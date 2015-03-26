@@ -27,11 +27,11 @@ public final class R {
 		public static final int scrubber_track_holo_dark = 0x7f020161;
 	}
 	public static final class id {
-		public static final int mediacontroller_file_name = 0x7f080186;
-		public static final int mediacontroller_play_pause = 0x7f080182;
-		public static final int mediacontroller_seekbar = 0x7f080185;
-		public static final int mediacontroller_time_current = 0x7f080183;
-		public static final int mediacontroller_time_total = 0x7f080184;
+		public static final int mediacontroller_file_name = 0x7f060186;
+		public static final int mediacontroller_play_pause = 0x7f060182;
+		public static final int mediacontroller_seekbar = 0x7f060185;
+		public static final int mediacontroller_time_current = 0x7f060183;
+		public static final int mediacontroller_time_total = 0x7f060184;
 	}
 	public static final class layout {
 		public static final int mediacontroller = 0x7f03006e;
@@ -40,22 +40,22 @@ public final class R {
 		public static final int libarm = 0x7f050001;
 	}
 	public static final class string {
-		public static final int VideoView_error_button = 0x7f06000b;
-		public static final int VideoView_error_text_invalid_progressive_playback = 0x7f060009;
-		public static final int VideoView_error_text_unknown = 0x7f06000a;
-		public static final int VideoView_error_title = 0x7f060008;
-		public static final int mediacontroller_play_pause = 0x7f06000c;
-		public static final int permission_group_tools_description = 0x7f060003;
-		public static final int permission_group_tools_label = 0x7f060002;
-		public static final int permission_receive_messages_description = 0x7f060005;
-		public static final int permission_receive_messages_label = 0x7f060004;
-		public static final int permission_write_providers_description = 0x7f060007;
-		public static final int permission_write_providers_label = 0x7f060006;
-		public static final int vitamio_init_decoders = 0x7f060001;
-		public static final int vitamio_library_app_name = 0x7f060000;
+		public static final int VideoView_error_button = 0x7f07000d;
+		public static final int VideoView_error_text_invalid_progressive_playback = 0x7f07000b;
+		public static final int VideoView_error_text_unknown = 0x7f07000c;
+		public static final int VideoView_error_title = 0x7f07000a;
+		public static final int mediacontroller_play_pause = 0x7f07000e;
+		public static final int permission_group_tools_description = 0x7f070005;
+		public static final int permission_group_tools_label = 0x7f070004;
+		public static final int permission_receive_messages_description = 0x7f070007;
+		public static final int permission_receive_messages_label = 0x7f070006;
+		public static final int permission_write_providers_description = 0x7f070009;
+		public static final int permission_write_providers_label = 0x7f070008;
+		public static final int vitamio_init_decoders = 0x7f070003;
+		public static final int vitamio_library_app_name = 0x7f070002;
 	}
 	public static final class style {
-		public static final int MediaController_SeekBar = 0x7f070000;
-		public static final int MediaController_Text = 0x7f070001;
+		public static final int MediaController_SeekBar = 0x7f080000;
+		public static final int MediaController_Text = 0x7f080001;
 	}
 }

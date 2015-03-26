@@ -15,7 +15,7 @@ public class SmartDownloadThread extends Thread {
 	private static final String TAG = "SmartDownloadThread";
 	private File saveFile;
 	private URL downUrl;
-	/* *ÏÂÔØ¿ªÊ¼Î»ÖÃ  */
+	/* *ä¸‹è½½å¼€å§‹ä½ç½®  */
 	private int threadId = -1;	
 	private int downLength;
 	private boolean finish = false;
@@ -43,8 +43,8 @@ public class SmartDownloadThread extends Thread {
 			http.setRequestProperty("Accept-Language", "zh-CN");
 			http.setRequestProperty("Referer", downUrl.toString()); 
 			http.setRequestProperty("Charset", "UTF-8");
-			//Range±ØĞë´óĞ´
-			http.setRequestProperty("RANGE", "bytes=" + (l.getStartPos()+l.getCompleteSize())+ "-"+ l.getEndPos());//ÉèÖÃ»ñÈ¡ÊµÌåÊı¾İµÄ·¶Î§
+			//Rangeå¿…é¡»å¤§å†™
+			http.setRequestProperty("RANGE", "bytes=" + (l.getStartPos()+l.getCompleteSize())+ "-"+ l.getEndPos());//è®¾ç½®è·å–å®ä½“æ•°æ®çš„èŒƒå›´
 			http.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.2; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)");
 			http.setRequestProperty("Connection", "Keep-Alive");
 			InputStream inStream = http.getInputStream();
@@ -59,12 +59,12 @@ public class SmartDownloadThread extends Thread {
 				l.setCompleteSize(downLength);
 //				if(downLength%5120==0)
 //				{
-//					System.out.println("Thread "+this.getId()+"¸üĞÂÊı¾İ¿â");
-//					downloader.update(l);	//¸üĞÂÊı¾İ¿â
+//					System.out.println("Thread "+this.getId()+"æ›´æ–°æ•°æ®åº“");
+//					downloader.update(l);	//æ›´æ–°æ•°æ®åº“
 //				}
 				downloader.append(offset);
 			}
-			downloader.update(l);//ÍË³öÁËÑ­»·ÔÙ´æÒ»´Î
+			downloader.update(l);//é€€å‡ºäº†å¾ªç¯å†å­˜ä¸€æ¬¡
 			threadfile.close();
 			inStream.close();
 			if(downLength==(l.getEndPos()-l.getStartPos()+1))
@@ -78,21 +78,21 @@ public class SmartDownloadThread extends Thread {
 			e.printStackTrace();
 		}
 		}	
-		print("Thread "+this.threadId+"Í£Ö¹ÁËÔËĞĞ");
+		print("Thread "+this.threadId+"åœæ­¢äº†è¿è¡Œ");
 	}
 	private static void print(String msg){
 		Log.i(TAG, msg);
 	}
 	/**
-	 * ÏÂÔØÊÇ·ñÍê³É
+	 * ä¸‹è½½æ˜¯å¦å®Œæˆ
 	 * @return
 	 */
 	public boolean isFinish() {
 		return finish;
 	}
 	/**
-	 * ÒÑ¾­ÏÂÔØµÄÄÚÈİ´óĞ¡
-	 * @return Èç¹û·µ»ØÖµÎª-1,´ú±íÏÂÔØÊ§°Ü
+	 * å·²ç»ä¸‹è½½çš„å†…å®¹å¤§å°
+	 * @return å¦‚æœè¿”å›å€¼ä¸º-1,ä»£è¡¨ä¸‹è½½å¤±è´¥
 	 */
 	public long getDownLength() {
 		return downLength;

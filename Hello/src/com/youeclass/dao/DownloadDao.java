@@ -34,7 +34,7 @@ public class DownloadDao {
 		return list;
 	}
 	/**
-	 * ±£´æÃ¿ÌõÏß³ÌÒÑ¾­ÏÂÔØµÄÎÄ¼ş³¤¶È
+	 * ä¿å­˜æ¯æ¡çº¿ç¨‹å·²ç»ä¸‹è½½çš„æ–‡ä»¶é•¿åº¦
 	 * @param path
 	 * @param map
 	 */
@@ -55,7 +55,7 @@ public class DownloadDao {
 		openHelper.closeDb();
 	}
 	/**
-	 * ÊµÊ±¸üĞÂÃ¿ÌõÏß³ÌÒÑ¾­ÏÂÔØµÄÎÄ¼ş³¤¶È
+	 * å®æ—¶æ›´æ–°æ¯æ¡çº¿ç¨‹å·²ç»ä¸‹è½½çš„æ–‡ä»¶é•¿åº¦
 	 * @param path
 	 * @param map
 	 */
@@ -73,19 +73,19 @@ public class DownloadDao {
 		openHelper.closeDb();
 	}
 	/**
-	 * µ±ÎÄ¼şÏÂÔØÍê³Éºó£¬É¾³ı¶ÔÓ¦µÄÏÂÔØ¼ÇÂ¼,¸üĞÂ¿Î³Ì±í¼ÇÂ¼
+	 * å½“æ–‡ä»¶ä¸‹è½½å®Œæˆåï¼Œåˆ é™¤å¯¹åº”çš„ä¸‹è½½è®°å½•,æ›´æ–°è¯¾ç¨‹è¡¨è®°å½•
 	 * @param path
 	 */
 	public void deleteAll(String url,int size,String filePath,String username)
 	{
-		Log.i("Download","É¾³ıÏÂÔØ¼ÇÂ¼");
+		Log.i("Download","åˆ é™¤ä¸‹è½½è®°å½•");
 		SQLiteDatabase db =  openHelper.getDatabase(MyDBHelper.WRITE);
 		db.beginTransaction();
 		try
 		{
-			//É¾³ı¼ÇÂ¼
+			//åˆ é™¤è®°å½•
 			db.execSQL("delete from DownloadTab where url=? and username = ?", new Object[]{url,username });
-			//¸üĞÂ¼ÇÂ¼
+			//æ›´æ–°è®°å½•
 			db.execSQL("update CourseTab set finishsize = ?,filepath = ? ,state = 2 where fileurl = ? and username = ?", new Object[]{size,filePath,url,username});
 			db.setTransactionSuccessful();
 		}finally
@@ -100,7 +100,7 @@ public class DownloadDao {
 		db.beginTransaction();
 		try
 		{
-			//É¾³ı¼ÇÂ¼
+			//åˆ é™¤è®°å½•
 			db.execSQL("delete from DownloadTab where url=? and username = ?", new Object[]{url,username});
 			db.setTransactionSuccessful();
 		}finally

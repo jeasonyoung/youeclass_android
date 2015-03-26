@@ -51,7 +51,7 @@ public class ZuHeClassActivity extends Activity implements OnClickListener{
 		this.title = (TextView) this.findViewById(R.id.TopTitle4);
 		this.list = (ListView) this.findViewById(R.id.list);
 		this.nodata = (LinearLayout) this.findViewById(R.id.nodataLayout);
-		dialog = ProgressDialog.show(ZuHeClassActivity.this,null,"Å¬Á¦¼ÓÔØÖĞÇëÉÔºò",true,false);
+		dialog = ProgressDialog.show(ZuHeClassActivity.this,null,"åŠªåŠ›åŠ è½½ä¸­è¯·ç¨å€™",true,false);
 		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		Intent intent = this.getIntent();
 		this.title.setText(intent.getStringExtra("name"));
@@ -70,7 +70,7 @@ public class ZuHeClassActivity extends Activity implements OnClickListener{
 				String result = HttpConnectUtil.httpGetRequest(ZuHeClassActivity.this, Constant.DOMAIN_URL+"mobile/findGradeOfPkg?pkgId="+pid);
 				if(result!=null&&!result.equals("null"))
             	{
-            		//½âÎöjson×Ö·û´®,ÅäÖÃexpandableListViewµÄadapter
+            		//è§£æjsonå­—ç¬¦ä¸²,é…ç½®expandableListViewçš„adapter
             		try
             		{
             			JSONObject json = new JSONObject(result);
@@ -91,7 +91,7 @@ public class ZuHeClassActivity extends Activity implements OnClickListener{
             			{
             				handler.sendEmptyMessage(0);
             			}
-            			//ÉèÖÃadapter
+            			//è®¾ç½®adapter
             		}catch(Exception e)
             		{
             			e.printStackTrace();
@@ -124,16 +124,16 @@ public class ZuHeClassActivity extends Activity implements OnClickListener{
                 	break;
                 case 0:
                 	theActivity.dialog.dismiss();
-            		theActivity.nodata.setVisibility(View.VISIBLE);//ÎŞÊı¾İÏÔÊ¾
+            		theActivity.nodata.setVisibility(View.VISIBLE);//æ— æ•°æ®æ˜¾ç¤º
             		break;
                 case -1:
-                	//Á¬²»ÉÏ,
+                	//è¿ä¸ä¸Š,
                 	if(theActivity.dialog!=null)
                 	{
                 		theActivity.dialog.dismiss();
                 	}
-            		theActivity.nodata.setVisibility(View.VISIBLE);//ÎŞÊı¾İÏÔÊ¾
-            		Toast.makeText(theActivity, "ÔİÊ±Á¬²»ÉÏ·şÎñÆ÷,ÇëÉÔºò", Toast.LENGTH_SHORT).show();//ÌáÊ¾
+            		theActivity.nodata.setVisibility(View.VISIBLE);//æ— æ•°æ®æ˜¾ç¤º
+            		Toast.makeText(theActivity, "æš‚æ—¶è¿ä¸ä¸ŠæœåŠ¡å™¨,è¯·ç¨å€™", Toast.LENGTH_SHORT).show();//æç¤º
                 }
         }
 	}
@@ -162,7 +162,7 @@ public class ZuHeClassActivity extends Activity implements OnClickListener{
 		case R.id.returnbtn:
 			this.finish();return;
 		case R.id.LearningRecord_layout_btn:
-			Toast.makeText(this, "Ãâ·ÑÌåÑé²»Ìá¹©¸Ã¹¦ÄÜ", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "å…è´¹ä½“éªŒä¸æä¾›è¯¥åŠŸèƒ½", Toast.LENGTH_SHORT).show();
 			return;
 		case R.id.MyCourse_layout_btn:
 			Intent intent = new Intent(this,MyCourseActivity.class);

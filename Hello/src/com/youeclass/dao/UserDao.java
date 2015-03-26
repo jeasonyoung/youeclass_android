@@ -18,7 +18,7 @@ public class UserDao {
 	{
 		long i = 0;
 		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.WRITE);
-		Log.d(TAG, "addUser方法打开了数据库连接");
+		Log.d(TAG, "addUser鏂规硶鎵撳紑浜嗘暟鎹簱杩炴帴");
 		db.beginTransaction();
 		try{
 			i = db.insert("UserTab", null,ContentValuesBuilder.getInstance().bulid(user));
@@ -28,14 +28,14 @@ public class UserDao {
 			db.endTransaction();
 		}
 		dbhelper.closeDb();
-		Log.d(TAG, "addUser方法关闭了数据库连接");
+		Log.d(TAG, "addUser鏂规硶鍏抽棴浜嗘暟鎹簱杩炴帴");
 		return i;
 	}
 	public User findByUsername(String username)
 	{
 		User user = null;
 		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
-		Log.d(TAG, "findByUsername方法打开了数据库连接");
+		Log.d(TAG, "findByUsername鏂规硶鎵撳紑浜嗘暟鎹簱杩炴帴");
 		Cursor cursor= db.rawQuery("select uid,username,password from UserTab where username = ?", new String[]{username});
 		if(cursor.moveToNext())
 		{
@@ -46,16 +46,16 @@ public class UserDao {
 		}
 		cursor.close();
 		dbhelper.closeDb();
-		Log.d(TAG, "findByUsername方法关闭了数据库连接");
+		Log.d(TAG, "findByUsername鏂规硶鍏抽棴浜嗘暟鎹簱杩炴帴");
 		return user;
 	}
 	public void update(User user) throws IllegalArgumentException, IllegalAccessException
 	{
 		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.WRITE);
-		Log.d(TAG, "update方法打开了数据库连接");
+		Log.d(TAG, "update鏂规硶鎵撳紑浜嗘暟鎹簱杩炴帴");
 		db.update("UserTab", ContentValuesBuilder.getInstance().bulid(user), "username=?", new String[]{user.getUsername()});
 		dbhelper.closeDb();
-		Log.d(TAG, "update方法关闭了数据库连接");
+		Log.d(TAG, "update鏂规硶鍏抽棴浜嗘暟鎹簱杩炴帴");
 	}
 	public void saveOrUpdate(User user) throws IllegalArgumentException, IllegalAccessException
 	{

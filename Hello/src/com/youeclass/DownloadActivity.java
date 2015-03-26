@@ -68,7 +68,7 @@ public class DownloadActivity extends ActivityGroup implements OnClickListener {
 			this.finish();
 			break;
 		case R.id.delbtn:
-			Toast.makeText(this, "长按列表项以删除", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "闀挎寜鍒楄〃椤逛互鍒犻櫎", Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.downingBtn:
 			if(flag==1)

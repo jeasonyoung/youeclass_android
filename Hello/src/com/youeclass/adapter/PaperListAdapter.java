@@ -57,8 +57,8 @@ public class PaperListAdapter extends BaseAdapter{
 		}
 		final Paper p = papers.get(position);
 		holder.title.setText(p.getPaperName());
-		holder.info.setText("¿¼ÊÔÊ±¼ä:"+p.getPaperTime()+"·ÖÖÓ,"+"×Ü·Ö:"+p.getPaperSorce()+"·Ö");
-		//holder.doExam.setText("¿ªÊ¼¿¼ÊÔ");
+		holder.info.setText("è€ƒè¯•æ—¶é—´:"+p.getPaperTime()+"åˆ†é’Ÿ,"+"æ€»åˆ†:"+p.getPaperSorce()+"åˆ†");
+		//holder.doExam.setText("å¼€å§‹è€ƒè¯•");
 //		holder.doExam.setOnClickListener(new OnClickListener() {
 //			@Override
 //			public void onClick(View v) {

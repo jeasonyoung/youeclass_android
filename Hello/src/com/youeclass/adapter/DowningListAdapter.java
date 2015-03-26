@@ -62,33 +62,33 @@ public class DowningListAdapter extends BaseAdapter {
 		// SmartFileDownloader.flagMap.get(url);
 		//if (convertView == null) {
 		/*
-		 * ³õÊ¼»¯ÏÂÔØÏîµÄÎÊÌâ
-		 * Ò»¿ªÊ¼Êı¾İ¿â»¹Ã»ÓĞÏÂÔØÏî,¶¼ÊÇĞÂµÄ,ÎÄ¼ş´óĞ¡²»¶¨
-		 * ÓĞÊı¾İµÄÇé¿ö
+		 * åˆå§‹åŒ–ä¸‹è½½é¡¹çš„é—®é¢˜
+		 * ä¸€å¼€å§‹æ•°æ®åº“è¿˜æ²¡æœ‰ä¸‹è½½é¡¹,éƒ½æ˜¯æ–°çš„,æ–‡ä»¶å¤§å°ä¸å®š
+		 * æœ‰æ•°æ®çš„æƒ…å†µ
 		 */
 			DowningListItem item = null;
-			if(convertView==null)	//converView»¹²»´æÔÚ
+			if(convertView==null)	//converViewè¿˜ä¸å­˜åœ¨
 			{
 				LayoutInflater inflater = LayoutInflater.from(context);
 				convertView = inflater.inflate(R.layout.list_downing_layout, null);
 				item = new DowningListItem();
-				// ÎÄ¼şÃû
+				// æ–‡ä»¶å
 				item.filenameLab = (TextView) convertView
 						.findViewById(R.id.filenameLab);
-				// ½ø¶ÈÌõ
+				// è¿›åº¦æ¡
 				item.finishProgress = (ProgressBar) convertView
 						.findViewById(R.id.finishProgress);
 				item.finishProgress.setMax(100);
-				// ÏÂÔØÖĞ
+				// ä¸‹è½½ä¸­
 				item.downing = (TextView) convertView
 						.findViewById(R.id.fileDownText);
-				// °Ù·ÖÊı
+				// ç™¾åˆ†æ•°
 				item.percent = (TextView) convertView
 						.findViewById(R.id.fileFininshProgressLab);
-				// Á¬½ÓÖĞ
+				// è¿æ¥ä¸­
 				item.connecting = (TextView) convertView
 						.findViewById(R.id.finishSizeTextView);
-				// ÔİÍ£»ò¼ÌĞø°´Å¥
+				// æš‚åœæˆ–ç»§ç»­æŒ‰é’®
 				item.pauseBtn = (DownloadButton) convertView
 						.findViewById(R.id.pauseBtn);
 				convertView.setTag(item);
@@ -97,43 +97,43 @@ public class DowningListAdapter extends BaseAdapter {
 				item = (DowningListItem) convertView.getTag();
 			}
 			DowningCourse dc = list.get(position);
-			System.out.println(dc.getFileurl()+" ÏÂÔØ×´Ì¬ : "+dc.getStatus());
+			System.out.println(dc.getFileurl()+" ä¸‹è½½çŠ¶æ€ : "+dc.getStatus());
 			item.filenameLab.setText(dc.getCourseName());
-			//»ñÈ¡ÏÂÔØ×´Ì¬
+			//è·å–ä¸‹è½½çŠ¶æ€
 			Boolean flag = SmartFileDownloader.flagMap.get(dc.getFileurl());
-			//Îª¿Õ±íÊ¾ÉĞÎ´ÏÂÔØ¹ı,Îª¼Ù±íÊ¾ÔİÍ£ÁË
+			//ä¸ºç©ºè¡¨ç¤ºå°šæœªä¸‹è½½è¿‡,ä¸ºå‡è¡¨ç¤ºæš‚åœäº†
 			if(flag == null || !flag)
 			{
-				//³õÊ¼»¯,--ÔİÍ£,
-				if(dc.getStatus()==0)	//ÒÔÇ°Ã»ÓĞÏÂÔØÍêµÄ×´Ì¬Âê¶¼Îª0;ÏÔÊ¾¼ÌĞø
+				//åˆå§‹åŒ–,--æš‚åœ,
+				if(dc.getStatus()==0)	//ä»¥å‰æ²¡æœ‰ä¸‹è½½å®Œçš„çŠ¶æ€ç›éƒ½ä¸º0;æ˜¾ç¤ºç»§ç»­
 				{
 					int percentNum = (int) (dc.getFinishsize()*100.0/dc.getFilesize());
 					item.percent.setText(percentNum	+ "%");
 					item.finishProgress.setProgress(percentNum);
-					// ÒÑÓĞÏÂÔØµ«ÊÇÃ»ÓĞÆô¶¯ÏÂÔØ
-					item.pauseBtn.setImageResource(R.drawable.continuedown);// ÏÔÊ¾¼ÌĞø°´Å¥
-					item.pauseBtn.setText(R.string.continueDown);// ÏÔÊ¾¼ÌĞø
-					item.downing.setText("ÔİÍ£ÖĞ");
-				}else if (dc.getStatus()== -1) {	//±íÊ¾¸Õ¸Õ¼ÓÈë½øÀ´,»¹Ã»ÓĞ¿ªÊ¼ÏÂÔØ
-					item.connecting.setText("Á¬½ÓÖĞ...");
-					item.downing.setText("");// »¹Ã»¿ªÊ¼ÏÂÔØ
-					// ½ûÓÃ°´Å¥»òÕßÉèÖÃÈ¡Ïû
+					// å·²æœ‰ä¸‹è½½ä½†æ˜¯æ²¡æœ‰å¯åŠ¨ä¸‹è½½
+					item.pauseBtn.setImageResource(R.drawable.continuedown);// æ˜¾ç¤ºç»§ç»­æŒ‰é’®
+					item.pauseBtn.setText(R.string.continueDown);// æ˜¾ç¤ºç»§ç»­
+					item.downing.setText("æš‚åœä¸­");
+				}else if (dc.getStatus()== -1) {	//è¡¨ç¤ºåˆšåˆšåŠ å…¥è¿›æ¥,è¿˜æ²¡æœ‰å¼€å§‹ä¸‹è½½
+					item.connecting.setText("è¿æ¥ä¸­...");
+					item.downing.setText("");// è¿˜æ²¡å¼€å§‹ä¸‹è½½
+					// ç¦ç”¨æŒ‰é’®æˆ–è€…è®¾ç½®å–æ¶ˆ
 					//item.pauseBtn.setEnabled(false);
 				}else if(dc.getStatus() == 4)
 				{
-					item.downing.setText("µÈ´ıÖĞ");
-					item.pauseBtn.setImageResource(R.drawable.waitdown);// ÏÔÊ¾µÈ´ı°´Å¥
-					item.pauseBtn.setText(R.string.waitDown);// ÏÔÊ¾µÈ´ı
-//					item.pauseBtn.setEnabled(false);//½ûÓÃ°´Å¥
+					item.downing.setText("ç­‰å¾…ä¸­");
+					item.pauseBtn.setImageResource(R.drawable.waitdown);// æ˜¾ç¤ºç­‰å¾…æŒ‰é’®
+					item.pauseBtn.setText(R.string.waitDown);// æ˜¾ç¤ºç­‰å¾…
+//					item.pauseBtn.setEnabled(false);//ç¦ç”¨æŒ‰é’®
 				}else if(dc.getStatus() == -2)
 				{
-					item.connecting.setText("Á¬½ÓÊ§°Ü!");
+					item.connecting.setText("è¿æ¥å¤±è´¥!");
 					item.pauseBtn.setImageResource(R.drawable.retry);
 					item.pauseBtn.setText(R.string.retry);
 				}
-			}else	//ÕıÔÚÏÂÔØ
+			}else	//æ­£åœ¨ä¸‹è½½
 			{
-				if(dc.getStatus()==1)	//¸Õ¸Õ¼ÓÈë½øÀ´µÄ¿ªÊ¼ÏÂÔØÁË
+				if(dc.getStatus()==1)	//åˆšåˆšåŠ å…¥è¿›æ¥çš„å¼€å§‹ä¸‹è½½äº†
 				{
 					item.connecting.setText("");
 					item.pauseBtn.setEnabled(true);
@@ -141,26 +141,26 @@ public class DowningListAdapter extends BaseAdapter {
 					//dc.setStatus(0);
 				}
 				dc.setStatus(1);
-				//ÕıÔÚÏÂÔØ  
-				// ¸üĞÂ½ø¶ÈÊıÖµ
+				//æ­£åœ¨ä¸‹è½½  
+				// æ›´æ–°è¿›åº¦æ•°å€¼
 				int percentNum = (int) (dc.getFinishsize()*100.0/dc.getFilesize());
 				item.percent.setText(percentNum	+ "%");
-				//¸üĞÂ½ø¶ÈÌõ
+				//æ›´æ–°è¿›åº¦æ¡
 				item.finishProgress.setProgress(percentNum);
-				item.downing.setText("ÏÂÔØÖĞ");
-				item.pauseBtn.setImageResource(R.drawable.pausedown);// ÏÔÊ¾¼ÌĞø°´Å¥
-				item.pauseBtn.setText(R.string.pauseDown);// ÏÔÊ¾¼ÌĞø
+				item.downing.setText("ä¸‹è½½ä¸­");
+				item.pauseBtn.setImageResource(R.drawable.pausedown);// æ˜¾ç¤ºç»§ç»­æŒ‰é’®
+				item.pauseBtn.setText(R.string.pauseDown);// æ˜¾ç¤ºç»§ç»­
 				System.out.println("!!!!!!! update the progress !!!!!!!!!");
 			}
-			// ÉèÖÃ°´Å¥ÊÂ¼ş
+			// è®¾ç½®æŒ‰é’®äº‹ä»¶
 			item.pauseBtn.setOnClickListener(new PauseClickEvent(position, list,
 					item.downing));
 		return convertView;
 	}
 
-	// ÅĞ¶ÏÏÂÔØÓëÔİÍ£µÄ±êÊ¶ÊÇÊ²Ã´
+	// åˆ¤æ–­ä¸‹è½½ä¸æš‚åœçš„æ ‡è¯†æ˜¯ä»€ä¹ˆ
 	/*
-	 * mapÀïÈ¡²»µ½ url¶ÔÓ¦µÄÖµ,±íÊ¾Ã»ÓĞ¿ªÊ¼ÏÂÔØ È¡³öÎªfalse,ÔİÍ£ÁËÏÂÔØ È¡³öÎªtrue,ÕıÔÚÏÂÔØ
+	 * mapé‡Œå–ä¸åˆ° urlå¯¹åº”çš„å€¼,è¡¨ç¤ºæ²¡æœ‰å¼€å§‹ä¸‹è½½ å–å‡ºä¸ºfalse,æš‚åœäº†ä¸‹è½½ å–å‡ºä¸ºtrue,æ­£åœ¨ä¸‹è½½
 	 */
 	private class PauseClickEvent implements OnClickListener {
 		private TextView textView;
@@ -178,13 +178,13 @@ public class DowningListAdapter extends BaseAdapter {
 			if(dc.getStatus()==4||dc.getStatus()==-1) return;
 			String url  = dc.getFileurl();
 			Boolean flag = SmartFileDownloader.flagMap.get(url);
-			// Í£Ö¹ÁËÏÂÔØ
+			// åœæ­¢äº†ä¸‹è½½
 			if (flag == null || !flag) {
-				// Æô¶¯ÏÂÔØ
+				// å¯åŠ¨ä¸‹è½½
 				if(SmartFileDownloader.getDowningCount()>=2)
 				{
-					dc.setStatus(4);  //µÈ´ı×´Ì¬
-					((DownloadButton) v).setImageResource(R.drawable.waitdown);// ÏÔÊ¾ÔİÍ£°´Å¥
+					dc.setStatus(4);  //ç­‰å¾…çŠ¶æ€
+					((DownloadButton) v).setImageResource(R.drawable.waitdown);// æ˜¾ç¤ºæš‚åœæŒ‰é’®
 					((DownloadButton) v).setText(R.string.waitDown);
 					return;
 				}
@@ -192,19 +192,19 @@ public class DowningListAdapter extends BaseAdapter {
 				Boolean isDownUse3G = settingfile.getBoolean("setDownIsUse3G", true);
 				if(wifiState==null)
 				{
-					//print("Çë¼ì²éÄúµÄÍøÂç");
-					Toast.makeText(context, "Çë¼ì²éÄúµÄÍøÂç", Toast.LENGTH_SHORT).show();
+					//print("è¯·æ£€æŸ¥æ‚¨çš„ç½‘ç»œ");
+					Toast.makeText(context, "è¯·æ£€æŸ¥æ‚¨çš„ç½‘ç»œ", Toast.LENGTH_SHORT).show();
 					return;
 				}
-				if(wifiState==false&&isDownUse3G==false)//Ã»ÓĞwifi,ÓÖ²»ÔÊĞí3GÏÂÔØ
+				if(wifiState==false&&isDownUse3G==false)//æ²¡æœ‰wifi,åˆä¸å…è®¸3Gä¸‹è½½
 				{
-					//print("µ±Ç°ÍøÂçÎª2G/3G,ÒªÏÂÔØÇëĞŞ¸ÄÉèÖÃ»ò¿ªÆôwifi");
-					Toast.makeText(context, "µ±Ç°ÍøÂçÎª2G/3G,ÒªÏÂÔØÇëĞŞ¸ÄÉèÖÃ»ò¿ªÆôwifi", Toast.LENGTH_SHORT).show();
+					//print("å½“å‰ç½‘ç»œä¸º2G/3G,è¦ä¸‹è½½è¯·ä¿®æ”¹è®¾ç½®æˆ–å¼€å¯wifi");
+					Toast.makeText(context, "å½“å‰ç½‘ç»œä¸º2G/3G,è¦ä¸‹è½½è¯·ä¿®æ”¹è®¾ç½®æˆ–å¼€å¯wifi", Toast.LENGTH_SHORT).show();
 					return;
 				}
 				if(!FileUtil.checkSDCard(dc.getFilesize()))
 				{
-					Toast.makeText(context, "Ã»ÓĞSD¿¨»òÕß¿Õ¼ä²»¹»", Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, "æ²¡æœ‰SDå¡æˆ–è€…ç©ºé—´ä¸å¤Ÿ", Toast.LENGTH_SHORT).show();
 					return;
 				}
 				SmartFileDownloader.flagMap.put(url, true);
@@ -214,24 +214,24 @@ public class DowningListAdapter extends BaseAdapter {
 				intent.putExtra("dir", dir.getPath() + "/eschool");
 				intent.putExtra("username", username);
 				context.startService(intent);
-				textView.setText("ÏÂÔØÖĞ");
+				textView.setText("ä¸‹è½½ä¸­");
 				dc.setStatus(1);
-				((DownloadButton) v).setImageResource(R.drawable.pausedown);// ÏÔÊ¾ÔİÍ£°´Å¥
+				((DownloadButton) v).setImageResource(R.drawable.pausedown);// æ˜¾ç¤ºæš‚åœæŒ‰é’®
 				((DownloadButton) v).setText(R.string.pauseDown);
 			} else {
-				// ·¢¹ã²¥Í¨ÖªºóÌ¨serviceÔİÍ£
+				// å‘å¹¿æ’­é€šçŸ¥åå°serviceæš‚åœ
 				SmartFileDownloader.flagMap.put(url, false);
-				Intent myIntent = new Intent();// ´´½¨Intent¶ÔÏó
+				Intent myIntent = new Intent();// åˆ›å»ºIntentå¯¹è±¡
 				myIntent.setAction("commandFromActivity");
 				myIntent.putExtra("cmd", 0);
 				myIntent.putExtra("url", url);
-				context.sendBroadcast(myIntent);// ·¢ËÍ¹ã²¥
-				textView.setText("ÔİÍ£ÖĞ");
-				//ÏÂÔØ×´Ì¬ÂëÎª0
+				context.sendBroadcast(myIntent);// å‘é€å¹¿æ’­
+				textView.setText("æš‚åœä¸­");
+				//ä¸‹è½½çŠ¶æ€ç ä¸º0
 				dc.setStatus(0);
-				((DownloadButton) v).setImageResource(R.drawable.continuedown);// ÏÔÊ¾¼ÌĞø°´Å¥
-				((DownloadButton) v).setText(R.string.continueDown);// ÏÔÊ¾¼ÌĞø
-				//Í¬Ê±²éÕÒ´¦ÓÚÔİÍ£×´Ì¬µÄÈÎÎñ
+				((DownloadButton) v).setImageResource(R.drawable.continuedown);// æ˜¾ç¤ºç»§ç»­æŒ‰é’®
+				((DownloadButton) v).setText(R.string.continueDown);// æ˜¾ç¤ºç»§ç»­
+				//åŒæ—¶æŸ¥æ‰¾å¤„äºæš‚åœçŠ¶æ€çš„ä»»åŠ¡
 				DowningCourse waiting = getFirstWait();
 				if(waiting!=null)
 				{
@@ -254,7 +254,7 @@ public class DowningListAdapter extends BaseAdapter {
 		DownloadButton pauseBtn;
 		ProgressBar finishProgress;
 	}
-	//»ñµÃÁĞ±íÖĞµÚÒ»¸öµÈ´ıµÄÈÎÎñ
+	//è·å¾—åˆ—è¡¨ä¸­ç¬¬ä¸€ä¸ªç­‰å¾…çš„ä»»åŠ¡
 	private DowningCourse getFirstWait()
 	{
 		for(DowningCourse dc:list)

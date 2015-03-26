@@ -70,7 +70,7 @@ public class MyCourseActivity extends BaseActivity implements OnClickListener {
 		nodata = (LinearLayout) this.findViewById(R.id.nodataLayout);
 		handler = new MyHandler(this);
 		dao = new UserClassDao(this);
-		dialog = ProgressDialog.show(MyCourseActivity.this, null, "Å¬Á¦¼ÓÔØÖĞÇëÉÔºò",
+		dialog = ProgressDialog.show(MyCourseActivity.this, null, "åŠªåŠ›åŠ è½½ä¸­è¯·ç¨å€™",
 				true, true);
 		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		new GetMyLessonThread().start();
@@ -87,9 +87,9 @@ public class MyCourseActivity extends BaseActivity implements OnClickListener {
 							MyCourseActivity.this,
 							Constant.DOMAIN_URL+"mobile/myLessons?stuId="
 									+ id);
-					//½âÎö×Ö·û´®
+					//è§£æå­—ç¬¦ä¸²
 					if (result != null && !result.equals("null")) {
-						// ½âÎöjson×Ö·û´®,ÅäÖÃexpandableListViewµÄadapter
+						// è§£æjsonå­—ç¬¦ä¸²,é…ç½®expandableListViewçš„adapter
 						try {
 							JSONObject json = new JSONObject(result);
 							JSONArray packages = json.optJSONArray("classPackages");
@@ -97,14 +97,14 @@ public class MyCourseActivity extends BaseActivity implements OnClickListener {
 							int plength = packages.length();
 							int glength = grades.length();
 							List<UserClass> list = new ArrayList<UserClass>();
-							// ´óÏî,Ì×²Í»òµ¥°à¼¶
+							// å¤§é¡¹,å¥—é¤æˆ–å•ç­çº§
 							group = new String[plength + glength];
-							// ×ÓÏî,Ì×²ÍÏÂµÄ°à¼¶,µ¥°à¼¶Ã»ÓĞ×ÓÏî
-							// ×¢Òâ×ÓÏîµÄ³¤¶È±È´óÏîµÄ¶Ì
+							// å­é¡¹,å¥—é¤ä¸‹çš„ç­çº§,å•ç­çº§æ²¡æœ‰å­é¡¹
+							// æ³¨æ„å­é¡¹çš„é•¿åº¦æ¯”å¤§é¡¹çš„çŸ­
 							child = new String[plength][];
-							// ¿Î³ÌÏêÏ¸,µã»÷°à¼¶Ê±Ìø×ª
+							// è¯¾ç¨‹è¯¦ç»†,ç‚¹å‡»ç­çº§æ—¶è·³è½¬
 							classDetail = new String[plength + glength][];
-							// Ñ­»·Ì×²Í( classid,classname,username,fatherid,classtype)
+							// å¾ªç¯å¥—é¤( classid,classname,username,fatherid,classtype)
 							for (int i = 0; i < plength; i++) {
 								JSONObject p = packages.getJSONObject(i);
 								group[i] = p.optString("pkgName");
@@ -117,7 +117,7 @@ public class MyCourseActivity extends BaseActivity implements OnClickListener {
 										p.optString("pkgName"), username, 0 + "",
 										1 + "");
 								list.add(c);
-								// Ñ­»·Ì×²ÍÏÂµÄ°à¼¶
+								// å¾ªç¯å¥—é¤ä¸‹çš„ç­çº§
 								for (int k = 0; k < p_grades.length(); k++) {
 									p = p_grades.getJSONObject(k);
 									child[i][k] = p.getString("name");
@@ -131,7 +131,7 @@ public class MyCourseActivity extends BaseActivity implements OnClickListener {
 									list.add(c1);
 								}
 							}
-							// Ñ­»·°à¼¶
+							// å¾ªç¯ç­çº§
 							for (int j = 0; j < glength; j++) {
 								JSONObject p = grades.getJSONObject(j);
 								group[j + plength] = p
@@ -145,7 +145,7 @@ public class MyCourseActivity extends BaseActivity implements OnClickListener {
 										p.optInt("pkgId") + "", 0 + "");
 								list.add(c1);
 							}
-							// ½«ÎÒµÄ¿Î³Ì±£´æµ½Êı¾İ¿â
+							// å°†æˆ‘çš„è¯¾ç¨‹ä¿å­˜åˆ°æ•°æ®åº“
 							dao.deleteAll(username);
 							dao.addClasses(list);
 							Message msg = handler.obtainMessage();
@@ -156,14 +156,14 @@ public class MyCourseActivity extends BaseActivity implements OnClickListener {
 								handler.sendEmptyMessage(-1);
 							}
 						} else {
-							//·¢ÏûÏ¢
+							//å‘æ¶ˆæ¯
 							Message msg = handler.obtainMessage();
 							msg.what = -2;
 							handler.sendMessage(msg);
 						}
 				}else
 				{
-					//Í¨¹ıÊı¾İ¿âÕÒ [group,child]
+					//é€šè¿‡æ•°æ®åº“æ‰¾ [group,child]
 					group = dao.findBigClassName(username);
 					child = dao.findChildrenClass(username);
 					classDetail = dao.findChildrenClassid(username);
@@ -202,31 +202,31 @@ public class MyCourseActivity extends BaseActivity implements OnClickListener {
 				theActivity.expandList.setAdapter(new MyExpandableAdapter(
 										theActivity, theActivity.group,
 										theActivity.child));
-						// ÉèÖÃadapter
+						// è®¾ç½®adapter
 				break;
 			case -1:
-				// Á¬²»ÉÏ,
+				// è¿ä¸ä¸Š,
 				theActivity.dialog.dismiss();
-				theActivity.nodata.setVisibility(View.VISIBLE);// ÎŞÊı¾İÏÔÊ¾
-				Toast.makeText(theActivity, "ÔİÊ±Á¬²»ÉÏ·şÎñÆ÷,ÇëÉÔºò", Toast.LENGTH_SHORT)
-						.show();// ÌáÊ¾
+				theActivity.nodata.setVisibility(View.VISIBLE);// æ— æ•°æ®æ˜¾ç¤º
+				Toast.makeText(theActivity, "æš‚æ—¶è¿ä¸ä¸ŠæœåŠ¡å™¨,è¯·ç¨å€™", Toast.LENGTH_SHORT)
+						.show();// æç¤º
 				break;
 			case -2:
-				//Ã»ÓĞÊı¾İ
+				//æ²¡æœ‰æ•°æ®
 				theActivity.dialog.dismiss();
-				theActivity.nodata.setVisibility(View.VISIBLE);// ÎŞÊı¾İÏÔÊ¾
-				Toast.makeText(theActivity, "ÄúÃ»ÓĞ¹ºÂò¿Î³Ì", Toast.LENGTH_SHORT)
-						.show();// ÌáÊ¾
+				theActivity.nodata.setVisibility(View.VISIBLE);// æ— æ•°æ®æ˜¾ç¤º
+				Toast.makeText(theActivity, "æ‚¨æ²¡æœ‰è´­ä¹°è¯¾ç¨‹", Toast.LENGTH_SHORT)
+						.show();// æç¤º
 				break;
 			case -3:
-				//Êı¾İ¿âÖĞÃ»ÓĞÊı¾İ
+				//æ•°æ®åº“ä¸­æ²¡æœ‰æ•°æ®
 				theActivity.dialog.dismiss();
-				theActivity.nodata.setVisibility(View.VISIBLE);// ÎŞÊı¾İÏÔÊ¾
-				Toast.makeText(theActivity, "±¾µØÊı¾İ¿âÖĞÃ»ÓĞÊı¾İ,ÇëÔÚÏßµÇÂ¼ºó½øÈëÎÒµÄ¿Î³Ì", Toast.LENGTH_SHORT)
-						.show();// ÌáÊ¾
+				theActivity.nodata.setVisibility(View.VISIBLE);// æ— æ•°æ®æ˜¾ç¤º
+				Toast.makeText(theActivity, "æœ¬åœ°æ•°æ®åº“ä¸­æ²¡æœ‰æ•°æ®,è¯·åœ¨çº¿ç™»å½•åè¿›å…¥æˆ‘çš„è¯¾ç¨‹", Toast.LENGTH_SHORT)
+						.show();// æç¤º
 				break;
 			case 2:
-				//Í¨¹ıÊı¾İ¿â²éÕÒ
+				//é€šè¿‡æ•°æ®åº“æŸ¥æ‰¾
 				theActivity.dialog.dismiss();
 				theActivity.expandList
 						.setAdapter(new MyExpandableAdapter(
@@ -266,7 +266,7 @@ public class MyCourseActivity extends BaseActivity implements OnClickListener {
 		public boolean onGroupClick(ExpandableListView parent, View v,
 				int groupPosition, long id) {
 			// TODO Auto-generated method stub
-			// Èç¹ûÃ»ÓĞ×ÓÀàÁË,±íÊ¾ÊÇµ¥¶ÀµÄ¿Î³Ì
+			// å¦‚æœæ²¡æœ‰å­ç±»äº†,è¡¨ç¤ºæ˜¯å•ç‹¬çš„è¯¾ç¨‹
 			if (parent.getExpandableListAdapter().getChildrenCount(
 					groupPosition) == 0) {
 				Intent intent = new Intent(MyCourseActivity.this,
@@ -293,7 +293,7 @@ public class MyCourseActivity extends BaseActivity implements OnClickListener {
 		// TODO Auto-generated method stub
 		int id = v.getId();
 		switch (id) {
-		case R.id.LearningRecord_layout_btn: // ²¥·Å¼ÇÂ¼
+		case R.id.LearningRecord_layout_btn: // æ’­æ”¾è®°å½•
 			Intent mIntent = new Intent(this, PlayrecordActivity.class);
 			mIntent.putExtra("username", username);
 			mIntent.putExtra("loginType", loginType);

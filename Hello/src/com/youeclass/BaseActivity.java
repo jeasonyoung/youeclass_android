@@ -14,10 +14,10 @@ public class BaseActivity extends Activity{
 	 @Override
 	 public boolean onCreateOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
-		menu.add(Menu.NONE, Menu.FIRST+1, 1, "ÉèÖÃ").setIcon(android.R.drawable.ic_menu_edit);
-		menu.add(Menu.NONE, Menu.FIRST+2, 2, "°ïÖú").setIcon(android.R.drawable.ic_menu_help);
-		//menu.add(Menu.NONE, Menu.FIRST+3, 3, "¹ØÓÚ").setIcon(android.R.drawable.ic_menu_info_details);
-		//menu.add(Menu.NONE, Menu.FIRST+4, 4, "×¢Ïú").setIcon(android.R.drawable.ic_menu_set_as);
+		menu.add(Menu.NONE, Menu.FIRST+1, 1, "è®¾ç½®").setIcon(android.R.drawable.ic_menu_edit);
+		menu.add(Menu.NONE, Menu.FIRST+2, 2, "å¸®åŠ©").setIcon(android.R.drawable.ic_menu_help);
+		//menu.add(Menu.NONE, Menu.FIRST+3, 3, "å…³äº").setIcon(android.R.drawable.ic_menu_info_details);
+		//menu.add(Menu.NONE, Menu.FIRST+4, 4, "æ³¨é”€").setIcon(android.R.drawable.ic_menu_set_as);
 		return true;
 	}
 	 @Override
@@ -25,15 +25,15 @@ public class BaseActivity extends Activity{
 		// TODO Auto-generated method stub
 		 switch(item.getItemId()){
 		 case Menu.FIRST+1:
-			 //ÉèÖÃ
+			 //è®¾ç½®
 			 startSettingActivity();
 		 	 break;
 		 case Menu.FIRST+2:
-			 //°ïÖú
+			 //å¸®åŠ©
 			 this.startActivity(new Intent(this,HelpActivity.class));
 			 break;
 //		 case Menu.FIRST+3:
-//			 Toast.makeText(this, "É¾³ı²Ëµ¥±»µã»÷ÁË", Toast.LENGTH_LONG).show();
+//			 Toast.makeText(this, "åˆ é™¤èœå•è¢«ç‚¹å‡»äº†", Toast.LENGTH_LONG).show();
 //		 	break;
 //		 case Menu.FIRST+4:
 //			 showDialog();
@@ -43,22 +43,22 @@ public class BaseActivity extends Activity{
 		 
 	 }
 	 /**
-		 * ×Ô¶¨ÒåÒ»¸öÏûÏ¢ÌáÊ¾´°¿Ú
+		 * è‡ªå®šä¹‰ä¸€ä¸ªæ¶ˆæ¯æç¤ºçª—å£
 		 * @param msg
 		 */
 		protected void showDialog(){
 			 AlertDialog.Builder localBuilder = new AlertDialog.Builder(this);
-			 localBuilder.setTitle("×¢Ïú").setMessage("ÊÇ·ñ×¢ÏúÓÃ»§").setCancelable(false).setPositiveButton("È·¶¨", new DialogInterface.OnClickListener() {
+			 localBuilder.setTitle("æ³¨é”€").setMessage("æ˜¯å¦æ³¨é”€ç”¨æˆ·").setCancelable(false).setPositiveButton("ç¡®å®š", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						// TODO Auto-generated method stub
-						//Í£Ö¹ÏÂÔØ·şÎñ
-						Toast.makeText(BaseActivity.this, "·¢ÇëÇó×¢Ïú", Toast.LENGTH_LONG).show();
+						//åœæ­¢ä¸‹è½½æœåŠ¡
+						Toast.makeText(BaseActivity.this, "å‘è¯·æ±‚æ³¨é”€", Toast.LENGTH_LONG).show();
 						BaseActivity.this.startActivity(new Intent(BaseActivity.this,LoginActivity.class));
 						BaseActivity.this.finish();
 						
 					}                      
-				}).setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
+				}).setNegativeButton("å–æ¶ˆ", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						// TODO Auto-generated method stub

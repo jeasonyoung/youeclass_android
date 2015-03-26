@@ -61,15 +61,15 @@ public class MyCourseListAdapter2 extends BaseAdapter{
 		int state = courses.get(position).getState();
 		if(state==0)
 		{
-			holder.isDown.setText("Î´ÏÂÔØ");
+			holder.isDown.setText("æœªä¸‹è½½");
 			holder.isDown.setTextColor(context.getResources().getColor(R.color.grey));
 		}else if(state ==1)
 		{
-			holder.isDown.setText("ÕıÏÂÔØ");
+			holder.isDown.setText("æ­£ä¸‹è½½");
 			holder.isDown.setTextColor(context.getResources().getColor(R.color.red));
 		}else if(state == 2)
 		{
-			holder.isDown.setText("ÒÑÏÂÔØ");
+			holder.isDown.setText("å·²ä¸‹è½½");
 			holder.isDown.setTextColor(context.getResources().getColor(R.color.green));
 		}
 		holder.name.setOnClickListener(new OnClickListener() {
@@ -83,7 +83,7 @@ public class MyCourseListAdapter2 extends BaseAdapter{
 					context.startActivity(intent);
 					return;
 				}
-				//umeng¼ÇÂ¼ÊÂ¼ş
+				//umengè®°å½•äº‹ä»¶
 				MobclickAgent.onEvent(context,"online_listen");
 				//
 				Course c = courses.get(position);
@@ -91,23 +91,23 @@ public class MyCourseListAdapter2 extends BaseAdapter{
 				intent.putExtra("name", c.getCourseName());
 				intent.putExtra("username", c.getUsername());
 				intent.putExtra("courseid", c.getCourseId());
-				//¸ù¾İÏÂÔØµÄ×´Ì¬ 
+				//æ ¹æ®ä¸‹è½½çš„çŠ¶æ€ 
 				if(c.getState()==2)
 				{
 					intent.putExtra("url",c.getFilePath());
 				}else
 				{
-					//¼ì²éÊÇ·ñÔÊĞí2G/3GÏÂ²¥·Å
+					//æ£€æŸ¥æ˜¯å¦å…è®¸2G/3Gä¸‹æ’­æ”¾
 					Boolean wifiState = checkWifiNetworkInfo();
 					Boolean isDownUse3G = settingfile.getBoolean("setPlayIsUse3G", true);
 					if(wifiState==null)
 					{
-						print("Çë¼ì²éÄúµÄÍøÂç");
+						print("è¯·æ£€æŸ¥æ‚¨çš„ç½‘ç»œ");
 						return;
 					}
-					if(wifiState==false&&isDownUse3G==false)//Ã»ÓĞwifi,ÓÖ²»ÔÊĞí3GÏÂÔØ
+					if(wifiState==false&&isDownUse3G==false)//æ²¡æœ‰wifi,åˆä¸å…è®¸3Gä¸‹è½½
 					{
-						print("µ±Ç°ÍøÂçÎª2G/3G,Òª²¥·ÅÇëĞŞ¸ÄÉèÖÃ»ò¿ªÆôwifi");
+						print("å½“å‰ç½‘ç»œä¸º2G/3G,è¦æ’­æ”¾è¯·ä¿®æ”¹è®¾ç½®æˆ–å¼€å¯wifi");
 						return;
 					}
 					intent.putExtra("url", c.getFileUrl());
@@ -137,29 +137,29 @@ public class MyCourseListAdapter2 extends BaseAdapter{
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			//¼ì²ésd¿¨ÊÇ·ñ¿ÉÓÃ,
-			//»ñÈ¡ÎÄ¼şµÄ´óĞ¡
-			//¼ì²ésdµÄ¿ÉÓÃÈİÁ¿ÊÇ·ñ¹»
+			//æ£€æŸ¥sdå¡æ˜¯å¦å¯ç”¨,
+			//è·å–æ–‡ä»¶çš„å¤§å°
+			//æ£€æŸ¥sdçš„å¯ç”¨å®¹é‡æ˜¯å¦å¤Ÿ
 			if(!FileUtil.checkSDCard(0))
 			{
-				Toast.makeText(context, "Çë²åÈëSD¿¨", Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, "è¯·æ’å…¥SDå¡", Toast.LENGTH_SHORT).show();
 				return;
 			}
 			if("local".equals(loginType))
 			{
-				Toast.makeText(context, "ÇëÔÚÏßµÇÂ¼", Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, "è¯·åœ¨çº¿ç™»å½•", Toast.LENGTH_SHORT).show();
 				return;
 			}
 			Boolean wifiState = checkWifiNetworkInfo();
 			Boolean isDownUse3G = settingfile.getBoolean("setDownIsUse3G", true);
 			if(wifiState==null)
 			{
-				print("Çë¼ì²éÄúµÄÍøÂç");
+				print("è¯·æ£€æŸ¥æ‚¨çš„ç½‘ç»œ");
 				return;
 			}
-			if(wifiState==false&&isDownUse3G==false)//Ã»ÓĞwifi,ÓÖ²»ÔÊĞí3GÏÂÔØ
+			if(wifiState==false&&isDownUse3G==false)//æ²¡æœ‰wifi,åˆä¸å…è®¸3Gä¸‹è½½
 			{
-				print("µ±Ç°ÍøÂçÎª2G/3G,ÒªÏÂÔØÇëĞŞ¸ÄÉèÖÃ»ò¿ªÆôwifi");
+				print("å½“å‰ç½‘ç»œä¸º2G/3G,è¦ä¸‹è½½è¯·ä¿®æ”¹è®¾ç½®æˆ–å¼€å¯wifi");
 				return;
 			}
 			Intent intent = new Intent(context,DownloadActivity.class);

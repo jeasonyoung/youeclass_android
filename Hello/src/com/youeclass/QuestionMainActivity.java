@@ -45,7 +45,7 @@ public class QuestionMainActivity extends Activity{
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				// TODO Auto-generated method stub
-				//Toast.makeText(QuestionMainActivity.this, "µã»÷ÁËItem", Toast.LENGTH_LONG).show();
+				//Toast.makeText(QuestionMainActivity.this, "ç‚¹å‡»äº†Item", Toast.LENGTH_LONG).show();
 				Intent mIntent = new Intent(QuestionMainActivity.this,classes[arg2]);
 				mIntent.putExtra("username", username);
 				mIntent.putExtra("actionName", actions[arg2]);

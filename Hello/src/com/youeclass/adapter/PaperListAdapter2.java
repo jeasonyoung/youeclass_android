@@ -59,11 +59,11 @@ public class PaperListAdapter2 extends BaseAdapter{
 		holder.title.setText(r.getPapername());
 		if(r.getAnswers()!=null)
 		{
-			holder.info.setText("ÉÏ´ÎµÃ·Ö:"+r.getScore()+"·Ö");
+			holder.info.setText("ä¸Šæ¬¡å¾—åˆ†:"+r.getScore()+"åˆ†");
 			holder.info.setTextColor(context.getResources().getColor(R.color.red));
 		}else
 		{
-			holder.info.setText("¼ÌÐø¿¼ÊÔ");
+			holder.info.setText("ç»§ç»­è€ƒè¯•");
 			holder.info.setTextColor(context.getResources().getColor(R.color.blue));
 		}
 		holder.lastTime.setText(r.getLastTime());

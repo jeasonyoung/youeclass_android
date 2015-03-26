@@ -23,11 +23,11 @@ public class HttpConnectUtil {
 			conn.setConnectTimeout(60000);
 			conn.setReadTimeout(60000);
 			conn.setRequestMethod("GET");
-			// ¼ì²éÍøÂç
+			// æ£€æŸ¥ç½‘ç»œ
 			conn.connect();
-			// Á¬½Ó´íÎó
+			// è¿žæŽ¥é”™è¯¯
 			if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-				Log.d(context.toString(), "ÇëÇó´íÎó");
+				Log.d(context.toString(), "è¯·æ±‚é”™è¯¯");
 				throw new Exception();
 			}
 			InputStream in = conn.getInputStream();

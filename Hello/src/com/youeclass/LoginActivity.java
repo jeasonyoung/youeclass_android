@@ -44,7 +44,7 @@ import com.youeclass.util.HttpConnectUtil;
 
 public class LoginActivity extends Activity implements TextWatcher {
 	private AutoCompleteTextView usernameText;
-	private String[] items;// ÊÊÅäautoCompleteTextViewµÄÊı¾İ
+	private String[] items;// é€‚é…autoCompleteTextViewçš„æ•°æ®
 	private EditText pwdText;
 	private Button goRegisterBtn;
 	private ImageButton loginBtn1,loginBtn2;
@@ -57,21 +57,21 @@ public class LoginActivity extends Activity implements TextWatcher {
 	private SharedPreferences userinfo;
 	private UserDao userdao;
 	private AppContext appContext;
-	/** Èç¹ûµÇÂ½Ê§°Ü,Õâ¸ö¿ÉÒÔ¸øÓÃ»§È·ÇĞµÄÏûÏ¢ÏÔÊ¾,trueÊÇÍøÂçÁ¬½ÓÊ§°Ü,falseÊÇÓÃ»§ÃûºÍÃÜÂë´íÎó */
+	/** å¦‚æœç™»é™†å¤±è´¥,è¿™ä¸ªå¯ä»¥ç»™ç”¨æˆ·ç¡®åˆ‡çš„æ¶ˆæ¯æ˜¾ç¤º,trueæ˜¯ç½‘ç»œè¿æ¥å¤±è´¥,falseæ˜¯ç”¨æˆ·åå’Œå¯†ç é”™è¯¯ */
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		usernameText = (AutoCompleteTextView) this
-				.findViewById(R.id.usernameText);// ÓÃ»§Ãû
-		pwdText = (EditText) this.findViewById(R.id.pwdText);// ÃÜÂë
-		loginBtn1 = (ImageButton) this.findViewById(R.id.login1Btn);// ÔÚÏßµÇÂ¼
-		loginBtn2 = (ImageButton) this.findViewById(R.id.login2Btn);// ±¾µØµÇÂ¼
-		rememeberCheck = (CheckBox) this.findViewById(R.id.rememeberCheck);// ¼Ç×¡ÃÜÂë
-		goRegisterBtn = (Button) this.findViewById(R.id.goRegisterBtn);// ×¢²á
-		goRegisterBtn.setText(Html.fromHtml("<u>Ãâ·Ñ×¢²á</u>"));
-		userdao = new UserDao(new MyDBHelper(this)); 	//²Ù×÷Êı¾İ¿â
+				.findViewById(R.id.usernameText);// ç”¨æˆ·å
+		pwdText = (EditText) this.findViewById(R.id.pwdText);// å¯†ç 
+		loginBtn1 = (ImageButton) this.findViewById(R.id.login1Btn);// åœ¨çº¿ç™»å½•
+		loginBtn2 = (ImageButton) this.findViewById(R.id.login2Btn);// æœ¬åœ°ç™»å½•
+		rememeberCheck = (CheckBox) this.findViewById(R.id.rememeberCheck);// è®°ä½å¯†ç 
+		goRegisterBtn = (Button) this.findViewById(R.id.goRegisterBtn);// æ³¨å†Œ
+		goRegisterBtn.setText(Html.fromHtml("<u>å…è´¹æ³¨å†Œ</u>"));
+		userdao = new UserDao(new MyDBHelper(this)); 	//æ“ä½œæ•°æ®åº“
 		share = getSharedPreferences("passwordfile", 0);
 		share2 = getSharedPreferences("abfile", 0);
 		userinfo = getSharedPreferences("userinfo", 0);
@@ -92,7 +92,7 @@ public class LoginActivity extends Activity implements TextWatcher {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				//¼ÇÂ¼µÇÂ¼ÊÂ¼ş
+				//è®°å½•ç™»å½•äº‹ä»¶
 				MobclickAgent.onEvent(LoginActivity.this,"LoginIn_online");
 				
 				final String name = usernameText.getText().toString();
@@ -100,10 +100,10 @@ public class LoginActivity extends Activity implements TextWatcher {
 				if (checkInput()) {
 					if(checkNetWork())
 					{
-						// ÌáÊ¾ÕıÔÚµÇÂ¼
+						// æç¤ºæ­£åœ¨ç™»å½•
 						if(o==null)
 						{
-							o = ProgressDialog.show(LoginActivity.this, null, "µÇÂ¼ÖĞÇëÉÔºò",
+							o = ProgressDialog.show(LoginActivity.this, null, "ç™»å½•ä¸­è¯·ç¨å€™",
 									true, true	);
 							o.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 						}else
@@ -114,7 +114,7 @@ public class LoginActivity extends Activity implements TextWatcher {
 						{
 							return;
 						}
-						// ¿ªÆôÒ»¸öÏß³ÌÓÃÀ´µÇÂ¼
+						// å¼€å¯ä¸€ä¸ªçº¿ç¨‹ç”¨æ¥ç™»å½•
 						new Thread() {
 								public void run() {
 									String url = Constant.DOMAIN_URL+"mobile/login?username="+name+"&password="+password;
@@ -125,11 +125,11 @@ public class LoginActivity extends Activity implements TextWatcher {
 												LoginActivity.this, url);
 										if (!"".equals(result)) {
 											try {
-												// ½âÎö×Ö·û´®
+												// è§£æå­—ç¬¦ä¸²
 												JSONObject json = new JSONObject(result);
 												int ok = json.optInt("OK", 0);
 												int id = json.optInt("uid", 0);
-												if (ok == 1) { // µÇÂ¼³É¹¦
+												if (ok == 1) { // ç™»å½•æˆåŠŸ
 													if (isRememberMe()) {
 														saveSharePreferences(true,true);
 													}
@@ -148,10 +148,10 @@ public class LoginActivity extends Activity implements TextWatcher {
 													data.putString("username", name);
 													data.putInt("uid", id);
 													msg.setData(data);
-													handler.sendMessage(msg);//µÇÂ¼³É¹¦
+													handler.sendMessage(msg);//ç™»å½•æˆåŠŸ
 												}else
 												{
-													handler.sendEmptyMessage(-3); //ÓÃ»§ÃûÃÜÂë´íÎó
+													handler.sendEmptyMessage(-3); //ç”¨æˆ·åå¯†ç é”™è¯¯
 													appContext.setLoginState(AppContext.LOGIN_FAIL);
 												}
 											} catch (Exception e) {
@@ -164,7 +164,7 @@ public class LoginActivity extends Activity implements TextWatcher {
 										}
 									} catch (Exception e) {
 										e.printStackTrace();
-										handler.sendEmptyMessage(-1); // Á¬½ÓÓĞÎó
+										handler.sendEmptyMessage(-1); // è¿æ¥æœ‰è¯¯
 										appContext.setLoginState(AppContext.LOGIN_FAIL);
 									}
 						};
@@ -186,7 +186,7 @@ public class LoginActivity extends Activity implements TextWatcher {
 					String password = pwdText.getText().toString();
 					if(password.equals(new String(Base64.decode(Base64.decode(user.getPassword(), 0), 0))))
 					{
-						showToast("µÇÂ¼³É¹¦");
+						showToast("ç™»å½•æˆåŠŸ");
 						appContext.saveLocalLoginInfo(name);
 						Intent intent = new Intent();
 						intent.setClass(LoginActivity.this, MainActivity.class);
@@ -194,18 +194,18 @@ public class LoginActivity extends Activity implements TextWatcher {
 						bundle.putString("MAP_USERNAME", name);
 						bundle.putString("loginType", "local");
 						intent.putExtras(bundle);
-						// ×ªÏòµÇÂ½ºóµÄÒ³Ãæ
+						// è½¬å‘ç™»é™†åçš„é¡µé¢
 						BaseActivity.username = name;
 						BaseActivity.loginType = "local";
 						startActivity(intent);
 						LoginActivity.this.finish();
 					}else
 					{
-						showToast("ÇëÏÈÔÚÏßµÇÂ¼");
+						showToast("è¯·å…ˆåœ¨çº¿ç™»å½•");
 					}
 				}else
 				{
-					showToast("ÇëÏÈÔÚÏßµÇÂ¼");
+					showToast("è¯·å…ˆåœ¨çº¿ç™»å½•");
 				}
 				}
 			}
@@ -252,7 +252,7 @@ public class LoginActivity extends Activity implements TextWatcher {
 			switch(msg.what)
 			{
 			case 1:
-				//µÇÂ¼³É¹¦
+				//ç™»å½•æˆåŠŸ
 				Bundle data = msg.getData();
 				Intent intent = new Intent(login,MainActivity.class);
 				intent.putExtra("MAP_USERNAME",data.getString("username"));
@@ -262,13 +262,13 @@ public class LoginActivity extends Activity implements TextWatcher {
 				login.finish();
 				break;
 			case -1:
-				Toast.makeText(login, "Á¬½Ó²»µ½·şÎñÆ÷", Toast.LENGTH_SHORT).show();
+				Toast.makeText(login, "è¿æ¥ä¸åˆ°æœåŠ¡å™¨", Toast.LENGTH_SHORT).show();
 				break;
 			case -2:
-				Toast.makeText(login, "Á¬½Ó´íÎó", Toast.LENGTH_SHORT).show();
+				Toast.makeText(login, "è¿æ¥é”™è¯¯", Toast.LENGTH_SHORT).show();
 				break;
 			case -3:
-				Toast.makeText(login, "ÓÃ»§Ãû»òÃÜÂë´íÎó", Toast.LENGTH_SHORT).show();
+				Toast.makeText(login, "ç”¨æˆ·åæˆ–å¯†ç é”™è¯¯", Toast.LENGTH_SHORT).show();
 				break;
 			}
 		}
@@ -276,12 +276,12 @@ public class LoginActivity extends Activity implements TextWatcher {
 	}
 
 	/**
-	 * Èç¹ûµÇÂ¼³É¹¦¹ı,Ôò½«µÇÂ½ÓÃ»§ÃûºÍÃÜÂë¼ÇÂ¼ÔÚSharePreferences
+	 * å¦‚æœç™»å½•æˆåŠŸè¿‡,åˆ™å°†ç™»é™†ç”¨æˆ·åå’Œå¯†ç è®°å½•åœ¨SharePreferences
 	 * 
 	 * @param saveUserName
-	 *            ÊÇ·ñ½«ÓÃ»§Ãû±£´æµ½SharePreferences
+	 *            æ˜¯å¦å°†ç”¨æˆ·åä¿å­˜åˆ°SharePreferences
 	 * @param savePassword
-	 *            ÊÇ·ñ½«ÃÜÂë±£´æµ½SharePreferences
+	 *            æ˜¯å¦å°†å¯†ç ä¿å­˜åˆ°SharePreferences
 	 * */
 	private void saveSharePreferences(boolean saveUserName, boolean savePassword) {
 		if (saveUserName) {
@@ -320,7 +320,7 @@ public class LoginActivity extends Activity implements TextWatcher {
 				e.printStackTrace();
 			}
 	}
-	/** ¼Ç×¡ÃÜÂëÑ¡ÏîÊÇ·ñ¹´Ñ¡ */
+	/** è®°ä½å¯†ç é€‰é¡¹æ˜¯å¦å‹¾é€‰ */
 	private boolean isRememberMe() {
 		if (rememeberCheck.isChecked()) {
 			return true;
@@ -335,31 +335,31 @@ public class LoginActivity extends Activity implements TextWatcher {
 		return true;
 	}
 
-	// ¼ì²éÍøÂç
+	// æ£€æŸ¥ç½‘ç»œ
 	private boolean checkNetWork() {
 		ConnectivityManager manager = (ConnectivityManager) this
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo info = manager.getActiveNetworkInfo();
 		if (info == null || !info.isConnected()) {
-			Toast.makeText(this,"Çë¼ì²éÍøÂç", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this,"è¯·æ£€æŸ¥ç½‘ç»œ", Toast.LENGTH_SHORT).show();
 			return false;
 		}
 		return true;
 	}
 
-	// ¼ì²éÊäÈë¿òµÄÄÚÈİ
+	// æ£€æŸ¥è¾“å…¥æ¡†çš„å†…å®¹
 	private boolean checkInput() {
 		String username = usernameText.getText().toString().trim();
 		String password = pwdText.getText().toString().trim();
 		if (username.equals("") || password.equals("")) {
-			Toast.makeText(LoginActivity.this, "ÓÃ»§Ãû»òÃÜÂë²»ÄÜÎª¿Õ", Toast.LENGTH_SHORT)
+			Toast.makeText(LoginActivity.this, "ç”¨æˆ·åæˆ–å¯†ç ä¸èƒ½ä¸ºç©º", Toast.LENGTH_SHORT)
 					.show();
 			return false;
 		}
 		return true;
 	}
 
-	// ³õÊ¼»¯ÊäÈë¿ò
+	// åˆå§‹åŒ–è¾“å…¥æ¡†
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
@@ -372,8 +372,8 @@ public class LoginActivity extends Activity implements TextWatcher {
 		MobclickAgent.onResume(this);
 	}
 
-	// °´Á½´ÎÍË³ö³ÌĞò
-	long waitTime = 2000;// µÈ´ıÊ±¼ä2s
+	// æŒ‰ä¸¤æ¬¡é€€å‡ºç¨‹åº
+	long waitTime = 2000;// ç­‰å¾…æ—¶é—´2s
 	long touchTime = 0;
 
 	@Override
@@ -382,7 +382,7 @@ public class LoginActivity extends Activity implements TextWatcher {
 				&& KeyEvent.KEYCODE_BACK == keyCode) {
 			long currentTime = System.currentTimeMillis();
 			if ((currentTime - touchTime) >= waitTime) {
-				Toast.makeText(this, "ÔÙ°´Ò»´ÎÍË³ö", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "å†æŒ‰ä¸€æ¬¡é€€å‡º", Toast.LENGTH_SHORT).show();
 				touchTime = currentTime;
 			} else {
 				this.finish();

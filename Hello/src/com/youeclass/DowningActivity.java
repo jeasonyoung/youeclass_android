@@ -57,38 +57,38 @@ public class DowningActivity extends BaseActivity{
 		this.username = intent.getStringExtra("username");
 		this.listView = (ListView) this.findViewById(R.id.videoListView);
 		this.nodata = (LinearLayout) this.findViewById(R.id.down_nodataLayout);
-		//ÕÒ³öÊı¾İ¿âÖĞËùÓĞÕıÔÚÏÂÔØµÄ¿Î³Ì
+		//æ‰¾å‡ºæ•°æ®åº“ä¸­æ‰€æœ‰æ­£åœ¨ä¸‹è½½çš„è¯¾ç¨‹
 		list = initList();
 		System.out.println("list size = "+list.size()+"!!!!!!!!!");
-		//³õÊ¼»¯´Ó¿Î³ÌÁĞ±íÖĞµã»÷µÄÒªÏÂÔØÏî
+		//åˆå§‹åŒ–ä»è¯¾ç¨‹åˆ—è¡¨ä¸­ç‚¹å‡»çš„è¦ä¸‹è½½é¡¹
 		if(name!=null&&url!=null)
 		{
 			theNewOne = new DowningCourse();
 			theNewOne.setCourseName(name);
-			//²âÊÔµØÖ·
+			//æµ‹è¯•åœ°å€
 			theNewOne.setFileurl(url);
 			theNewOne.setStatus(-1);
 			theNewOne.setUsername(username);
-			//Èô±¾Éí¾ÍÔÚÏÂÔØ
+			//è‹¥æœ¬èº«å°±åœ¨ä¸‹è½½
 			if(!list.contains(theNewOne))
 				list.add(theNewOne);
 			else
 				theNewOne = null;
 		}
-		//ÅäÖÃÊı¾İÔ´
+		//é…ç½®æ•°æ®æº
 		mAdapter = new DowningListAdapter(this,list,username);
 		this.listView.setAdapter(mAdapter);
-		//¿ªÒ»¸öÏß³ÌÈ¥Á¬½Ó»ñÈ¡¸Õ¼ÓÈëÏÂÔØµÄÎÄ¼ş´óĞ¡
-		if(theNewOne!=null)	//Ô­À´Ã»ÓĞµÄ	,
+		//å¼€ä¸€ä¸ªçº¿ç¨‹å»è¿æ¥è·å–åˆšåŠ å…¥ä¸‹è½½çš„æ–‡ä»¶å¤§å°
+		if(theNewOne!=null)	//åŸæ¥æ²¡æœ‰çš„	,
 		{
 			new GetFileSizeThread().start();
 		}
 		if(list==null||list.size()==0)
 		{
-			//Êı¾İ¿âÖĞÃ»ÓĞÕıÔÚÏÂÔØÖĞµÄÊı¾İ
+			//æ•°æ®åº“ä¸­æ²¡æœ‰æ­£åœ¨ä¸‹è½½ä¸­çš„æ•°æ®
 			this.nodata.setVisibility(View.VISIBLE);
 		}
-		//³¤°´µ¯³öÈ¡ÏûÏÂÔØµÄPopupWindow
+		//é•¿æŒ‰å¼¹å‡ºå–æ¶ˆä¸‹è½½çš„PopupWindow
 		this.listView.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
@@ -110,12 +110,12 @@ public class DowningActivity extends BaseActivity{
 				conn.setRequestMethod("GET");
 				conn.connect();
 				if (conn.getResponseCode() == 200) {
-					int fileSize = conn.getContentLength();// ¸ù¾İÏìÓ¦»ñÈ¡ÎÄ¼ş´óĞ¡
+					int fileSize = conn.getContentLength();// æ ¹æ®å“åº”è·å–æ–‡ä»¶å¤§å°
 					if (fileSize <= 0)
 					{
 						Message errorMsg = handler.obtainMessage();
 						errorMsg.what = -3;
-						errorMsg.obj = "Î´ÖªÎÄ¼ş´óĞ¡";
+						errorMsg.obj = "æœªçŸ¥æ–‡ä»¶å¤§å°";
 						handler.sendMessage(errorMsg);
 						return;
 						//throw new RuntimeException("Unkown file size ");
@@ -133,10 +133,10 @@ public class DowningActivity extends BaseActivity{
 					handler.sendMessage(msg);
 				}else
 				{
-					System.out.println("Á¬²»ÉÏ·şÎñÆ÷");
+					System.out.println("è¿ä¸ä¸ŠæœåŠ¡å™¨");
 					Message errorMsg = handler.obtainMessage();
 					errorMsg.what = -1;
-					errorMsg.obj = "Á¬²»ÉÏ·şÎñÆ÷";
+					errorMsg.obj = "è¿ä¸ä¸ŠæœåŠ¡å™¨";
 					handler.sendMessage(errorMsg);
 				}
 			}catch(Exception e)
@@ -144,18 +144,18 @@ public class DowningActivity extends BaseActivity{
 				e.printStackTrace();
 				Message errorMsg = handler.obtainMessage();
 				errorMsg.what = -2;
-				errorMsg.obj = "ÏÂÔØµØÖ·Á¬½Ó³¬Ê±";
+				errorMsg.obj = "ä¸‹è½½åœ°å€è¿æ¥è¶…æ—¶";
 				handler.sendMessage(errorMsg);
 			}
 		};
 	}
-	//»ñÈ¡ÕıÔÚÏÂÔØµÄÈÎÎñÊıÁ¿
+	//è·å–æ­£åœ¨ä¸‹è½½çš„ä»»åŠ¡æ•°é‡
 	private int getDowningSize()
 	{
 		int count = 0;
 		for(DowningCourse dc:list)
 		{
-			if(dc.getStatus()==1) //±íÊ¾ÕıÔÚÏÂÔØ
+			if(dc.getStatus()==1) //è¡¨ç¤ºæ­£åœ¨ä¸‹è½½
 			{
 				count++;
 			}
@@ -177,12 +177,12 @@ public class DowningActivity extends BaseActivity{
 			switch(msg.what)
 			{
 			case 1:
-				//dao¸üĞÂÎÄ¼ş³¤¶È,ÒÔ¼°ÏÂÔØ×´Ì¬[Ã»ÓĞ»ñÈ¡µ½ÎÄ¼ş³¤¶È±íÊ¾Ã»ÓĞÏÂÔØ]
+				//daoæ›´æ–°æ–‡ä»¶é•¿åº¦,ä»¥åŠä¸‹è½½çŠ¶æ€[æ²¡æœ‰è·å–åˆ°æ–‡ä»¶é•¿åº¦è¡¨ç¤ºæ²¡æœ‰ä¸‹è½½]
 				Bundle data = msg.getData();
 				String url = data.getString("path");
 				if(!FileUtil.checkSDCard(msg.arg1))
 				{
-					Toast.makeText(theActivity, "Ã»ÓĞSD¿¨»òÕß¿Õ¼ä²»¹»", Toast.LENGTH_SHORT).show();
+					Toast.makeText(theActivity, "æ²¡æœ‰SDå¡æˆ–è€…ç©ºé—´ä¸å¤Ÿ", Toast.LENGTH_SHORT).show();
 					return;
 				}
 				File dir = Environment.getExternalStorageDirectory();
@@ -197,9 +197,9 @@ public class DowningActivity extends BaseActivity{
 				}else{
 					theActivity.theNewOne.setStatus(1);
 					theActivity.mAdapter.notifyDataSetChanged();
-					//¿ªÆô·şÎñ,Í¨ÖªÏÂÔØ
+					//å¼€å¯æœåŠ¡,é€šçŸ¥ä¸‹è½½
 					SmartFileDownloader.flagMap.put(url, true);
-					//!!!ÔİÊ±²»Æô¶¯ÏÂÔØ
+					//!!!æš‚æ—¶ä¸å¯åŠ¨ä¸‹è½½
 					Intent intent = new Intent(theActivity,DownloadService.class);
 					intent.putExtra("url", url);
 					intent.putExtra("dir",filePath);
@@ -224,14 +224,14 @@ public class DowningActivity extends BaseActivity{
 	{
 		return dao.findAllDowning(username);
 	}
-	//¶¨Òå¹ã²¥½ÓÊÕÕß½ÓÊÕ¹ã²¥  ÓÃÓÚ¸üĞÂÁĞ±íÊı¾İ
+	//å®šä¹‰å¹¿æ’­æ¥æ”¶è€…æ¥æ”¶å¹¿æ’­  ç”¨äºæ›´æ–°åˆ—è¡¨æ•°æ®
 	private class DataReceiver extends BroadcastReceiver
 	{
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
 			String url = intent.getStringExtra("url");
-    		int data = intent.getIntExtra("data", -1); //ÊµÊ±µÄÏÂÔØÊıÁ¿
+    		int data = intent.getIntExtra("data", -1); //å®æ—¶çš„ä¸‹è½½æ•°é‡
     		updateListView(url,data);
 		}
 	}
@@ -251,10 +251,10 @@ public class DowningActivity extends BaseActivity{
 			d.setFinishsize(data==-1?0:data);
 			if(d.getFilesize()==data)
 			{
-				//´ÓlistÖĞÉ¾³ıÕâ¸ö¶ÔÏó
+				//ä»listä¸­åˆ é™¤è¿™ä¸ªå¯¹è±¡
 				list.remove(d);	
-				//ÌáÊ¾ÏÂÔØÍê³É
-				Toast.makeText(this, d.getCourseName()+"ÏÂÔØÍê³É", Toast.LENGTH_LONG).show();
+				//æç¤ºä¸‹è½½å®Œæˆ
+				Toast.makeText(this, d.getCourseName()+"ä¸‹è½½å®Œæˆ", Toast.LENGTH_LONG).show();
 			}
 		}
 		mAdapter.notifyDataSetChanged();
@@ -268,18 +268,18 @@ public class DowningActivity extends BaseActivity{
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("updateUI");
 		registerReceiver(dataReceiver, filter);
-		//³õÊ¼»¯½çÃæ
+		//åˆå§‹åŒ–ç•Œé¢
 		super.onStart();
 	}
 	@Override
 	protected void onStop() {
 		// TODO Auto-generated method stub
-//		×¢Ïú¹ã²¥
+//		æ³¨é”€å¹¿æ’­
 		unregisterReceiver(dataReceiver);
-//		//·¢¹ã²¥,Í¨Öªservice½áÊøËùÓĞµÄÏß³Ì,Í¬Ê±½áÊø×Ô¼º
+//		//å‘å¹¿æ’­,é€šçŸ¥serviceç»“æŸæ‰€æœ‰çš„çº¿ç¨‹,åŒæ—¶ç»“æŸè‡ªå·±
 //        Intent myIntent = new Intent();
 //        myIntent.setAction("commandFromActivity");  
-//        sendBroadcast(myIntent);//·¢ËÍ¹ã²¥  
+//        sendBroadcast(myIntent);//å‘é€å¹¿æ’­  
 		super.onStop();
 	}
 	private void showWindow(View v,DowningCourse dc) {
@@ -287,11 +287,11 @@ public class DowningActivity extends BaseActivity{
 		{
 			actionbar = new QuickActionPopupWindow(DowningActivity.this);
 			action_delete = new ActionItem();
-			action_delete.setTitle("È¡Ïû");
+			action_delete.setTitle("å–æ¶ˆ");
 			action_delete.setIcon(getResources().getDrawable(
 					R.drawable.action_delete));
 			actionbar.addActionItem(action_delete);
-			// ÉèÖÃ¶¯»­·ç¸ñ
+			// è®¾ç½®åŠ¨ç”»é£æ ¼
 			actionbar.setAnimStyle(QuickActionPopupWindow.ANIM_AUTO);
 		}
 		if(listener == null)
@@ -302,7 +302,7 @@ public class DowningActivity extends BaseActivity{
 			listener.setDc(dc);
 		}
 		action_delete.setClickListener(listener); 
-		// ÏÔÊ¾
+		// æ˜¾ç¤º
 		actionbar.show(v);
 		}
 	private class ActionBarClickListener implements OnClickListener
@@ -318,12 +318,12 @@ public class DowningActivity extends BaseActivity{
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			//µ¯¿òÊÇ·ñÈ·ÈÏÉ¾³ı
+			//å¼¹æ¡†æ˜¯å¦ç¡®è®¤åˆ é™¤
 			AlertDialog dialog = new AlertDialog.Builder(DowningActivity.this)
-			.setTitle("É¾³ıÎÄ¼ş")
-			.setMessage("ÊÇ·ñÈ·ÈÏÈ¡ÏûÏÂÔØ²¢É¾³ıÎÄ¼ş")
-			.setPositiveButton("È·¶¨", new  DialogButtonClick(dc))
-			.setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
+			.setTitle("åˆ é™¤æ–‡ä»¶")
+			.setMessage("æ˜¯å¦ç¡®è®¤å–æ¶ˆä¸‹è½½å¹¶åˆ é™¤æ–‡ä»¶")
+			.setPositiveButton("ç¡®å®š", new  DialogButtonClick(dc))
+			.setNegativeButton("å–æ¶ˆ", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					// TODO Auto-generated method stub
@@ -346,19 +346,19 @@ public class DowningActivity extends BaseActivity{
 			dialog.cancel();
 			actionbar.dismiss();
 			//to do something
-			Log.i("DownFinish","É¾³ıÁËÏÂÔØÈÎÎñ¼°ÎÄ¼ş");
+			Log.i("DownFinish","åˆ é™¤äº†ä¸‹è½½ä»»åŠ¡åŠæ–‡ä»¶");
 			if(SmartFileDownloader.flagMap.get(dc.getFileurl())!=null)
 			{
-			//Í£Ö¹ÏÂÔØ,²¢É¾³ıÎÄ¼ş
-			Intent myIntent = new Intent();// ´´½¨Intent¶ÔÏó
+			//åœæ­¢ä¸‹è½½,å¹¶åˆ é™¤æ–‡ä»¶
+			Intent myIntent = new Intent();// åˆ›å»ºIntentå¯¹è±¡
 			myIntent.setAction("commandFromActivity");
 			myIntent.putExtra("cmd", 2);
 			myIntent.putExtra("url", dc.getFileurl());
 			myIntent.putExtra("path", dc.getFilePath());
-			sendBroadcast(myIntent);// ·¢ËÍ¹ã²¥
+			sendBroadcast(myIntent);// å‘é€å¹¿æ’­
 			}
 			dao.deleteDowingCourse(dc.getFileurl(),dc.getUsername());
-			//downloadTabÖĞµÄ¼ÇÂ¼É¾³ı
+			//downloadTabä¸­çš„è®°å½•åˆ é™¤
 			list.remove(dc);
 			System.out.println("list size = "+list.size());
 			mAdapter.notifyDataSetChanged();

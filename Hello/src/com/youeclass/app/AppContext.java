@@ -35,7 +35,7 @@ import com.youeclass.util.MethodsCompat;
 import com.youeclass.util.StringUtils;
 
 /**
- * È«¾ÖÓ¦ÓÃ³ÌĞòÀà£ºÓÃÓÚ±£´æºÍµ÷ÓÃÈ«¾ÖÓ¦ÓÃÅäÖÃ¼°·ÃÎÊÍøÂçÊı¾İ
+ * å…¨å±€åº”ç”¨ç¨‹åºç±»ï¼šç”¨äºä¿å­˜å’Œè°ƒç”¨å…¨å±€åº”ç”¨é…ç½®åŠè®¿é—®ç½‘ç»œæ•°æ®
  * 
  * @version 1.0
  */
@@ -45,18 +45,18 @@ public class AppContext extends Application {
 	public static final int NETTYPE_CMWAP = 0x02;
 	public static final int NETTYPE_CMNET = 0x03;
 
-	public static final int PAGE_SIZE = 20;// Ä¬ÈÏ·ÖÒ³´óĞ¡
-	private static final int CACHE_TIME = 60 * 60000;// »º´æÊ§Ğ§Ê±¼ä
-	public static final int LOGINING = 1;// ÕıÔÚµÇÂ¼
-	public static final int LOGIN_FAIL = -1;// µÇÂ¼Ê§°Ü
-	public static final int LOGINED = 2;// ÒÑ¾­µÇÂ¼
-	public static final int UNLOGIN = 0;// Ã»ÓĞµÇÂ¼
-	public static final int LOCAL_LOGINED = 3; // ±¾µØµÇÂ¼
+	public static final int PAGE_SIZE = 20;// é»˜è®¤åˆ†é¡µå¤§å°
+	private static final int CACHE_TIME = 60 * 60000;// ç¼“å­˜å¤±æ•ˆæ—¶é—´
+	public static final int LOGINING = 1;// æ­£åœ¨ç™»å½•
+	public static final int LOGIN_FAIL = -1;// ç™»å½•å¤±è´¥
+	public static final int LOGINED = 2;// å·²ç»ç™»å½•
+	public static final int UNLOGIN = 0;// æ²¡æœ‰ç™»å½•
+	public static final int LOCAL_LOGINED = 3; // æœ¬åœ°ç™»å½•
 
-	private int loginState = 0; // µÇÂ¼×´Ì¬
-	private String loginUid = null; // µÇÂ¼ÓÃ»§µÄid
-	private String username = null;// µÇÂ¼ÓÃµÄÓÃ»§Ãû
-	private String nickname = null;// êÇ³Æ
+	private int loginState = 0; // ç™»å½•çŠ¶æ€
+	private String loginUid = null; // ç™»å½•ç”¨æˆ·çš„id
+	private String username = null;// ç™»å½•ç”¨çš„ç”¨æˆ·å
+	private String nickname = null;// æ˜µç§°
 	private boolean isAutoCheckuped, isAutoLogined,hasNewVersion;
 
 	public boolean isHasNewVersion() {
@@ -85,7 +85,7 @@ public class AppContext extends Application {
 
 	private Hashtable<String, Object> memCacheRegion = new Hashtable<String, Object>();
 
-	private String saveImagePath;// ±£´æÍ¼Æ¬Â·¾¶
+	private String saveImagePath;// ä¿å­˜å›¾ç‰‡è·¯å¾„
 
 	private Handler unLoginHandler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -100,17 +100,17 @@ public class AppContext extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		// ×¢²áAppÒì³£±ÀÀ£´¦ÀíÆ÷
+		// æ³¨å†ŒAppå¼‚å¸¸å´©æºƒå¤„ç†å™¨
 //		 Thread.setDefaultUncaughtExceptionHandler(AppException
 //		 .getAppExceptionHandler());
 		init();
 	}
 
 	/**
-	 * ³õÊ¼»¯
+	 * åˆå§‹åŒ–
 	 */
 	private void init() {
-		// ÉèÖÃ±£´æÍ¼Æ¬µÄÂ·¾¶
+		// è®¾ç½®ä¿å­˜å›¾ç‰‡çš„è·¯å¾„
 		saveImagePath = getProperty(AppConfig.SAVE_IMAGE_PATH);
 		if (StringUtils.isEmpty(saveImagePath)) {
 			setProperty(AppConfig.SAVE_IMAGE_PATH,
@@ -119,7 +119,7 @@ public class AppContext extends Application {
 		}
 	}
 
-	//½ø³Ì±»É±ËÀ£¬applicationÀïµÄ¶ÔÏó¶ªÊ§
+	//è¿›ç¨‹è¢«æ€æ­»ï¼Œapplicationé‡Œçš„å¯¹è±¡ä¸¢å¤±
 	public void recoverLoginStatus()
 	{
 		String name = getProperty("user.account");
@@ -130,7 +130,7 @@ public class AppContext extends Application {
 		}
 	}
 	/**
-	 * ¼ì²âµ±Ç°ÏµÍ³ÉùÒôÊÇ·ñÎªÕı³£Ä£Ê½
+	 * æ£€æµ‹å½“å‰ç³»ç»Ÿå£°éŸ³æ˜¯å¦ä¸ºæ­£å¸¸æ¨¡å¼
 	 * 
 	 * @return
 	 */
@@ -140,7 +140,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * Ó¦ÓÃ³ÌĞòÊÇ·ñ·¢³öÌáÊ¾Òô
+	 * åº”ç”¨ç¨‹åºæ˜¯å¦å‘å‡ºæç¤ºéŸ³
 	 * 
 	 * @return
 	 */
@@ -149,7 +149,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * ¼ì²âÍøÂçÊÇ·ñ¿ÉÓÃ
+	 * æ£€æµ‹ç½‘ç»œæ˜¯å¦å¯ç”¨
 	 * 
 	 * @return
 	 */
@@ -160,9 +160,9 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * »ñÈ¡µ±Ç°ÍøÂçÀàĞÍ
+	 * è·å–å½“å‰ç½‘ç»œç±»å‹
 	 * 
-	 * @return 0£ºÃ»ÓĞÍøÂç 1£ºWIFIÍøÂç 2£ºWAPÍøÂç 3£ºNETÍøÂç
+	 * @return 0ï¼šæ²¡æœ‰ç½‘ç»œ 1ï¼šWIFIç½‘ç»œ 2ï¼šWAPç½‘ç»œ 3ï¼šNETç½‘ç»œ
 	 */
 	public int getNetworkType() {
 		int netType = 0;
@@ -188,7 +188,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * ÅĞ¶Ïµ±Ç°°æ±¾ÊÇ·ñ¼æÈİÄ¿±ê°æ±¾µÄ·½·¨
+	 * åˆ¤æ–­å½“å‰ç‰ˆæœ¬æ˜¯å¦å…¼å®¹ç›®æ ‡ç‰ˆæœ¬çš„æ–¹æ³•
 	 * 
 	 * @param VersionCode
 	 * @return
@@ -199,7 +199,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * »ñÈ¡App°²×°°üĞÅÏ¢
+	 * è·å–Appå®‰è£…åŒ…ä¿¡æ¯
 	 * 
 	 * @return
 	 */
@@ -216,7 +216,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * »ñÈ¡°æ±¾ºÅ
+	 * è·å–ç‰ˆæœ¬å·
 	 * 
 	 * @return
 	 * @throws Exception
@@ -229,7 +229,7 @@ public class AppContext extends Application {
 		return getPackageInfo().versionCode;
 	}
 	/**
-	 * »ñÈ¡AppÎ¨Ò»±êÊ¶
+	 * è·å–Appå”¯ä¸€æ ‡è¯†
 	 * 
 	 * @return
 	 */
@@ -243,7 +243,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * »ñÈ¡Éè±¸Î¨Ò»±êÊ¶
+	 * è·å–è®¾å¤‡å”¯ä¸€æ ‡è¯†
 	 */
 	public String getDeviceId() {
 		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -251,7 +251,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * ÓÃ»§ÊÇ·ñµÇÂ¼
+	 * ç”¨æˆ·æ˜¯å¦ç™»å½•
 	 * 
 	 * @return
 	 */
@@ -260,7 +260,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * »ñÈ¡µÇÂ¼ÓÃ»§id
+	 * è·å–ç™»å½•ç”¨æˆ·id
 	 * 
 	 * @return
 	 */
@@ -277,7 +277,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * ÓÃ»§×¢Ïú
+	 * ç”¨æˆ·æ³¨é”€
 	 */
 	public void Logout() {
 		ApiClient.cleanCookie();
@@ -288,7 +288,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * Î´µÇÂ¼»òĞŞ¸ÄÃÜÂëºóµÄ´¦Àí
+	 * æœªç™»å½•æˆ–ä¿®æ”¹å¯†ç åçš„å¤„ç†
 	 */
 	public Handler getUnLoginHandler() {
 		return this.unLoginHandler;
@@ -296,7 +296,7 @@ public class AppContext extends Application {
 
 	//
 	// /**
-	// * ³õÊ¼»¯ÓÃ»§µÇÂ¼ĞÅÏ¢
+	// * åˆå§‹åŒ–ç”¨æˆ·ç™»å½•ä¿¡æ¯
 	// */
 	// public void initLoginInfo() {
 	// User loginUser = getLoginInfo();
@@ -310,7 +310,7 @@ public class AppContext extends Application {
 	// }
 
 	/**
-	 * ÓÃ»§µÇÂ¼ÑéÖ¤
+	 * ç”¨æˆ·ç™»å½•éªŒè¯
 	 * 
 	 * @param account
 	 * @param pwd
@@ -322,7 +322,7 @@ public class AppContext extends Application {
 	// }
 
 	/**
-	 * ±£´æµÇÂ¼ĞÅÏ¢
+	 * ä¿å­˜ç™»å½•ä¿¡æ¯
 	 * 
 	 * @param username
 	 * @param pwd
@@ -336,14 +336,14 @@ public class AppContext extends Application {
 				setProperty("user.uid", String.valueOf(user.getUid()));
 				// setProperty("user.name", user.getNickname());
 				// setProperty("user.face",
-				// FileUtils.getFileName(user.getFace()));// ÓÃ»§Í·Ïñ-ÎÄ¼şÃû
+				// FileUtils.getFileName(user.getFace()));// ç”¨æˆ·å¤´åƒ-æ–‡ä»¶å
 				setProperty("user.account", user.getUsername());
 				setProperty("user.pwd",
 						CyptoUtils.encode("youeclass", user.getPassword()));
 				// setProperty("user.location", user.getLocation());
 				// setProperty("user.deviceid", user.getDeviceId());
 				// setProperty("user.isRememberMe",
-				// String.valueOf(user.isRememberMe()));//ÊÇ·ñ¼Ç×¡ÎÒµÄĞÅÏ¢
+				// String.valueOf(user.isRememberMe()));//æ˜¯å¦è®°ä½æˆ‘çš„ä¿¡æ¯
 			}
 		});
 	}
@@ -354,7 +354,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * Çå³ıµÇÂ¼ĞÅÏ¢
+	 * æ¸…é™¤ç™»å½•ä¿¡æ¯
 	 */
 	public void cleanLoginInfo() {
 		this.loginUid = null;
@@ -366,7 +366,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * »ñÈ¡µÇÂ¼ĞÅÏ¢
+	 * è·å–ç™»å½•ä¿¡æ¯
 	 * 
 	 * @return
 	 */
@@ -379,7 +379,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * ±£´æÓÃ»§Í·Ïñ
+	 * ä¿å­˜ç”¨æˆ·å¤´åƒ
 	 * 
 	 * @param fileName
 	 * @param bitmap
@@ -393,7 +393,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * »ñÈ¡ÓÃ»§Í·Ïñ
+	 * è·å–ç”¨æˆ·å¤´åƒ
 	 * 
 	 * @param key
 	 * @return
@@ -415,13 +415,13 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * ÊÇ·ñ¼ÓÔØÏÔÊ¾ÎÄÕÂÍ¼Æ¬
+	 * æ˜¯å¦åŠ è½½æ˜¾ç¤ºæ–‡ç« å›¾ç‰‡
 	 * 
 	 * @return
 	 */
 	public boolean isLoadImage() {
 		String perf_loadimage = getProperty(AppConfig.CONF_LOAD_IMAGE);
-		// Ä¬ÈÏÊÇ¼ÓÔØµÄ
+		// é»˜è®¤æ˜¯åŠ è½½çš„
 		if (StringUtils.isEmpty(perf_loadimage))
 			return true;
 		else
@@ -429,7 +429,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * ÉèÖÃÊÇ·ñ¼ÓÔØÎÄÕÂÍ¼Æ¬
+	 * è®¾ç½®æ˜¯å¦åŠ è½½æ–‡ç« å›¾ç‰‡
 	 * 
 	 * @param b
 	 */
@@ -438,13 +438,13 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * ÊÇ·ñ·¢³öÌáÊ¾Òô
+	 * æ˜¯å¦å‘å‡ºæç¤ºéŸ³
 	 * 
 	 * @return
 	 */
 	public boolean isVoice() {
 		String perf_voice = getProperty(AppConfig.CONF_VOICE);
-		// Ä¬ÈÏÊÇ¿ªÆôÌáÊ¾ÉùÒô
+		// é»˜è®¤æ˜¯å¼€å¯æç¤ºå£°éŸ³
 		if (StringUtils.isEmpty(perf_voice))
 			return true;
 		else
@@ -452,7 +452,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * ÉèÖÃÊÇ·ñ·¢³öÌáÊ¾Òô
+	 * è®¾ç½®æ˜¯å¦å‘å‡ºæç¤ºéŸ³
 	 * 
 	 * @param b
 	 */
@@ -461,13 +461,13 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * ÊÇ·ñÆô¶¯¼ì²é¸üĞÂ
+	 * æ˜¯å¦å¯åŠ¨æ£€æŸ¥æ›´æ–°
 	 * 
 	 * @return
 	 */
 	public boolean isCheckUp() {
 		String perf_checkup = getProperty(AppConfig.CONF_CHECKUP);
-		// Ä¬ÈÏÊÇ¿ªÆô
+		// é»˜è®¤æ˜¯å¼€å¯
 		if (StringUtils.isEmpty(perf_checkup))
 			return true;
 		else
@@ -475,7 +475,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * ÊÇ·ñ×Ô¶¯µÇÂ¼
+	 * æ˜¯å¦è‡ªåŠ¨ç™»å½•
 	 */
 	public boolean isAutoLogin() {
 		String perf_autoLogin = getProperty(AppConfig.CONF_AUTOLOGIN);
@@ -486,7 +486,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * ÉèÖÃÆô¶¯¼ì²é¸üĞÂ
+	 * è®¾ç½®å¯åŠ¨æ£€æŸ¥æ›´æ–°
 	 * 
 	 * @param b
 	 */
@@ -495,13 +495,13 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * ÊÇ·ñ×óÓÒ»¬¶¯
+	 * æ˜¯å¦å·¦å³æ»‘åŠ¨
 	 * 
 	 * @return
 	 */
 	public boolean isScroll() {
 		String perf_scroll = getProperty(AppConfig.CONF_SCROLL);
-		// Ä¬ÈÏÊÇ¹Ø±Õ×óÓÒ»¬¶¯
+		// é»˜è®¤æ˜¯å…³é—­å·¦å³æ»‘åŠ¨
 		if (StringUtils.isEmpty(perf_scroll))
 			return false;
 		else
@@ -509,14 +509,14 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * Çå³ı±£´æµÄ»º´æ
+	 * æ¸…é™¤ä¿å­˜çš„ç¼“å­˜
 	 */
 	public void cleanCookie() {
 		removeProperty(AppConfig.CONF_COOKIE);
 	}
 
 	/**
-	 * ÅĞ¶Ï»º´æÊı¾İÊÇ·ñ¿É¶Á
+	 * åˆ¤æ–­ç¼“å­˜æ•°æ®æ˜¯å¦å¯è¯»
 	 * 
 	 * @param cachefile
 	 * @return
@@ -526,7 +526,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * ÅĞ¶Ï»º´æÊÇ·ñ´æÔÚ
+	 * åˆ¤æ–­ç¼“å­˜æ˜¯å¦å­˜åœ¨
 	 * 
 	 * @param cachefile
 	 * @return
@@ -540,7 +540,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * ÅĞ¶Ï»º´æÊÇ·ñÊ§Ğ§
+	 * åˆ¤æ–­ç¼“å­˜æ˜¯å¦å¤±æ•ˆ
 	 * 
 	 * @param cachefile
 	 * @return
@@ -557,10 +557,10 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * Çå³ıapp»º´æ
+	 * æ¸…é™¤appç¼“å­˜
 	 */
 	public void clearAppCache() {
-		// Çå³ıwebview»º´æ
+		// æ¸…é™¤webviewç¼“å­˜
 		// File file = CacheManager.getCacheFileBaseDir();
 		// if (file != null && file.exists() && file.isDirectory()) {
 		// for (File item : file.listFiles()) {
@@ -574,15 +574,15 @@ public class AppContext extends Application {
 		deleteDatabase("webviewCache.db");
 		deleteDatabase("webviewCache.db-shm");
 		deleteDatabase("webviewCache.db-wal");
-		// Çå³ıÊı¾İ»º´æ
+		// æ¸…é™¤æ•°æ®ç¼“å­˜
 		clearCacheFolder(getFilesDir(), System.currentTimeMillis());
 		clearCacheFolder(getCacheDir(), System.currentTimeMillis());
-		// 2.2°æ±¾²ÅÓĞ½«Ó¦ÓÃ»º´æ×ªÒÆµ½sd¿¨µÄ¹¦ÄÜ
+		// 2.2ç‰ˆæœ¬æ‰æœ‰å°†åº”ç”¨ç¼“å­˜è½¬ç§»åˆ°sdå¡çš„åŠŸèƒ½
 		if (isMethodsCompat(android.os.Build.VERSION_CODES.FROYO)) {
 			clearCacheFolder(MethodsCompat.getExternalCacheDir(this),
 					System.currentTimeMillis());
 		}
-		// Çå³ı±à¼­Æ÷±£´æµÄÁÙÊ±ÄÚÈİ
+		// æ¸…é™¤ç¼–è¾‘å™¨ä¿å­˜çš„ä¸´æ—¶å†…å®¹
 		Properties props = getProperties();
 		for (Object key : props.keySet()) {
 			String _key = key.toString();
@@ -592,12 +592,12 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * Çå³ı»º´æÄ¿Â¼
+	 * æ¸…é™¤ç¼“å­˜ç›®å½•
 	 * 
 	 * @param dir
-	 *            Ä¿Â¼
+	 *            ç›®å½•
 	 * @param numDays
-	 *            µ±Ç°ÏµÍ³Ê±¼ä
+	 *            å½“å‰ç³»ç»Ÿæ—¶é—´
 	 * @return
 	 */
 	private int clearCacheFolder(File dir, long curTime) {
@@ -622,7 +622,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * ½«¶ÔÏó±£´æµ½ÄÚ´æ»º´æÖĞ
+	 * å°†å¯¹è±¡ä¿å­˜åˆ°å†…å­˜ç¼“å­˜ä¸­
 	 * 
 	 * @param key
 	 * @param value
@@ -632,7 +632,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * ´ÓÄÚ´æ»º´æÖĞ»ñÈ¡¶ÔÏó
+	 * ä»å†…å­˜ç¼“å­˜ä¸­è·å–å¯¹è±¡
 	 * 
 	 * @param key
 	 * @return
@@ -642,7 +642,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * ±£´æ´ÅÅÌ»º´æ
+	 * ä¿å­˜ç£ç›˜ç¼“å­˜
 	 * 
 	 * @param key
 	 * @param value
@@ -663,7 +663,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * »ñÈ¡´ÅÅÌ»º´æÊı¾İ
+	 * è·å–ç£ç›˜ç¼“å­˜æ•°æ®
 	 * 
 	 * @param key
 	 * @return
@@ -685,7 +685,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * ±£´æ¶ÔÏó
+	 * ä¿å­˜å¯¹è±¡
 	 * 
 	 * @param ser
 	 * @param file
@@ -716,7 +716,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * ¼ÆËã»º´æ´óĞ¡
+	 * è®¡ç®—ç¼“å­˜å¤§å°
 	 * 
 	 * @return
 	 */
@@ -729,7 +729,7 @@ public class AppContext extends Application {
 		fileSize += FileUtils.getDirSize(filesDir);
 		fileSize += FileUtils.getDirSize(cacheDir);
 
-		// 2.2°æ±¾²ÅÓĞ½«Ó¦ÓÃ»º´æ×ªÒÆµ½sd¿¨µÄ¹¦ÄÜ
+		// 2.2ç‰ˆæœ¬æ‰æœ‰å°†åº”ç”¨ç¼“å­˜è½¬ç§»åˆ°sdå¡çš„åŠŸèƒ½
 		if (AppContext.isMethodsCompat(android.os.Build.VERSION_CODES.FROYO)) {
 			File externalCacheDir = MethodsCompat.getExternalCacheDir(this);
 			fileSize += FileUtils.getDirSize(externalCacheDir);
@@ -740,7 +740,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * ¶ÁÈ¡¶ÔÏó
+	 * è¯»å–å¯¹è±¡
 	 * 
 	 * @param file
 	 * @return
@@ -758,7 +758,7 @@ public class AppContext extends Application {
 		} catch (FileNotFoundException e) {
 		} catch (Exception e) {
 			e.printStackTrace();
-			// ·´ĞòÁĞ»¯Ê§°Ü - É¾³ı»º´æÎÄ¼ş
+			// ååºåˆ—åŒ–å¤±è´¥ - åˆ é™¤ç¼“å­˜æ–‡ä»¶
 			if (e instanceof InvalidClassException) {
 				File data = getFileStreamPath(file);
 				data.delete();
@@ -802,7 +802,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * »ñÈ¡ÄÚ´æÖĞ±£´æÍ¼Æ¬µÄÂ·¾¶
+	 * è·å–å†…å­˜ä¸­ä¿å­˜å›¾ç‰‡çš„è·¯å¾„
 	 * 
 	 * @return
 	 */
@@ -811,7 +811,7 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * ÉèÖÃÄÚ´æÖĞ±£´æÍ¼Æ¬µÄÂ·¾¶
+	 * è®¾ç½®å†…å­˜ä¸­ä¿å­˜å›¾ç‰‡çš„è·¯å¾„
 	 * 
 	 * @return
 	 */
@@ -831,9 +831,9 @@ public class AppContext extends Application {
 //		{
 //			throw AppException.http(0);
 //		}
-//		if(isReadDataCache(key)) //¿É¶Á
+//		if(isReadDataCache(key)) //å¯è¯»
 //		{
-//			System.out.println("¿É¶Á..........");
+//			System.out.println("å¯è¯»..........");
 //			update = (AppUpdate) readObject(key);
 //			if(!update.isNeedUpdate(getVersionCode()))
 //			{
@@ -845,7 +845,7 @@ public class AppContext extends Application {
 //			}
 //		}else
 //		{
-//			System.out.println("²»¿É¶Á...........");
+//			System.out.println("ä¸å¯è¯»...........");
 //			update = ApiClient.checkVersion(this);
 //			if (update != null) {
 //				update.setCacheKey(key);

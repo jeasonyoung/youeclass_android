@@ -40,7 +40,7 @@ public class MyCourseListAdapter extends BaseAdapter{
 		TextView name = (TextView) convertView.findViewById(R.id.text4);
 		name.setText(courses.get(position));
 		TextView isDown = (TextView) convertView.findViewById(R.id.Downprogresstext);
-		isDown.setText("Î´ÏÂÔØ");
+		isDown.setText("æœªä¸‹è½½");
 		ImageButton btn = (ImageButton) convertView.findViewById(R.id.playerBtn);
 		name.setOnClickListener(new OnClickListener() {
 			@Override
@@ -74,17 +74,17 @@ public class MyCourseListAdapter extends BaseAdapter{
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			//¼ì²ésd¿¨ÊÇ·ñ¿ÉÓÃ,
-			//»ñÈ¡ÎÄ¼şµÄ´óĞ¡
-			//¼ì²ésdµÄ¿ÉÓÃÈİÁ¿ÊÇ·ñ¹»
+			//æ£€æŸ¥sdå¡æ˜¯å¦å¯ç”¨,
+			//è·å–æ–‡ä»¶çš„å¤§å°
+			//æ£€æŸ¥sdçš„å¯ç”¨å®¹é‡æ˜¯å¦å¤Ÿ
 			
 //			File pathFile = Environment.getExternalStorageDirectory();
 //			StatFs statfs = new StatFs(pathFile.getPath());
-//			//»ñµÃ¿É¹©³ÌĞòÊ¹ÓÃµÄBlockÊıÁ¿
+//			//è·å¾—å¯ä¾›ç¨‹åºä½¿ç”¨çš„Blockæ•°é‡
 //			long nAvailaBlock = statfs.getAvailableBlocks();
-//			//»ñµÃSDCardÉÏÃ¿¸öblockµÄSIZE
+//			//è·å¾—SDCardä¸Šæ¯ä¸ªblockçš„SIZE
 //			long nBlocSize = statfs.getBlockSize();
-//			//¼ÆËãSDCardÊ£Óà´óĞ¡MB
+//			//è®¡ç®—SDCardå‰©ä½™å¤§å°MB
 //			long nSDFreeSize = nAvailaBlock * nBlocSize / 1024 / 1024;
 			Intent intent = new Intent(context,DownloadActivity.class);
 			intent.putExtra("name", courses.get(position));

@@ -72,7 +72,7 @@ public class QuestionRecordActivity extends Activity{
 		this.contentLayout = (LinearLayout) this.findViewById(R.id.questionContentLayout);
 		this.loadingLayout = (LinearLayout) this.findViewById(R.id.loadingLayout);
 		this.paperListView = (ListView) this.findViewById(R.id.contentListView);
-		this.topTitle.setText("×öÌâ¼ÇÂ¼");
+		this.topTitle.setText("åšé¢˜è®°å½•");
 		this.returnbtn.setOnClickListener(new ReturnBtnClickListener(this));
 	}
 	@Override
@@ -97,11 +97,11 @@ public class QuestionRecordActivity extends Activity{
 	private void showDeleteWindow(final int index)
 	{
 		AlertDialog.Builder localBuilder = new AlertDialog.Builder(this);
-		localBuilder.setTitle("É¾³ı").setMessage("ÊÇ·ñÉ¾³ı´Ë¼ÇÂ¼").setCancelable(false).setPositiveButton("È·¶¨", new DialogInterface.OnClickListener() {
+		localBuilder.setTitle("åˆ é™¤").setMessage("æ˜¯å¦åˆ é™¤æ­¤è®°å½•").setCancelable(false).setPositiveButton("ç¡®å®š", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int id) {
 					// TODO Auto-generated method stub
-					//Í£Ö¹ÏÂÔØ·şÎñ
+					//åœæ­¢ä¸‹è½½æœåŠ¡
 					dao.deleteRecord(recordList.get(index));
 					recordList.remove(index);
 					if(recordList.size()==0)
@@ -111,7 +111,7 @@ public class QuestionRecordActivity extends Activity{
 					}else
 					mAdapter.notifyDataSetChanged();
 				}                      
-			}).setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
+			}).setNegativeButton("å–æ¶ˆ", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int id) {
 					// TODO Auto-generated method stub
@@ -122,7 +122,7 @@ public class QuestionRecordActivity extends Activity{
 	}
 	private void itemClickMethod(ExamRecord r)
 	{
-		//Ã»ÓĞ½»¾íµÄ
+		//æ²¡æœ‰äº¤å·çš„
 		Gson gson = new Gson();
 		Intent mIntent = null;
 		List<ExamQuestion> questionList = dao.findQuestionByPaperId(r.getPaperId());
@@ -156,8 +156,8 @@ public class QuestionRecordActivity extends Activity{
 			mIntent.putExtra("useTime", r.getUseTime());
 			mIntent.putExtra("record", gson.toJson(r));
 			mIntent.putExtra("isDone", gson.toJson(isDone));
-			mIntent.putExtra("userScore", r.getScore()); // ±¾´ÎµÃ·Ö
-			this.startActivity(mIntent);	//ÈÔÈ»ÊÇÒªÆô¶¯Õâ¸öActivity²»´ø½á¹û·µ»Ø
+			mIntent.putExtra("userScore", r.getScore()); // æœ¬æ¬¡å¾—åˆ†
+			this.startActivity(mIntent);	//ä»ç„¶æ˜¯è¦å¯åŠ¨è¿™ä¸ªActivityä¸å¸¦ç»“æœè¿”å›
 		}
 	}
 	private void addAnswer(SparseBooleanArray isDone,List<ExamQuestion> list,String tempAnswer)
@@ -176,12 +176,12 @@ public class QuestionRecordActivity extends Activity{
 		for (int i = 0; i < listSize; i++) {
 			ExamQuestion q = list.get(i);
 			String str = q.getQid() + "-";
-			if ((!"ÎÊ´ğÌâ".equals(q.getQType()))
+			if ((!"é—®ç­”é¢˜".equals(q.getQType()))
 					&& choiceAnswer.indexOf(str) != -1) {
 				String temp = choiceAnswer.substring(choiceAnswer.indexOf(str));
 				q.setUserAnswer(temp.substring(str.length(), temp.indexOf("&")));
 				isDone.append(i, true);
-			} else if (textAnswer != null && "ÎÊ´ğÌâ".equals(q.getQType())
+			} else if (textAnswer != null && "é—®ç­”é¢˜".equals(q.getQType())
 					&& textAnswer.indexOf(str) != -1) {
 				String temp = textAnswer.substring(textAnswer.indexOf(str));
 				q.setUserAnswer(temp.substring(str.length(),

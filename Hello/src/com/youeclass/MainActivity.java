@@ -40,7 +40,7 @@ public class MainActivity extends BaseActivity{
 		appContext = (AppContext) getApplication();
 		//g.setOnItemClickListener(new ItemClickListener());
 	  }
-	 //³õÊ¼»¯ÌõÄ¿
+	 //åˆå§‹åŒ–æ¡ç›®
 	 private class MyAdapter extends BaseAdapter
 	 {
 		private LayoutInflater inflater = LayoutInflater.from(MainActivity.this);;
@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity{
 			return position;
 		}
 	 }
-	 //ÎªÃ¿¸öÌõÄ¿ÉèÖÃ¼àÌı·½·¨
+	 //ä¸ºæ¯ä¸ªæ¡ç›®è®¾ç½®ç›‘å¬æ–¹æ³•
 	 private class ItemClickListener implements OnClickListener
 	{
 		 private Class c;
@@ -104,10 +104,10 @@ public class MainActivity extends BaseActivity{
 					 MainActivity.this.startActivity(intent);
 					 return;
 				 }
-				 Toast.makeText(MainActivity.this, "ÇëÔÚÏßµÇÂ¼", Toast.LENGTH_SHORT).show();
+				 Toast.makeText(MainActivity.this, "è¯·åœ¨çº¿ç™»å½•", Toast.LENGTH_SHORT).show();
 				 return;
 			 }
-			 Log.v("debug", "Æô¶¯activity"+c.toString());
+			 Log.v("debug", "å¯åŠ¨activity"+c.toString());
 			 Intent intent = new Intent(MainActivity.this,c);
 			 intent.putExtra("username", username);
 			 intent.putExtra("uid", uid);
@@ -126,18 +126,18 @@ public class MainActivity extends BaseActivity{
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
-		//·¢¹ã²¥,Í¨ÖªÏÂÔØ·şÎñservice½áÊøËùÓĞµÄÏß³Ì,Í¬Ê±½áÊø×Ô¼º
+		//å‘å¹¿æ’­,é€šçŸ¥ä¸‹è½½æœåŠ¡serviceç»“æŸæ‰€æœ‰çš„çº¿ç¨‹,åŒæ—¶ç»“æŸè‡ªå·±
         Intent myIntent = new Intent();
         myIntent.setAction("commandFromActivity");  
-        sendBroadcast(myIntent);//·¢ËÍ¹ã²¥  
+        sendBroadcast(myIntent);//å‘é€å¹¿æ’­  
 		super.onDestroy();
 	}
 	@Override
 	 public boolean onCreateOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
-		menu.add(Menu.NONE, Menu.FIRST+1, 1, "ÉèÖÃ").setIcon(android.R.drawable.ic_menu_edit);
-		menu.add(Menu.NONE, Menu.FIRST+2, 2, "°ïÖú").setIcon(android.R.drawable.ic_menu_help);
-		menu.add(Menu.NONE, Menu.FIRST+4, 4, "×¢Ïú").setIcon(android.R.drawable.ic_menu_set_as);
+		menu.add(Menu.NONE, Menu.FIRST+1, 1, "è®¾ç½®").setIcon(android.R.drawable.ic_menu_edit);
+		menu.add(Menu.NONE, Menu.FIRST+2, 2, "å¸®åŠ©").setIcon(android.R.drawable.ic_menu_help);
+		menu.add(Menu.NONE, Menu.FIRST+4, 4, "æ³¨é”€").setIcon(android.R.drawable.ic_menu_set_as);
 		return true;
 	}
 	 @Override
@@ -145,11 +145,11 @@ public class MainActivity extends BaseActivity{
 		// TODO Auto-generated method stub
 		 switch(item.getItemId()){
 		 case Menu.FIRST+1:
-			 //ÉèÖÃ
+			 //è®¾ç½®
 			 startSettingActivity();
 		 	 break;
 		 case Menu.FIRST+2:
-			 //°ïÖú
+			 //å¸®åŠ©
 			 this.startActivity(new Intent(this,HelpActivity.class));
 			 break;
 		 case Menu.FIRST+4:
@@ -160,24 +160,24 @@ public class MainActivity extends BaseActivity{
 		 
 	 }
 	 /**
-		 * ×Ô¶¨ÒåÒ»¸öÏûÏ¢ÌáÊ¾´°¿Ú
+		 * è‡ªå®šä¹‰ä¸€ä¸ªæ¶ˆæ¯æç¤ºçª—å£
 		 * @param msg
 		 */
 		protected void showDialog(){
 			 AlertDialog.Builder localBuilder = new AlertDialog.Builder(this);
-			 localBuilder.setTitle("×¢Ïú").setMessage("ÊÇ·ñ×¢ÏúÓÃ»§").setCancelable(false).setPositiveButton("È·¶¨", new DialogInterface.OnClickListener() {
+			 localBuilder.setTitle("æ³¨é”€").setMessage("æ˜¯å¦æ³¨é”€ç”¨æˆ·").setCancelable(false).setPositiveButton("ç¡®å®š", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						// TODO Auto-generated method stub
-						//Í£Ö¹ÏÂÔØ·şÎñ
-						//Toast.makeText(this, "·¢ÇëÇó×¢Ïú", Toast.LENGTH_LONG).show();
+						//åœæ­¢ä¸‹è½½æœåŠ¡
+						//Toast.makeText(this, "å‘è¯·æ±‚æ³¨é”€", Toast.LENGTH_LONG).show();
 						MobclickAgent.onEvent(MainActivity.this,"LoginOut");
 						appContext.cleanLoginInfo();
 						MainActivity.this.startActivity(new Intent(MainActivity.this,LoginActivity.class));
 						MainActivity.this.finish();
 						
 					}                      
-				}).setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
+				}).setNegativeButton("å–æ¶ˆ", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						// TODO Auto-generated method stub

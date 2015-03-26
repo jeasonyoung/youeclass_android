@@ -50,7 +50,7 @@ public class ClassDetailActivity extends Activity implements OnClickListener{
 		rbtn = (ImageButton) this.findViewById(R.id.returnbtn);
 		title = (TextView) this.findViewById(R.id.TopTitle1);
 		list = (ListView) this.findViewById(R.id.courserList);
-		dialog = ProgressDialog.show(ClassDetailActivity.this,null,"Å¬Á¦¼ÓÔØÖĞÇëÉÔºò",true,true);
+		dialog = ProgressDialog.show(ClassDetailActivity.this,null,"åŠªåŠ›åŠ è½½ä¸­è¯·ç¨å€™",true,true);
 		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		initLayoutBtn();
 		Intent intent = this.getIntent();
@@ -58,7 +58,7 @@ public class ClassDetailActivity extends Activity implements OnClickListener{
 		this.gid = intent.getStringExtra("gid");
 		this.username = intent.getStringExtra("username");
 		list.setAdapter(new MyCourseListAdapter(this,adapterList,urls));
-		//ÉèÖÃ»º´æÑÕÉ«ÎªÍ¸Ã÷
+		//è®¾ç½®ç¼“å­˜é¢œè‰²ä¸ºé€æ˜
 		list.setCacheColorHint(Color.TRANSPARENT);
 		list.setAlwaysDrawnWithCacheEnabled(true); 
 		rbtn.setOnClickListener(this);
@@ -84,15 +84,15 @@ public class ClassDetailActivity extends Activity implements OnClickListener{
 		case R.id.returnbtn:
 			this.finish();
 			break;
-		case R.id.CourseCenter_layout_btn://¿Î³ÌÖĞĞÄ
+		case R.id.CourseCenter_layout_btn://è¯¾ç¨‹ä¸­å¿ƒ
 			break;
-		case R.id.MyCourse_layout_btn://ÎÒµÄ¿Î³Ì
+		case R.id.MyCourse_layout_btn://æˆ‘çš„è¯¾ç¨‹
 			Intent intent = new Intent(this,MyCourseActivity.class);
 			intent.putExtra("username", username);
 			this.startActivity(intent);
 			break;
-		case R.id.LearningRecord_layout_btn://Ñ§Ï°¼ÇÂ¼
-			Toast.makeText(this, "Ãâ·ÑÌåÑé²»Ìá¹©¸Ã¹¦ÄÜ", Toast.LENGTH_SHORT).show();
+		case R.id.LearningRecord_layout_btn://å­¦ä¹ è®°å½•
+			Toast.makeText(this, "å…è´¹ä½“éªŒä¸æä¾›è¯¥åŠŸèƒ½", Toast.LENGTH_SHORT).show();
 			break;
 		}
 	}
@@ -105,7 +105,7 @@ public class ClassDetailActivity extends Activity implements OnClickListener{
 				String result = HttpConnectUtil.httpGetRequest(ClassDetailActivity.this, Constant.DOMAIN_URL+"mobile/findFreeClass?gid="+gid);
 				if(result!=null&&!result.equals("null"))
             	{
-            		//½âÎöjson×Ö·û´®,ÅäÖÃListViewµÄadapter
+            		//è§£æjsonå­—ç¬¦ä¸²,é…ç½®ListViewçš„adapter
             		try
             		{
             			JSONObject json = new JSONObject(result);
@@ -163,13 +163,13 @@ public class ClassDetailActivity extends Activity implements OnClickListener{
                     break;
                 case 0:
                 	theActivity.dialog.dismiss();
-            		theActivity.nodata.setVisibility(View.VISIBLE);//ÎŞÊı¾İÏÔÊ¾
+            		theActivity.nodata.setVisibility(View.VISIBLE);//æ— æ•°æ®æ˜¾ç¤º
                 	break;
                 case -1:
-                	//Á¬²»ÉÏ,
+                	//è¿ä¸ä¸Š,
                 	theActivity.dialog.dismiss();
-            		theActivity.nodata.setVisibility(View.VISIBLE);//ÎŞÊı¾İÏÔÊ¾
-            		Toast.makeText(theActivity, "ÔİÊ±Á¬²»ÉÏ·şÎñÆ÷,ÇëÉÔºò", Toast.LENGTH_SHORT).show();//ÌáÊ¾
+            		theActivity.nodata.setVisibility(View.VISIBLE);//æ— æ•°æ®æ˜¾ç¤º
+            		Toast.makeText(theActivity, "æš‚æ—¶è¿ä¸ä¸ŠæœåŠ¡å™¨,è¯·ç¨å€™", Toast.LENGTH_SHORT).show();//æç¤º
                 }
         }
 	}

@@ -18,7 +18,7 @@ public class MyDBHelper extends SQLiteOpenHelper {
 	{
 		super(context, DATABASENAME, null, VERSION);
 	}
-	//½¨±í
+	//å»ºè¡¨
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
@@ -36,7 +36,7 @@ public class MyDBHelper extends SQLiteOpenHelper {
 		db.execSQL("CREATE TABLE ExamNoteTab(_ID INTEGER PRIMARY KEY AUTOINCREMENT,QID TEXT,PAPERID TEXT,EXAMID TEXT,CONTENT TEXT,ADDTIME DATETIME DEFAULT (datetime('now','localtime')),USERNAME TEXT)");
 		db.execSQL("CREATE TABLE ExamFavorTab(_ID INTEGER PRIMARY KEY AUTOINCREMENT,QID TEXT,PAPERID TEXT,EXAMID TEXT,USERNAME TEXT)");
 	}
-	//Éý¼¶
+	//å‡çº§
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO Auto-generated method stub
@@ -63,7 +63,7 @@ public class MyDBHelper extends SQLiteOpenHelper {
 //	 * 
 //	 * @param Table_Name
 //	 * @param id
-//	 * @return Ó°ÏìÐÐÊý
+//	 * @return å½±å“è¡Œæ•°
 //	 */
 //	public int delete(String Table_Name, int id) {
 //		db = getDatabase(WRITE);
@@ -76,7 +76,7 @@ public class MyDBHelper extends SQLiteOpenHelper {
 //	 * @param values
 //	 * @param WhereClause
 //	 * @param whereArgs
-//	 * @return Ó°ÏìÐÐÊý
+//	 * @return å½±å“è¡Œæ•°
 //	 */
 //	public int update(String Table_Name, ContentValues values,
 //			String WhereClause, String[] whereArgs) {
@@ -107,7 +107,7 @@ public class MyDBHelper extends SQLiteOpenHelper {
 //	}
 
 	public synchronized void closeDb() {
-		//Ò»¿ªÊ¼¾ÍÃ»ÓÐ¿ª
+		//ä¸€å¼€å§‹å°±æ²¡æœ‰å¼€
 		if(openedNum==0)
 		{
 			if(db!=null)

@@ -53,11 +53,11 @@ public class QuestionPaperListActivity extends Activity{
 		dao = new PaperDao(this);
 		Intent intent = this.getIntent();
 		String name = intent.getStringExtra("name");
-		this.title.setText(name==null?"±¾µØÊÔ¾íÁĞ±í":name);
+		this.title.setText(name==null?"æœ¬åœ°è¯•å·åˆ—è¡¨":name);
 		this.gid = intent.getIntExtra("gid", 0);
 		this.username = intent.getStringExtra("username");
 		this.loginType = intent.getStringExtra("loginType");
-		dialog = ProgressDialog.show(QuestionPaperListActivity.this,null,"Å¬Á¦¼ÓÔØÖĞÇëÉÔºò",true,true);
+		dialog = ProgressDialog.show(QuestionPaperListActivity.this,null,"åŠªåŠ›åŠ è½½ä¸­è¯·ç¨å€™",true,true);
 		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		handler = new MyHandler(this);
 		new GetPaperListThread().start();
@@ -86,7 +86,7 @@ public class QuestionPaperListActivity extends Activity{
 				papers = dao.findAllPapers(username);
 				if(papers!=null&&papers.size()>0)
 				{
-					//·¢ÏûÏ¢
+					//å‘æ¶ˆæ¯
 					Message msg = handler.obtainMessage();
 					msg.what = 1;
 					handler.sendMessage(msg);
@@ -100,10 +100,10 @@ public class QuestionPaperListActivity extends Activity{
 			}
 			try{
 				String result = HttpConnectUtil.httpGetRequest(QuestionPaperListActivity.this, Constant.DOMAIN_URL+"mobile/paperList?pagesize=100&gradeId="+gid);
-				//½âÎöresult
+				//è§£æresult
 				if(result!=null&&!result.equals("null"))
             	{
-            		//½âÎöjson×Ö·û´®,ÅäÖÃexpandableListViewµÄadapter
+            		//è§£æjsonå­—ç¬¦ä¸²,é…ç½®expandableListViewçš„adapter
             		try
             		{
             			JSONArray json = new JSONArray(result);
@@ -119,19 +119,19 @@ public class QuestionPaperListActivity extends Activity{
             					papers.add(p);
             				}
             			}
-            			//·¢ÏûÏ¢
+            			//å‘æ¶ˆæ¯
             			Message msg = handler.obtainMessage();
         				msg.what = 1;
         				handler.sendMessage(msg);
             			//theActivity.expandList.setAdapter(new MyExpandableAdapter(theActivity, theActivity.group, theActivity.child));
-            			//ÉèÖÃadapter
+            			//è®¾ç½®adapter
             		}catch(Exception e)
             		{
             			e.printStackTrace();
             		}
             	}else
             	{
-            		//·¢ÏûÏ¢
+            		//å‘æ¶ˆæ¯
         			Message msg = handler.obtainMessage();
     				msg.what = -2;
     				handler.sendMessage(msg);
@@ -160,26 +160,26 @@ public class QuestionPaperListActivity extends Activity{
                     	theActivity.paperList.setAdapter(new PaperListAdapter(theActivity,theActivity.papers));
                 	}else
                 	{
-                		theActivity.nodata.setVisibility(View.VISIBLE);//ÎŞÊı¾İÏÔÊ¾
+                		theActivity.nodata.setVisibility(View.VISIBLE);//æ— æ•°æ®æ˜¾ç¤º
                 	}
                 			//theActivity.expandList.setAdapter(new MyExpandableAdapter(theActivity, theActivity.group, theActivity.child));
-                			//ÉèÖÃadapter
+                			//è®¾ç½®adapter
                 	break;
                 case -2:
                		theActivity.dialog.dismiss();
-               		theActivity.nodata.setVisibility(View.VISIBLE);//ÎŞÊı¾İÏÔÊ¾
-               		Toast.makeText(theActivity, "ÄúÃ»ÓĞ¹ºÂò¿Î³Ì", Toast.LENGTH_SHORT).show();//ÌáÊ¾
+               		theActivity.nodata.setVisibility(View.VISIBLE);//æ— æ•°æ®æ˜¾ç¤º
+               		Toast.makeText(theActivity, "æ‚¨æ²¡æœ‰è´­ä¹°è¯¾ç¨‹", Toast.LENGTH_SHORT).show();//æç¤º
                 	break;
                 case -1:
-                	//Á¬²»ÉÏ,
+                	//è¿ä¸ä¸Š,
                 	theActivity.dialog.dismiss();
-            		theActivity.nodata.setVisibility(View.VISIBLE);//ÎŞÊı¾İÏÔÊ¾
-            		Toast.makeText(theActivity, "ÔİÊ±Á¬²»ÉÏ·şÎñÆ÷,ÇëÉÔºò", Toast.LENGTH_SHORT).show();//ÌáÊ¾
+            		theActivity.nodata.setVisibility(View.VISIBLE);//æ— æ•°æ®æ˜¾ç¤º
+            		Toast.makeText(theActivity, "æš‚æ—¶è¿ä¸ä¸ŠæœåŠ¡å™¨,è¯·ç¨å€™", Toast.LENGTH_SHORT).show();//æç¤º
             		break;
                 case -3:
                 	theActivity.dialog.dismiss();
-                	theActivity.nodata.setVisibility(View.VISIBLE);//ÎŞÊı¾İÏÔÊ¾
-            		Toast.makeText(theActivity, "±¾µØÃ»ÓĞÊı¾İ", Toast.LENGTH_SHORT).show();//ÌáÊ¾
+                	theActivity.nodata.setVisibility(View.VISIBLE);//æ— æ•°æ®æ˜¾ç¤º
+            		Toast.makeText(theActivity, "æœ¬åœ°æ²¡æœ‰æ•°æ®", Toast.LENGTH_SHORT).show();//æç¤º
             		break;
                 }
         }

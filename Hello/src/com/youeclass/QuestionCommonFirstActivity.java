@@ -69,8 +69,8 @@ public class QuestionCommonFirstActivity extends Activity{
 						long arg3) {
 					// TODO Auto-generated method stub
 					QuestionAdapterData qad = data.get(arg2);
-					Intent mIntent = new Intent(QuestionCommonFirstActivity.this,c);//!!!ĞŞ¸Äclass
-					//°óÊı¾İ
+					Intent mIntent = new Intent(QuestionCommonFirstActivity.this,c);//!!!ä¿®æ”¹class
+					//ç»‘æ•°æ®
 					mIntent.putExtra("paperId", qad.getPaperId());
 					mIntent.putExtra("username", username);
 					mIntent.putExtra("title", qad.getTitle());

@@ -58,7 +58,7 @@ public class ImageTextView extends LinearLayout {
 
 					height = view.getMeasuredHeight();
 					width = view.getMeasuredWidth();
-					// ��ȡ����Ⱥ͸߶Ⱥ󣬿����ڼ���?
+					// 锟斤拷取锟斤拷锟斤拷群透叨群螅锟斤拷锟斤拷诩锟斤拷锟?
 					hasMeasured = true;
 				}
 				return true;
@@ -68,7 +68,7 @@ public class ImageTextView extends LinearLayout {
 	}
 
 	public void setText(String text) {
-		// ����ͼƬ����text1��ʾ
+		// 锟斤拷锟斤拷图片锟斤拷锟斤拷text1锟斤拷示
 		if (StringUtils.isEmpty(text)) {
 			return;
 		}

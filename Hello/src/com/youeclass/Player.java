@@ -41,7 +41,7 @@ public class Player implements OnBufferingUpdateListener,
 	}
 	
 	/*******************************************************
-	 * Í¨¹ı¶¨Ê±Æ÷ºÍHandlerÀ´¸üĞÂ½ø¶ÈÌõ
+	 * é€šè¿‡å®šæ—¶å™¨å’ŒHandleræ¥æ›´æ–°è¿›åº¦æ¡
 	 ******************************************************/
 	TimerTask mTimerTask = new TimerTask() {
 		@Override
@@ -95,7 +95,7 @@ public class Player implements OnBufferingUpdateListener,
 			mediaPlayer.setDataSource(videoUrl);
 			mediaPlayer.setOnPreparedListener(this);
 			mediaPlayer.setOnErrorListener(this);
-			mediaPlayer.prepareAsync();//prepareÖ®ºó×Ô¶¯²¥·Å
+			mediaPlayer.prepareAsync();//prepareä¹‹åè‡ªåŠ¨æ’­æ”¾
 			mediaPlayer.setOnBufferingUpdateListener(this);
 			//mediaPlayer.start();
 		} catch (IllegalArgumentException e) {
@@ -154,7 +154,7 @@ public class Player implements OnBufferingUpdateListener,
 	
 	@Override
 	/**
-	 * Í¨¹ıonPrepared²¥·Å
+	 * é€šè¿‡onPreparedæ’­æ”¾
 	 */
 	public void onPrepared(MediaPlayer arg0) {
 		videoWidth = mediaPlayer.getVideoWidth();
@@ -189,7 +189,7 @@ public class Player implements OnBufferingUpdateListener,
 		System.out.println(what+"..."+extra);
 		return false;
 	}
-	//»ñÈ¡ÊÓÆµµÄºÁÃëÖµ
+	//è·å–è§†é¢‘çš„æ¯«ç§’å€¼
 	public int getDuration()
 	{
 		return duration;

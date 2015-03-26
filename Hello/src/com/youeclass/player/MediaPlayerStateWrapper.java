@@ -14,7 +14,7 @@ import android.view.SurfaceHolder;
 
 /**
  * A wrapper class for {@link android.media.MediaPlayer}.
- * Ò»¸öMediaPlayerµÄ°ü×°Àà
+ * ä¸€ä¸ªMediaPlayerçš„åŒ…è£…ç±»
  * <p>
  * Encapsulates an instance of MediaPlayer, and makes a record of its internal state accessible via a
  * {@link MediaPlayerWrapper#getState()} accessor. Most of the frequently used methods are available, but some still
@@ -176,7 +176,7 @@ public class MediaPlayerStateWrapper {
 			return false;
 		}
 	};
-	//ÉèÖÃ¼àÌı
+	//è®¾ç½®ç›‘å¬
 	public void setOnPreparedListener(OnPreparedListener listener)
 	{
 		mPlayer.setOnPreparedListener(listener);
@@ -257,13 +257,13 @@ public class MediaPlayerStateWrapper {
 		if (currentState != State.ERROR) {
 			mPlayer.setAudioStreamType(streamtype);
 		}else
-			Log.i("mediaPlayer", "ÉèÖÃAudioStreamTypeÊ§°Ü");
+			Log.i("mediaPlayer", "è®¾ç½®AudioStreamTypeå¤±è´¥");
 	}
 	public void setLooping (boolean looping)
 	{
 		if(currentState != State.ERROR){
 			mPlayer.setLooping(looping);
 		}else
-			Log.i("mediaPlayer", "ÉèÖÃLoopingÊ§°Ü");
+			Log.i("mediaPlayer", "è®¾ç½®Loopingå¤±è´¥");
 	}
 }

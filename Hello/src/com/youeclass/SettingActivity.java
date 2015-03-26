@@ -58,7 +58,7 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 	private ProgressDialog progressDialog,o;
 	private boolean isCanceled=false;
 	private AsyncTask<String,Integer,String> downloader = null;
-	private static String[] data = new String[]{"Ã¿´ÎÆô¶¯","Ò»ÌìÒ»´Î","Ò»ĞÇÆÚÒ»´Î","Ò»¸öÔÂÒ»´Î"};
+	private static String[] data = new String[]{"æ¯æ¬¡å¯åŠ¨","ä¸€å¤©ä¸€æ¬¡","ä¸€æ˜ŸæœŸä¸€æ¬¡","ä¸€ä¸ªæœˆä¸€æ¬¡"};
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -82,8 +82,8 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 		this.aboutusBtn.setOnClickListener(this);
 		this.spinner = (Spinner) this.findViewById(R.id.checkupdateSpinner);
 		this.spinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,data));
-		this.spinner.setPrompt("ÇëÑ¡Ôñ¼ì²â¸üĞÂÖÜÆÚ");
-		this.spinner.setSelection(this.setting.getInt("setCheckUpdateMode", 0));//ÉèÖÃÄ¬ÈÏÖµ
+		this.spinner.setPrompt("è¯·é€‰æ‹©æ£€æµ‹æ›´æ–°å‘¨æœŸ");
+		this.spinner.setSelection(this.setting.getInt("setCheckUpdateMode", 0));//è®¾ç½®é»˜è®¤å€¼
 		this.spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
@@ -125,25 +125,25 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 	}
 	private void initAvailableSpaceTextView() {
 		// TODO Auto-generated method stub
-		//ÅĞ¶ÏSD¿¨ÊÇ·ñ¿ÉÓÃ,¼ÆËãSD¿¨µÄ¿ÉÓÃ¿Õ¼ä
+		//åˆ¤æ–­SDå¡æ˜¯å¦å¯ç”¨,è®¡ç®—SDå¡çš„å¯ç”¨ç©ºé—´
 		if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
 		{
-			//¼ÆËã sd¿ÉÓÃ¿Õ¼äµÄ´óĞ¡
-			//È¡µÃSDÎÄ¼şµÄÂ·¾¶
+			//è®¡ç®— sdå¯ç”¨ç©ºé—´çš„å¤§å°
+			//å–å¾—SDæ–‡ä»¶çš„è·¯å¾„
 			File path = Environment.getExternalStorageDirectory(); 
 			StatFs statfs = new StatFs(path.getPath());
-			//»ñµÃblockÇøµÄ´óĞ¡
+			//è·å¾—blockåŒºçš„å¤§å°
 			long blockSize = statfs.getBlockSize();
-			//»ñµÃ¿ÉÓÃblockµÄÊıÁ¿ 
+			//è·å¾—å¯ç”¨blockçš„æ•°é‡ 
 			long availableBlocks = statfs.getAvailableBlocks();
 			long size = availableBlocks * blockSize/1024/1024;	//MB
 			this.availableSpace.setText(" "+size+" MB");
 			return;
 		}
 		this.availableSpace.setTextColor(getResources().getColor(R.color.grey));
-		this.availableSpace.setText(" SD¿¨²»´æÔÚ");
+		this.availableSpace.setText(" SDå¡ä¸å­˜åœ¨");
 		this.downFilePath.setTextColor(getResources().getColor(R.color.grey));
-		this.downFilePath.setText(this.downFilePath.getText()+" Â·¾¶²»¿ÉÓÃ");
+		this.downFilePath.setText(this.downFilePath.getText()+" è·¯å¾„ä¸å¯ç”¨");
 	}
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -168,7 +168,7 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 		switch(v.getId())
 		{
 		case R.id.set_clearPicBtn:
-			Toast.makeText(this, "Çå³ı³É¹¦", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "æ¸…é™¤æˆåŠŸ", Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.returnbtn:
 			this.finish();
@@ -183,12 +183,12 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 	}
 	private void check()
 	{
-		o = ProgressDialog.show(SettingActivity.this, null, "¼ì²âÖĞÇëÉÔºò",
+		o = ProgressDialog.show(SettingActivity.this, null, "æ£€æµ‹ä¸­è¯·ç¨å€™",
 				true, false);
 		o.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		CheckUpdateTask checkup = new CheckUpdateTask();
 		try {
-			String oldVersion = getVersionName();	//»ñÈ¡¾ÉµÄ°æ±¾ºÅ
+			String oldVersion = getVersionName();	//è·å–æ—§çš„ç‰ˆæœ¬å·
 			System.out.println(oldVersion);
 			checkup.execute(Constant.DOMAIN_URL+"mobile/checkup?appType=1&oldVersion="+oldVersion);
 		} catch (Exception e) {
@@ -196,12 +196,12 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 			e.printStackTrace();
 		}
 	}
-	//»ñÈ¡µ±Ç°Ó¦ÓÃµÄ°æ±¾ºÅ
+	//è·å–å½“å‰åº”ç”¨çš„ç‰ˆæœ¬å·
 		private String getVersionName() throws Exception
 		   {
-		           // »ñÈ¡packagemanagerµÄÊµÀı
+		           // è·å–packagemanagerçš„å®ä¾‹
 		           PackageManager packageManager = getPackageManager();
-		           // getPackageName()ÊÇÄãµ±Ç°ÀàµÄ°üÃû£¬0´ú±íÊÇ»ñÈ¡°æ±¾ĞÅÏ¢
+		           // getPackageName()æ˜¯ä½ å½“å‰ç±»çš„åŒ…åï¼Œ0ä»£è¡¨æ˜¯è·å–ç‰ˆæœ¬ä¿¡æ¯
 		           PackageInfo packInfo = packageManager.getPackageInfo(getPackageName(),0);
 		           String version = packInfo.versionName;
 		           return version;
@@ -218,7 +218,7 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 			editor.commit();
 			super.onPreExecute();
 		}
-		//¼ì²é£¬·µ»ØÖµ¾ÍÊÇ½áÊøÊ±µÄ½á¹û²ÎÊı
+		//æ£€æŸ¥ï¼Œè¿”å›å€¼å°±æ˜¯ç»“æŸæ—¶çš„ç»“æœå‚æ•°
 		@Override
 		protected String doInBackground(String... params) {
 			// TODO Auto-generated method stub
@@ -227,25 +227,25 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 			try{
 				URL url = new URL(params[0]);
 				conn = (HttpURLConnection) url.openConnection();
-				conn.setConnectTimeout(5000);//Á¬½Ó³¬Ê±
-				conn.setRequestMethod("GET");//ÇëÇó·½Ê½
-				conn.connect();// Á¬½Ó
+				conn.setConnectTimeout(5000);//è¿æ¥è¶…æ—¶
+				conn.setRequestMethod("GET");//è¯·æ±‚æ–¹å¼
+				conn.connect();// è¿æ¥
 				if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
 					Log.d(this.toString(),
 							"getResponseCode() not HttpURLConnection.HTTP_OK");
 					return null;
 				}
 				InputStream in = conn.getInputStream();
-				//´´½¨Ò»¸ö»º³å×Ö½ÚÊı			//×Ö½Ú²»¶àÊ±ÕâÃ´×ö
+				//åˆ›å»ºä¸€ä¸ªç¼“å†²å­—èŠ‚æ•°			//å­—èŠ‚ä¸å¤šæ—¶è¿™ä¹ˆåš
 				byte[] buffer = new byte[in.available()];
-				//ÔÚÊäÈëÁ÷ÖĞ¶ÁÈ¡Êı¾İ²¢´æ·Åµ½»º³å×Ö½ÚÊı×éÖĞ
+				//åœ¨è¾“å…¥æµä¸­è¯»å–æ•°æ®å¹¶å­˜æ”¾åˆ°ç¼“å†²å­—èŠ‚æ•°ç»„ä¸­
 				in.read(buffer);
-				//½«×Ö½Ú×ª»»³É×Ö·û´®
+				//å°†å­—èŠ‚è½¬æ¢æˆå­—ç¬¦ä¸²
 				result = new String(buffer);
 				System.out.println(result);
 			}catch(Exception e)
 			{
-				//¸÷ÖÖ´íÎó
+				//å„ç§é”™è¯¯
 				Log.d(this.toString(),
 						e.getMessage());
 				return null;
@@ -258,7 +258,7 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 			}
 			return result;
 		}
-		//½áÊø¼ì²é
+		//ç»“æŸæ£€æŸ¥
 		@Override
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
@@ -267,13 +267,13 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 				o.dismiss();
 			if(result==null)
 			{
-				//Ìø×ªµ½µÇÂ¼½çÃæ
-				Toast.makeText(SettingActivity.this, "ÎŞ·¨¼ì²â,ÉÔºóÔÙÊÔ", Toast.LENGTH_SHORT).show();
+				//è·³è½¬åˆ°ç™»å½•ç•Œé¢
+				Toast.makeText(SettingActivity.this, "æ— æ³•æ£€æµ‹,ç¨åå†è¯•", Toast.LENGTH_SHORT).show();
 				return;
 			}
 			try {
 				JSONObject json = new JSONObject(result);
-				if(json.getInt("S")==1)//±íÊ¾ÓĞ¸üĞÂ
+				if(json.getInt("S")==1)//è¡¨ç¤ºæœ‰æ›´æ–°
 				{
 					final String version = json.optString("version");
 			        final String url = URLDecoder.decode(json.optString("url"),"UTF-8");
@@ -281,40 +281,40 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 			        String content=null;
 			        content = json.optString("Content");
 			        alertDialog = new AlertDialog.Builder(SettingActivity.this)
-					.setTitle("¸üĞÂ¼ì²â")
-					.setMessage("¼ì²âµ½×îĞÂ°æ±¾£º" + version + "\n" + "¸üĞÂÄÚÈİ£º" + "\n" + content)
-					.setPositiveButton("¸üĞÂ", new DialogInterface.OnClickListener() {
+					.setTitle("æ›´æ–°æ£€æµ‹")
+					.setMessage("æ£€æµ‹åˆ°æœ€æ–°ç‰ˆæœ¬ï¼š" + version + "\n" + "æ›´æ–°å†…å®¹ï¼š" + "\n" + content)
+					.setPositiveButton("æ›´æ–°", new DialogInterface.OnClickListener() {
 						
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							// TODO Auto-generated method stub
 							dialog.cancel();
-							//¿ªÆôÏÂÔØ·şÎñ£¬ÒÔ¼°½ø¶È¶Ô»°¿ò£¬½øĞĞÏÂÔØ
+							//å¼€å¯ä¸‹è½½æœåŠ¡ï¼Œä»¥åŠè¿›åº¦å¯¹è¯æ¡†ï¼Œè¿›è¡Œä¸‹è½½
 							//to do something 
 							progressDialog = new ProgressDialog(SettingActivity.this);
 						    progressDialog.setProgressStyle(1);
-						    progressDialog.setTitle("Èí¼ş¸üĞÂ");
-						    progressDialog.setMessage("×îĞÂ°æ±¾£º" + version);
+						    progressDialog.setTitle("è½¯ä»¶æ›´æ–°");
+						    progressDialog.setMessage("æœ€æ–°ç‰ˆæœ¬ï¼š" + version);
 						    progressDialog.setIcon(R.drawable.down2);
 						    progressDialog.setProgress(10);
 						    progressDialog.setMax(100);
 						    progressDialog.setIndeterminate(false);
 						    progressDialog.setCancelable(false);
-						    //¿ªÆôÒ»¸öÒì²½ÈÎÎñ½øĞĞappÏÂÔØ
+						    //å¼€å¯ä¸€ä¸ªå¼‚æ­¥ä»»åŠ¡è¿›è¡Œappä¸‹è½½
 						    downloader = new DownLoaderTask();
-						    progressDialog.setButton("È¡Ïû", new DialogInterface.OnClickListener() {	//È¡ÏûÏÂÔØ
+						    progressDialog.setButton("å–æ¶ˆ", new DialogInterface.OnClickListener() {	//å–æ¶ˆä¸‹è½½
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
 									// TODO Auto-generated method stub
-									//È¡Ïû
+									//å–æ¶ˆ
 									dialog.cancel();
 									isCanceled =true;
 									downloader.cancel(true);
 								}
 							});
-						    downloader.execute(url);	//ÏÂÔØµØÖ·
+						    downloader.execute(url);	//ä¸‹è½½åœ°å€
 						    progressDialog.show();
-						  //¼àÌı°´¼üÊÂ¼ş,Èç¹û°´È¡ÏûÊ²Ã´¶¼²»×ö,Ïàµ±ÓÚ¶ÔÕâ¸ö¶Ô»°¿ò½ûÓÃÁË·µ»Ø¼ü
+						  //ç›‘å¬æŒ‰é”®äº‹ä»¶,å¦‚æœæŒ‰å–æ¶ˆä»€ä¹ˆéƒ½ä¸åš,ç›¸å½“äºå¯¹è¿™ä¸ªå¯¹è¯æ¡†ç¦ç”¨äº†è¿”å›é”®
 						    progressDialog.setOnKeyListener(new OnKeyListener() {
 								@Override
 								public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
@@ -328,7 +328,7 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 							});
 						}
 					})
-					.setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
+					.setNegativeButton("å–æ¶ˆ", new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							// TODO Auto-generated method stub
@@ -336,7 +336,7 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 						}
 					})
 					.show();
-			        //¼àÌı°´¼üÊÂ¼ş,Èç¹û°´È¡ÏûÊ²Ã´¶¼²»×ö,Ïàµ±ÓÚ¶ÔÕâ¸ö¶Ô»°¿ò½ûÓÃÁË·µ»Ø¼ü
+			        //ç›‘å¬æŒ‰é”®äº‹ä»¶,å¦‚æœæŒ‰å–æ¶ˆä»€ä¹ˆéƒ½ä¸åš,ç›¸å½“äºå¯¹è¿™ä¸ªå¯¹è¯æ¡†ç¦ç”¨äº†è¿”å›é”®
 			        alertDialog.setOnKeyListener(new OnKeyListener() {
 						@Override
 						public boolean onKey(DialogInterface dialog,
@@ -350,7 +350,7 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 						}
 					});
 				}else{
-					Toast.makeText(SettingActivity.this, "ÒÑ¾­ÊÇ×îĞÂ°æ±¾", Toast.LENGTH_SHORT).show();
+					Toast.makeText(SettingActivity.this, "å·²ç»æ˜¯æœ€æ–°ç‰ˆæœ¬", Toast.LENGTH_SHORT).show();
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -359,7 +359,7 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 		}
 	}
 	
-	//ÏÂÔØ¸üĞÂapp
+	//ä¸‹è½½æ›´æ–°app
 	private class DownLoaderTask extends AsyncTask<String, Integer, String> {
 		//The method (doInBackground) runs always on a background thread. You shouldn't do any UI tasks there.
 	    @Override
@@ -395,7 +395,7 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 	        	e.printStackTrace();
 	        }
 	        if(isCanceled||this.isCancelled()){
-	        	System.out.println("È¡ÏûÁËÏÂÔØ");
+	        	System.out.println("å–æ¶ˆäº†ä¸‹è½½");
 	        	new File(Environment.getExternalStorageDirectory().getPath()+"/Hello.apk").delete();
 	        }
 	        return null;
@@ -417,7 +417,7 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 	    	super.onPostExecute(result);
 	    	if(!isCanceled&&!this.isCancelled()){
 	    		progressDialog.dismiss();
-	    		//ÏÔÊ¾Õâ¸öÓ¦ÓÃ£¬ÈÃÓÃ»§°²×°
+	    		//æ˜¾ç¤ºè¿™ä¸ªåº”ç”¨ï¼Œè®©ç”¨æˆ·å®‰è£…
 	    		Uri localUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath()+"/Hello.apk"));
 	        	Intent localIntent = new Intent("android.intent.action.VIEW");
 	        	localIntent.setDataAndType(localUri, "application/vnd.android.package-archive");

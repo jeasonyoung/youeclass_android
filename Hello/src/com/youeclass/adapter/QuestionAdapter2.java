@@ -49,7 +49,7 @@ public class QuestionAdapter2 extends BaseAdapter {
 //	private BaseActivity activity;
 	private ArrayList<ExamQuestion> questionList;
 	private ContentViewHolder contentHolder;
-	// Í¼Æ¬±£´æÄ¿Â¼
+	// å›¾ç‰‡ä¿å­˜ç›®å½•
 	private String imageSavePath;
 
 	private static TextViewLongClickListener tvLongClickListener;
@@ -114,11 +114,11 @@ public class QuestionAdapter2 extends BaseAdapter {
 //			action = activity1.getAction();
 //		}
 		String action = activity2.getAction();
-		ExamQuestion currentQuestion = questionList.get(position); // µ±Ç°µÄÌâÄ¿
+		ExamQuestion currentQuestion = questionList.get(position); // å½“å‰çš„é¢˜ç›®
 		AnswerViewHolder answerHolder = new AnswerViewHolder();
 		
 		if (v == null) {
-			System.out.println("QuestionAdapterµ÷ÓÃgetView·½·¨£¬View===NULL position = "+position);
+			System.out.println("QuestionAdapterè°ƒç”¨getViewæ–¹æ³•ï¼ŒView===NULL position = "+position);
 			v = LayoutInflater.from(context).inflate(R.layout.single_question,
 					null);
 			contentHolder = new ContentViewHolder();
@@ -126,11 +126,11 @@ public class QuestionAdapter2 extends BaseAdapter {
 			v.setTag(R.id.tag_second,answerHolder);
 			contentHolder.modeLayout = (LinearLayout) v
 					.findViewById(R.id.doexam_mode2layout);
-			contentHolder.examContent = (TextView) v.findViewById(R.id.exam_Content2);// ÌâÄ¿ÄÚÈİ
+			contentHolder.examContent = (TextView) v.findViewById(R.id.exam_Content2);// é¢˜ç›®å†…å®¹
 			contentHolder.examContent3 = (TextView) v.findViewById(R.id.exam_Content3);
 			contentHolder.examContent.setOnLongClickListener(tvLongClickListener);
 			contentHolder.examOption = (CheckBoxGroup2) v
-					.findViewById(R.id.examOption2);// checkbox×éµÄÈİÆ÷
+					.findViewById(R.id.examOption2);// checkboxç»„çš„å®¹å™¨
 			contentHolder.modeLayout4 = (LinearLayout) v
 					.findViewById(R.id.doexam_mode3layout);
 			contentHolder.examImages = (LinearLayout) v
@@ -147,33 +147,33 @@ public class QuestionAdapter2 extends BaseAdapter {
 //			contentHolder.examAnswerLayout.setVisibility(View.GONE);
 			
 		} else {
-			System.out.println("QuestionAdapterµ÷ÓÃgetView·½·¨  view!=!=!=!=!= null position = "+position);
+			System.out.println("QuestionAdapterè°ƒç”¨getViewæ–¹æ³•  view!=!=!=!=!= null position = "+position);
 			contentHolder = (ContentViewHolder) v.getTag(R.id.tag_first);
 			contentHolder.examOption.clearCheck();
 		}
 		
-		//´ğ°¸Óë½âÎö
+		//ç­”æ¡ˆä¸è§£æ
 		answerHolder.examAnswerLayout = (LinearLayout) v
-				.findViewById(R.id.exam_answer_layout); //Õû¸ö´ğ°¸µÄ²¼¾Ö
-		answerHolder.myAnswerTextView = (TextView) v.findViewById(R.id.myAnswerTextView); //ÎÒµÄ´ğ°¸
-		answerHolder.sysAnswerTextView = (TextView) v.findViewById(R.id.sysAnswerTextView);	//ÕıÈ·´ğ°¸
-		answerHolder.answerResultImg = (ImageView) v.findViewById(R.id.answerResultImg);	//ÅĞ¶ÏÍ¼Æ¬
-		answerHolder.analysisTextView = (TextView) v.findViewById(R.id.exam_analysisTextView); //½âÎö
+				.findViewById(R.id.exam_answer_layout); //æ•´ä¸ªç­”æ¡ˆçš„å¸ƒå±€
+		answerHolder.myAnswerTextView = (TextView) v.findViewById(R.id.myAnswerTextView); //æˆ‘çš„ç­”æ¡ˆ
+		answerHolder.sysAnswerTextView = (TextView) v.findViewById(R.id.sysAnswerTextView);	//æ­£ç¡®ç­”æ¡ˆ
+		answerHolder.answerResultImg = (ImageView) v.findViewById(R.id.answerResultImg);	//åˆ¤æ–­å›¾ç‰‡
+		answerHolder.analysisTextView = (TextView) v.findViewById(R.id.exam_analysisTextView); //è§£æ
 		answerHolder.analysisTextView.setOnLongClickListener(tvLongClickListener);
-		answerHolder.examAnswerLayout.setVisibility(View.GONE); 	//Òş²Ø´ğ°¸
+		answerHolder.examAnswerLayout.setVisibility(View.GONE); 	//éšè—ç­”æ¡ˆ
 		v.setTag(R.id.tag_second,answerHolder);
 		
-		// holder.scrollView.fullScroll(33); //»¬¶¯µ½×î¿ªÊ¼?
+		// holder.scrollView.fullScroll(33); //æ»‘åŠ¨åˆ°æœ€å¼€å§‹?
 		contentHolder.examImages.removeAllViews();
-		String type = currentQuestion.getQType(); // ÌâĞÍ
-		String answer = currentQuestion.getUserAnswer(); // Ñ§Ô±µÄ´ğ°¸
-		if ("µ¥Ñ¡Ìâ".equals(type) || "¶àÑ¡Ìâ".equals(type)) {	//µ¥Ñ¡Ìâ
+		String type = currentQuestion.getQType(); // é¢˜å‹
+		String answer = currentQuestion.getUserAnswer(); // å­¦å‘˜çš„ç­”æ¡ˆ
+		if ("å•é€‰é¢˜".equals(type) || "å¤šé€‰é¢˜".equals(type)) {	//å•é€‰é¢˜
 			contentHolder.modeLayout.setVisibility(0);
 			contentHolder.modeLayout4.setVisibility(8);
 			String[] arr = currentQuestion.getContent().replaceAll("\n", "")
-					.replaceAll("[A-Z][.£®¡¢)]", "@@@").split("@@@");
+					.replaceAll("[A-Z][.ï¼ã€)]", "@@@").split("@@@");
 			String title = arr[0];
-			// ÏÔÊ¾Í¼Æ¬
+			// æ˜¾ç¤ºå›¾ç‰‡
 			String zuheName = currentQuestion.getRuleId() + "-"
 					+ currentQuestion.getQid();
 			;
@@ -198,9 +198,9 @@ public class QuestionAdapter2 extends BaseAdapter {
 				}
 				option = (OptionLayout) contentHolder.examOption.getChildAt(i - 1);
 				option.resetColor();
-				option.setText((char) (64 + i) + "£®" + arr[i]);
+				option.setText((char) (64 + i) + "ï¼" + arr[i]);
 				option.setValue((char) (64 + i)+"");
-				if("µ¥Ñ¡Ìâ".equals(type))
+				if("å•é€‰é¢˜".equals(type))
 				{
 					option.setButtonDrawable(R.drawable.radio_button);
 					option.setType(OptionLayout.RADIO_BUTTON);
@@ -229,19 +229,19 @@ public class QuestionAdapter2 extends BaseAdapter {
 //						}
 //					});
 		} 
-//		else if ("2".equals(type)||"3".equals(type)) {	//¶àÑ¡ºÍ²»¶¨Ñ¡
+//		else if ("2".equals(type)||"3".equals(type)) {	//å¤šé€‰å’Œä¸å®šé€‰
 //			contentHolder.modeLayout.setVisibility(0);
 //			contentHolder.modeLayout4.setVisibility(8);
 //			String[] arr = currentQuestion.getContent().replaceAll("\n", "").replaceAll("&nbsp;", " ")
 //					.split("###");
 //			String title = arr[0];
-//			// ÏÔÊ¾Í¼Æ¬
+//			// æ˜¾ç¤ºå›¾ç‰‡
 //			String zuheName = currentQuestion.getRuleId() + "-"
 //					+ currentQuestion.getQid();
 //			;
 //			showPics(position, title, imageSavePath, zuheName,
 //					contentHolder.examImages2, contentHolder.examContent2);
-//			// ÏÔÊ¾Ñ¡Ïî
+//			// æ˜¾ç¤ºé€‰é¡¹
 //			if (contentHolder.examOption2.getChildCount() > arr.length - 1) {
 //				for (int j = arr.length - 1; j < contentHolder.examOption2
 //						.getChildCount(); j++) {
@@ -264,7 +264,7 @@ public class QuestionAdapter2 extends BaseAdapter {
 //					contentHolder.examOption2.addView(cb, i - 1);
 //				}
 //				cb = (MyCheckBox) contentHolder.examOption2.getChildAt(i - 1);
-//				cb.setText((char) (64 + i) + "£®" + arr[i]);
+//				cb.setText((char) (64 + i) + "ï¼" + arr[i]);
 //				if (answer != null
 //						&& answer.indexOf(String.valueOf((char) (64 + i))) != -1) {
 //					cb.setChecked(true);
@@ -279,21 +279,21 @@ public class QuestionAdapter2 extends BaseAdapter {
 ////							return;
 ////						}
 ////						String s = holder.examOption2.getValue();
-////						System.out.println("¶àÑ¡ÌâµÄ´ğ°¸:"+holder.examOption2.getValue());
+////						System.out.println("å¤šé€‰é¢˜çš„ç­”æ¡ˆ:"+holder.examOption2.getValue());
 ////						activity.saveChoiceAnswer(s);
 ////					}
 ////				});
 //				cb.setOnClickListener(contentHolder.checkBoxListener);
 //			}
 //		} 
-		else if ("ÅĞ¶ÏÌâ".equals(type)) { //ÅĞ¶ÏÌâ
+		else if ("åˆ¤æ–­é¢˜".equals(type)) { //åˆ¤æ–­é¢˜
 			contentHolder.modeLayout.setVisibility(0);
 			contentHolder.modeLayout4.setVisibility(8);
-			// this.examContent1.setText(questionCursor + 1 + "¡¢"
+			// this.examContent1.setText(questionCursor + 1 + "ã€"
 			// + currentQuestion.getContent());
-			// ¼ÓÔØÍ¼Æ¬
+			// åŠ è½½å›¾ç‰‡
 			String title = currentQuestion.getContent().replaceFirst("&nbsp;", " ");
-			// ÏÔÊ¾Í¼Æ¬
+			// æ˜¾ç¤ºå›¾ç‰‡
 			String zuheName = currentQuestion.getRuleId() + "-"
 					+ currentQuestion.getQid();
 			;
@@ -306,13 +306,13 @@ public class QuestionAdapter2 extends BaseAdapter {
 				rb_t.setId(1);
 				rb_f = new OptionLayout(context,null);
 				rb_f.setId(2);
-				rb_t.setText(" ¡Ì");
+				rb_t.setText(" âˆš");
 				rb_t.setValue("T");
 				rb_t.setFontColor(context.getResources()
 						.getColor(R.color.black));
 				rb_t.setButtonDrawable(R.drawable.radio_button);
 				rb_t.setType(OptionLayout.RADIO_BUTTON);
-				rb_f.setText(" ¡Á");
+				rb_f.setText(" Ã—");
 				rb_f.setFontColor(context.getResources()
 						.getColor(R.color.black));
 				rb_f.setValue("F");
@@ -328,13 +328,13 @@ public class QuestionAdapter2 extends BaseAdapter {
 				contentHolder.examOption.removeAllViews();
 				rb_t.setId(1);
 				rb_f.setId(2);
-				rb_t.setText(" ¡Ì");
+				rb_t.setText(" âˆš");
 				rb_t.setFontColor(context.getResources()
 						.getColor(R.color.black));
 				rb_t.setValue("T");
 				rb_t.setButtonDrawable(R.drawable.radio_button);
 				rb_t.setType(OptionLayout.RADIO_BUTTON);
-				rb_f.setText(" ¡Á");
+				rb_f.setText(" Ã—");
 				rb_f.setFontColor(context.getResources()
 						.getColor(R.color.black));
 				rb_f.setButtonDrawable(R.drawable.radio_button);
@@ -371,11 +371,11 @@ public class QuestionAdapter2 extends BaseAdapter {
 //								activity.saveChoiceAnswer("F");
 //						}
 //					});
-		} else if ("ÎÊ´ğÌâ".equals(type)) {
+		} else if ("é—®ç­”é¢˜".equals(type)) {
 			contentHolder.modeLayout.setVisibility(8);
 			contentHolder.modeLayout4.setVisibility(0);
 			String title = currentQuestion.getContent();
-			// ÏÔÊ¾Í¼Æ¬
+			// æ˜¾ç¤ºå›¾ç‰‡
 			String zuheName = currentQuestion.getRuleId() + "-"
 					+ currentQuestion.getQid();
 			;
@@ -415,7 +415,7 @@ public class QuestionAdapter2 extends BaseAdapter {
 			}else
 			{
 				answerHolder.examAnswerLayout.setVisibility(View.VISIBLE);
-				//½ûÓÃÑ¡Ôñ
+				//ç¦ç”¨é€‰æ‹©
 				contentHolder.examOption.forbidden(false);
 			}
 			showAnswer(answerHolder,currentQuestion, answer);
@@ -424,7 +424,7 @@ public class QuestionAdapter2 extends BaseAdapter {
 	}
 	private String answerToTF(String answer)
 	{
-		return "T".equals(answer)?" ¡Ì":"F".equals(answer)?" ¡Á":answer;
+		return "T".equals(answer)?" âˆš":"F".equals(answer)?" Ã—":answer;
 	}
 
 	public static class ContentViewHolder {
@@ -456,7 +456,7 @@ public class QuestionAdapter2 extends BaseAdapter {
 		holder.myAnswerTextView.setText(answerToTF(userAnswer));
 		holder.sysAnswerTextView.setText(answerToTF(trueAnswer));
 		holder.analysisTextView.setText(currentQuestion.getAnalysis());
-		if ("ÎÊ´ğÌâ".equals(type)) {
+		if ("é—®ç­”é¢˜".equals(type)) {
 			holder.answerResultImg.setVisibility(View.GONE);
 		} else {
 			holder.answerResultImg.setVisibility(View.VISIBLE);
@@ -474,7 +474,7 @@ public class QuestionAdapter2 extends BaseAdapter {
 		}
 	}
 
-	// ÅĞ¶Ï´ğ°¸ÊÇ·ñ°üº¬
+	// åˆ¤æ–­ç­”æ¡ˆæ˜¯å¦åŒ…å«
 	private boolean isContain(String trueAnswer, String answer) {
 		if (answer.length() == 1) {
 			return trueAnswer.contains(answer);
@@ -487,14 +487,14 @@ public class QuestionAdapter2 extends BaseAdapter {
 		return flag;
 	}
 
-	// ÏÔÊ¾ÌâÄ¿ÖĞµÄÍ¼Æ¬
+	// æ˜¾ç¤ºé¢˜ç›®ä¸­çš„å›¾ç‰‡
 	private void showPics(int questionCursor, String title,
 			String imageSavePath, String zuheName, LinearLayout examImages,
 			TextView examContent) {
-		if (title.contains("<IMG ")) // °üº¬Í¼Æ¬
+		if (title.contains("<IMG ")) // åŒ…å«å›¾ç‰‡
 		{
 			// String s = currentRule.getRuleId()+"-"+currentQuestion.getQid();
-			// ÏÈÈ¥sdÖĞÕÒ,ÕÒµ½¾ÍÏÔÊ¾,ÕÒ²»µ½ÏÈÏÂÔØÔÙÏÔÊ¾
+			// å…ˆå»sdä¸­æ‰¾,æ‰¾åˆ°å°±æ˜¾ç¤º,æ‰¾ä¸åˆ°å…ˆä¸‹è½½å†æ˜¾ç¤º
 			File dir = new File(imageSavePath);
 			if (dir.exists()) {
 				// dir.mkdirs();
@@ -508,7 +508,7 @@ public class QuestionAdapter2 extends BaseAdapter {
 						count--;
 					}
 				}
-				if (count == files.length) // Ã»ÓĞÍ¼Æ¬,Ã»¿¼ÂÇ¶àÍ¼Æ¬Ã»ÓĞ¼ÓÔØÍêÈ«µÄÇé¿ö
+				if (count == files.length) // æ²¡æœ‰å›¾ç‰‡,æ²¡è€ƒè™‘å¤šå›¾ç‰‡æ²¡æœ‰åŠ è½½å®Œå…¨çš„æƒ…å†µ
 				{
 					String[] imageUrls = parseAddress(title);
 					for (int i = 0; i < imageUrls.length; i++) {
@@ -532,13 +532,13 @@ public class QuestionAdapter2 extends BaseAdapter {
 							.execute(url);
 				}
 			}
-			examContent.setText(questionCursor + 1 + "¡¢"
+			examContent.setText(questionCursor + 1 + "ã€"
 					+ title.replaceAll("<IMG[\\S\\s]+>", ""));
 		} else
-			examContent.setText(questionCursor + 1 + "¡¢" + title);
+			examContent.setText(questionCursor + 1 + "ã€" + title);
 	}
 
-	// ½âÎöÍ¼Æ¬ÏÂÔØµØÖ·
+	// è§£æå›¾ç‰‡ä¸‹è½½åœ°å€
 	private String[] parseAddress(String address) {
 		String[] addr = null;
 		// if(address.contains("<IMG "))
@@ -558,7 +558,7 @@ public class QuestionAdapter2 extends BaseAdapter {
 		return addr;
 	}
 
-	// Òì²½ÏÂÔØÍ¼Æ¬
+	// å¼‚æ­¥ä¸‹è½½å›¾ç‰‡
 	private class GetImageTask extends AsyncTask<String, Void, Bitmap> {
 		private String fileName;
 		private LinearLayout examImages1;
@@ -577,22 +577,22 @@ public class QuestionAdapter2 extends BaseAdapter {
 			try {
 				fileName = fileName
 						+ params[0].substring(params[0].lastIndexOf("."));
-				url = new URL(params[0]); // ÉèÖÃURL
+				url = new URL(params[0]); // è®¾ç½®URL
 				HttpURLConnection con;
-				con = (HttpURLConnection) url.openConnection(); // ´ò¿ªÁ¬½Ó
-				con.setRequestMethod("GET"); // ÉèÖÃÇëÇó·½·¨
-				// ÉèÖÃÁ¬½Ó³¬Ê±Ê±¼äÎª5s
+				con = (HttpURLConnection) url.openConnection(); // æ‰“å¼€è¿æ¥
+				con.setRequestMethod("GET"); // è®¾ç½®è¯·æ±‚æ–¹æ³•
+				// è®¾ç½®è¿æ¥è¶…æ—¶æ—¶é—´ä¸º5s
 				con.setConnectTimeout(5000);
-				InputStream in = con.getInputStream(); // È¡µÃ×Ö½ÚÊäÈëÁ÷
+				InputStream in = con.getInputStream(); // å–å¾—å­—èŠ‚è¾“å…¥æµ
 				int len = 0;
 				byte buf[] = new byte[1024];
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				while ((len = in.read(buf)) != -1) {
-					out.write(buf, 0, len); // °ÑÊı¾İĞ´ÈëÄÚ´æ
+					out.write(buf, 0, len); // æŠŠæ•°æ®å†™å…¥å†…å­˜
 				}
 				byte[] data = out.toByteArray();
-				out.close(); // ¹Ø±ÕÄÚ´æÊä³öÁ÷
-				// ¶ş½øÖÆÊı¾İÉú³ÉÎ»Í¼
+				out.close(); // å…³é—­å†…å­˜è¾“å‡ºæµ
+				// äºŒè¿›åˆ¶æ•°æ®ç”Ÿæˆä½å›¾
 				Bitmap bit = BitmapFactory
 						.decodeByteArray(data, 0, data.length);
 				return bit;
@@ -632,16 +632,16 @@ public class QuestionAdapter2 extends BaseAdapter {
 			return filePath;
 		}
 	}
-//	//ÏÔÊ¾»òÕßÒş²Ø´ğ°¸
+//	//æ˜¾ç¤ºæˆ–è€…éšè—ç­”æ¡ˆ
 //	public void showAnswer() {
-//		System.out.println("ÏÔÊ¾»òÕßÒş²Ø´ğ°¸");
+//		System.out.println("æ˜¾ç¤ºæˆ–è€…éšè—ç­”æ¡ˆ");
 //		if (holder.examAnswerLayout.getVisibility() == View.GONE) {
 //			holder.examAnswerLayout.setVisibility(View.VISIBLE);
 //		} else {
 //			holder.examAnswerLayout.setVisibility(View.GONE);
 //		}
 //	}
-	//Çå³ıÑ¡ÔñÏî
+	//æ¸…é™¤é€‰æ‹©é¡¹
 	public void clearCheck() {
 		contentHolder.examOption.clearCheck();
 	}
@@ -667,7 +667,7 @@ public class QuestionAdapter2 extends BaseAdapter {
 //			if (id == -1)
 //				return;
 //			activity.saveChoiceAnswer(((char) (64 + id)) + "");
-			//viewholder²»ÊÇÈ·¶¨µÄÄÇ¸öÌâµÄholder,½«Õâ¸ö·Åµ½activityÖĞ
+			//viewholderä¸æ˜¯ç¡®å®šçš„é‚£ä¸ªé¢˜çš„holder,å°†è¿™ä¸ªæ”¾åˆ°activityä¸­
 //			if("practice".equals(action))
 //			{
 //				contentHolder.examOption1.setEnabled(false);
@@ -679,7 +679,7 @@ public class QuestionAdapter2 extends BaseAdapter {
 //		@Override
 //		public void onCheckedChanged(RadioGroup group, int checkedId) {
 //			// TODO Auto-generated method stub
-////			System.out.println("µ÷ÓÃonCheckedChanged·½·¨, checkedId = "+ checkedId);
+////			System.out.println("è°ƒç”¨onCheckedChangedæ–¹æ³•, checkedId = "+ checkedId);
 //			int id = checkedId;
 //			if (id == -1)
 //				return;
@@ -688,7 +688,7 @@ public class QuestionAdapter2 extends BaseAdapter {
 	}
 	public void setRadioEnable(RadioGroup group,boolean flag)
 	{
-		System.out.println("ÉèÖÃ½ûÓÃradiobutton");
+		System.out.println("è®¾ç½®ç¦ç”¨radiobutton");
 		int viewCount = group.getChildCount();
 		for(int i=0;i<viewCount;i++)
 		{
@@ -751,13 +751,13 @@ public class QuestionAdapter2 extends BaseAdapter {
 			// TODO Auto-generated method stub
 			AlertDialog.Builder builder = new AlertDialog.Builder(context);
 			builder.setCancelable(true);
-			builder.setItems(new CharSequence[]{"¸´ÖÆÄÚÈİ"}, new DialogInterface.OnClickListener() {
+			builder.setItems(new CharSequence[]{"å¤åˆ¶å†…å®¹"}, new DialogInterface.OnClickListener() {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					// TODO Auto-generated method stub
 					setClipBoard(((TextView)v).getText().toString());
-					Toast.makeText(context, "ÒÑ¸´ÖÆµ½¼ôÌù°å", Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, "å·²å¤åˆ¶åˆ°å‰ªè´´æ¿", Toast.LENGTH_SHORT).show();
 				}
 			});
 			builder.create().show();

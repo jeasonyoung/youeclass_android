@@ -67,12 +67,12 @@ public class VideoActivity extends Activity implements OnTouchListener,OnGesture
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);//²»Òª±êÌâÀ¸,±ØĞëÔÚsetContentviewÖ®Ç°
-		//ÉèÖÃÈ«ÆÁ
+		requestWindowFeature(Window.FEATURE_NO_TITLE);//ä¸è¦æ ‡é¢˜æ ,å¿…é¡»åœ¨setContentviewä¹‹å‰
+		//è®¾ç½®å…¨å±
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		this.setContentView(R.layout.activity_video);
 		this.mAudioManager = (AudioManager) this.getSystemService(AUDIO_SERVICE);
-		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//ÆÁÄ»³£ÁÁ
+		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//å±å¹•å¸¸äº®
 		Intent intent = this.getIntent();
 		this.name = intent.getStringExtra("name");
 		this.url = intent.getStringExtra("url");
@@ -84,12 +84,12 @@ public class VideoActivity extends Activity implements OnTouchListener,OnGesture
 		{
 		if(this.url.indexOf(username)!=-1)
 		{
-			//±íÊ¾´ÓÎÄ¼şÀï¶ÁÈ¡,¿´ÎÄ¼şÊÇ·ñ´æÔÚ
+			//è¡¨ç¤ºä»æ–‡ä»¶é‡Œè¯»å–,çœ‹æ–‡ä»¶æ˜¯å¦å­˜åœ¨
 			File file = new File(url);
 			if(!file.exists())
 			{
-				Toast.makeText(this, "±¾µØÎÄ¼şÒÑ¾­±»É¾³ı", Toast.LENGTH_SHORT).show();
-				//ĞŞ¸ÄcourseTabÖĞµÄ¼ÇÂ¼,½áÊø
+				Toast.makeText(this, "æœ¬åœ°æ–‡ä»¶å·²ç»è¢«åˆ é™¤", Toast.LENGTH_SHORT).show();
+				//ä¿®æ”¹courseTabä¸­çš„è®°å½•,ç»“æŸ
 				new CourseDao(this).updateState(httpUrl, 0, username);
 				if("local".equals(intent.getStringExtra("loginType")))
 				{
@@ -105,8 +105,8 @@ public class VideoActivity extends Activity implements OnTouchListener,OnGesture
 		this.view = (SurfaceView) this.findViewById(R.id.surfaceView);
 		this.videoloadingLayout = (RelativeLayout) this.findViewById(R.id.videoloadingLayout);
 		WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
-		width = wm.getDefaultDisplay().getWidth();//ÆÁÄ»¿í¶È
-		height = wm.getDefaultDisplay().getHeight();//ÆÁÄ»¸ß¶È
+		width = wm.getDefaultDisplay().getWidth();//å±å¹•å®½åº¦
+		height = wm.getDefaultDisplay().getHeight();//å±å¹•é«˜åº¦
 		this.title = new PopupWindow(t,400,50);
 		this.title.setAnimationStyle(R.style.AnimationFade);
 		this.toolbar = new PopupWindow(bar);
@@ -117,7 +117,7 @@ public class VideoActivity extends Activity implements OnTouchListener,OnGesture
 	             @Override
 	             public boolean queueIdle() 
 	             {
-	                 //ÏÔÊ¾Á½¸öpopupwindow
+	                 //æ˜¾ç¤ºä¸¤ä¸ªpopupwindow
 	            	 if(title!=null&&view.isShown())
 	            	 {
 	            		 title.showAtLocation(view, Gravity.TOP, 0, 0);
@@ -128,16 +128,16 @@ public class VideoActivity extends Activity implements OnTouchListener,OnGesture
 	            		 toolbar.showAtLocation(view, Gravity.BOTTOM, 0, 0);
 	            		 toolbar.update(0, 0, width, 120);
 	            	 }
-	            	//ÏÔÊ¾ÕıÔÚ¼ÓÔØ
+	            	//æ˜¾ç¤ºæ­£åœ¨åŠ è½½
 	                return false;  
 	             }
 	      });
 		returnBtn = (ImageButton) t.findViewById(R.id.imageBack);
 		titleTxt = (TextView) t.findViewById(R.id.videoName);
 		titleTxt.setText(name);
-		seekbar = (SeekBar) bar.findViewById(R.id.seekBar);//ÊÓÆµ½ø¶ÈÌõ 
-		volumnBar = (SeekBar) t.findViewById(R.id.seekBar1);//ÒôÁ¿ÍÏ×§Ìõ
-		volumnSize = (TextView) t.findViewById(R.id.volumnSize);//ÒôÁ¿°Ù·ÖÊı
+		seekbar = (SeekBar) bar.findViewById(R.id.seekBar);//è§†é¢‘è¿›åº¦æ¡ 
+		volumnBar = (SeekBar) t.findViewById(R.id.seekBar1);//éŸ³é‡æ‹–æ‹½æ¡
+		volumnSize = (TextView) t.findViewById(R.id.volumnSize);//éŸ³é‡ç™¾åˆ†æ•°
 		volumnMax = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		int current = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 		volumnBar.setMax(volumnMax);
@@ -178,7 +178,7 @@ public class VideoActivity extends Activity implements OnTouchListener,OnGesture
 			@Override
 			public boolean onError(MediaPlayer mp, int what, int extra) {
 				// TODO Auto-generated method stub
-				Toast.makeText(VideoActivity.this, "Î´ÖªÃ½Ìå´íÎó", Toast.LENGTH_SHORT).show();
+				Toast.makeText(VideoActivity.this, "æœªçŸ¥åª’ä½“é”™è¯¯", Toast.LENGTH_SHORT).show();
 				VideoActivity.this.finish();
 				return false;
 			}
@@ -196,7 +196,7 @@ public class VideoActivity extends Activity implements OnTouchListener,OnGesture
 		   		 	toolbar.update(0, 0, width, 120);
 				}
 				if(playbtn!=null){
-				//»»Í¼Æ¬
+				//æ¢å›¾ç‰‡
 				playbtn.setBackgroundResource(R.drawable.play_button);
 				playbtn.setImageResource(R.drawable.player_play);
 				seekbar.setProgress(0);
@@ -213,10 +213,10 @@ public class VideoActivity extends Activity implements OnTouchListener,OnGesture
 		}
 		
 		
-		//¼àÌı²¥ÍêÊÂ¼ş
+		//ç›‘å¬æ’­å®Œäº‹ä»¶
 		
 		
-		//¿ªÒ»¸öÏß³ÌµÈ×¼±¸ºÃ¾Í¿ªÊ¼²¥·Å
+		//å¼€ä¸€ä¸ªçº¿ç¨‹ç­‰å‡†å¤‡å¥½å°±å¼€å§‹æ’­æ”¾
 		new Thread(){
 			public void run() {
 				while(true)
@@ -224,7 +224,7 @@ public class VideoActivity extends Activity implements OnTouchListener,OnGesture
 						if(player.isCreated())
 						{
 							String url="http://192.168.1.246:8080/struts01/video/daomeixiong001.3gp";
-							String url2 = "http://www.youeclass.com:8090/test_video.mp4"; //ÍøÂçÊÓÆµµØÖ·
+							String url2 = "http://www.youeclass.com:8090/test_video.mp4"; //ç½‘ç»œè§†é¢‘åœ°å€
 							try{
 							player.playUrl(url2);
 							handler.sendEmptyMessage(1);
@@ -267,7 +267,7 @@ public class VideoActivity extends Activity implements OnTouchListener,OnGesture
         		}
         		break;
         	case -1:
-        		Toast.makeText(theActivity, "Î´ÖªÃ½Ìå´íÎó", Toast.LENGTH_SHORT).show();
+        		Toast.makeText(theActivity, "æœªçŸ¥åª’ä½“é”™è¯¯", Toast.LENGTH_SHORT).show();
         		break;
         	}
         	
@@ -310,7 +310,7 @@ public class VideoActivity extends Activity implements OnTouchListener,OnGesture
 			dao.save(record);
 		}
 	}
-	private void recordAndBack()	//·µ»Ø°´Å¥µÄ¼àÌı·½Ê½ÊµÏÖ
+	private void recordAndBack()	//è¿”å›æŒ‰é’®çš„ç›‘å¬æ–¹å¼å®ç°
 	{
 		//to do something
 		if(!"free".equals(playType))
@@ -331,7 +331,7 @@ public class VideoActivity extends Activity implements OnTouchListener,OnGesture
 	@Override
 	protected void onStart() {
 		// TODO Auto-generated method stub
-		//¿ªÒ»¸öÏß³Ì(Ó¦¸ÃÒª¿ªÒ»¸öÏß³Ì)
+		//å¼€ä¸€ä¸ªçº¿ç¨‹(åº”è¯¥è¦å¼€ä¸€ä¸ªçº¿ç¨‹)
 		super.onStart();
 	}
 	@Override
@@ -346,19 +346,19 @@ public class VideoActivity extends Activity implements OnTouchListener,OnGesture
 		super.onPause();
 		MobclickAgent.onPause(this);
 	}
-	private void playOrPause()	//µã»÷²¥·Å»òÕßÔİÍ£
+	private void playOrPause()	//ç‚¹å‡»æ’­æ”¾æˆ–è€…æš‚åœ
 	{
-		//ÔİÍ£ÊÓÆµ²¥·Å
+		//æš‚åœè§†é¢‘æ’­æ”¾
 		if(player.isPlaying())
 		{
-			player.pause();//ÔİÍ£
-			//¸üĞÂÊı¾İ¿â
+			player.pause();//æš‚åœ
+			//æ›´æ–°æ•°æ®åº“
 			if(!"free".equals(playType))
 			{
 			record.setCurrentTime(player.getCurrentTime());
 			dao.saveOrUpdate(record);
 			}
-			//»»Í¼Æ¬
+			//æ¢å›¾ç‰‡
 			playbtn.setBackgroundResource(R.drawable.play_button);
 			playbtn.setImageResource(R.drawable.player_play);
 			return;
@@ -386,7 +386,7 @@ public class VideoActivity extends Activity implements OnTouchListener,OnGesture
 		// TODO Auto-generated method stub
 		if(!player.isNull())
 		{
-			recordAndBack();//Í£Ö¹¼ÇÊ±
+			recordAndBack();//åœæ­¢è®°æ—¶
 		}
 		super.onStop();
 	}
@@ -404,7 +404,7 @@ public class VideoActivity extends Activity implements OnTouchListener,OnGesture
 		}
 		super.onDestroy();
 	}
-	//Çá´¥ÆÁÄ»,¿ØÖÆÌõ³öÏÖ»òÕßÏûÊ§
+	//è½»è§¦å±å¹•,æ§åˆ¶æ¡å‡ºç°æˆ–è€…æ¶ˆå¤±
 	@Override
 	public boolean onDown(MotionEvent e) {
 		// TODO Auto-generated method stub
@@ -480,7 +480,7 @@ public class VideoActivity extends Activity implements OnTouchListener,OnGesture
 		// TODO Auto-generated method stub
 		int currentVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 		   switch (keyCode) {
-		case KeyEvent.KEYCODE_VOLUME_UP:// ÒôÁ¿Ôö´ó
+		case KeyEvent.KEYCODE_VOLUME_UP:// éŸ³é‡å¢å¤§
 		mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume+1, 8);
 		if(title!=null&&title.isShowing())
 		{
@@ -488,7 +488,7 @@ public class VideoActivity extends Activity implements OnTouchListener,OnGesture
 			volumnSize.setText((currentVolume+1)*100/volumnMax+"%");
 		}
 		break;
-		case KeyEvent.KEYCODE_VOLUME_DOWN:// ÒôÁ¿¼õĞ¡
+		case KeyEvent.KEYCODE_VOLUME_DOWN:// éŸ³é‡å‡å°
 		mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume-1, 8);
 		if(title!=null&&title.isShowing())
 		{
@@ -499,7 +499,7 @@ public class VideoActivity extends Activity implements OnTouchListener,OnGesture
 			}
 		}
 		break;
-		case KeyEvent.KEYCODE_BACK:// ·µ»Ø¼ü
+		case KeyEvent.KEYCODE_BACK:// è¿”å›é”®
 		//jniOnCallCppEvent();
 		    return super.onKeyDown(keyCode, event); 
 		default:

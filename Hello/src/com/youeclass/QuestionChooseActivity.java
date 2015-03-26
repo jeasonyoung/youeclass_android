@@ -111,21 +111,21 @@ public class QuestionChooseActivity extends Activity implements OnClickListener{
 		{
 			this.scoreLayout.setVisibility(View.VISIBLE);
 			this.data = new String[10];
-			this.data[0] = "ÊÔÌâ×Ü·Ö:"+intent.getIntExtra("paperScore",0)+"·Ö";//×Ü·Ö
-			this.data[1] = "ÊÔÌâÏŞÊ±:"+intent.getIntExtra("paperTime",0)+"·ÖÖÓ";//×ÜÊ±
-			this.data[2] = "±¾´ÎµÃ·Ö:"+intent.getDoubleExtra("userScore",0)+"·Ö";//±¾´ÎµÃ·Ö[ºìÉ«]
-			this.data[3] = "´ğÌâºÄÊ±:"+intent.getIntExtra("useTime",0)+"·ÖÖÓ";//ºÄÊ±
-			this.data[4] = "ÒÑ×ö:"+isDone.size()+"Ìâ";//ÒÑ×ö
-			this.data[5] = "Î´×ö:"+(questionList.size()-isDone.size())+"Ìâ";//Î´×ö
+			this.data[0] = "è¯•é¢˜æ€»åˆ†:"+intent.getIntExtra("paperScore",0)+"åˆ†";//æ€»åˆ†
+			this.data[1] = "è¯•é¢˜é™æ—¶:"+intent.getIntExtra("paperTime",0)+"åˆ†é’Ÿ";//æ€»æ—¶
+			this.data[2] = "æœ¬æ¬¡å¾—åˆ†:"+intent.getDoubleExtra("userScore",0)+"åˆ†";//æœ¬æ¬¡å¾—åˆ†[çº¢è‰²]
+			this.data[3] = "ç­”é¢˜è€—æ—¶:"+intent.getIntExtra("useTime",0)+"åˆ†é’Ÿ";//è€—æ—¶
+			this.data[4] = "å·²åš:"+isDone.size()+"é¢˜";//å·²åš
+			this.data[5] = "æœªåš:"+(questionList.size()-isDone.size())+"é¢˜";//æœªåš
 			int right = getRightNum();
-			this.data[6] = "×ö¶Ô:"+right+"Ìâ";//×ö¶Ô
-			this.data[7] = "×ö´í:"+(isDone.size()-right)+"Ìâ";//×ö´í
-			this.data[8] = "¹²¼Æ:"+questionList.size()+"Ìâ";//¹²¼ÆÌâ
+			this.data[6] = "åšå¯¹:"+right+"é¢˜";//åšå¯¹
+			this.data[7] = "åšé”™:"+(isDone.size()-right)+"é¢˜";//åšé”™
+			this.data[8] = "å…±è®¡:"+questionList.size()+"é¢˜";//å…±è®¡é¢˜
 			if(isDone.size()==0)
 			{
-				this.data[9] = "ÕıÈ·ÂÊ:0%";
+				this.data[9] = "æ­£ç¡®ç‡:0%";
 			}else
-				this.data[9] = "ÕıÈ·ÂÊ:"+(((int)(right*10000/isDone.size())/100.0))+"%";//ÕıÈ·ÂÊ
+				this.data[9] = "æ­£ç¡®ç‡:"+(((int)(right*10000/isDone.size())/100.0))+"%";//æ­£ç¡®ç‡
 			this.scoreGridView.setAdapter(new QuestionGridAdapter2(this,null,data));
 			this.questionListView.setAdapter(new ChooseListAdapter2(this,this,questionList,action));
 			this.loadingLayout.setVisibility(View.GONE);
@@ -138,7 +138,7 @@ public class QuestionChooseActivity extends Activity implements OnClickListener{
 	}
 	private int getRightNum()
 	{
-		//½«´íÌâ¼ÓÈë´íÌâ¼¯
+		//å°†é”™é¢˜åŠ å…¥é”™é¢˜é›†
 		int count=0;
 		for(ExamQuestion q:questionList)
 		{
@@ -209,7 +209,7 @@ public class QuestionChooseActivity extends Activity implements OnClickListener{
 			this.finish();
 		}else
 		{
-			//Æô¶¯DoExamQuestion
+			//å¯åŠ¨DoExamQuestion
 			Intent mIntent = new Intent(this,QuestionDoExamActivity2.class);
 			mIntent.putExtra("action", "DoExam");
 			mIntent.putExtra("paperName", r.getPapername());
@@ -235,7 +235,7 @@ public class QuestionChooseActivity extends Activity implements OnClickListener{
 			Intent data = new Intent();
 			data.putExtra("action", "showQuestionWithAnswer");  
         	data.putExtra("cursor", 0);  
-         	//ÇëÇó´úÂë¿ÉÒÔ×Ô¼ºÉèÖÃ£¬ÕâÀïÉèÖÃ³É20  
+         	//è¯·æ±‚ä»£ç å¯ä»¥è‡ªå·±è®¾ç½®ï¼Œè¿™é‡Œè®¾ç½®æˆ20  
         	this.setResult(20, data);
         	this.finish();
 		}else if("chooseQuestion".equals(action)||"otherChooseQuestion".equals(action))
@@ -243,14 +243,14 @@ public class QuestionChooseActivity extends Activity implements OnClickListener{
 			Intent data=new Intent();  
          	data.putExtra("action", "showQuestionWithAnswer");  
          	data.putExtra("cursor", cursor);  
-         	//ÇëÇó´úÂë¿ÉÒÔ×Ô¼ºÉèÖÃ£¬ÕâÀïÉèÖÃ³É20  
+         	//è¯·æ±‚ä»£ç å¯ä»¥è‡ªå·±è®¾ç½®ï¼Œè¿™é‡Œè®¾ç½®æˆ20  
          	this.setResult(20, data);  
-         	//¹Ø±ÕµôÕâ¸öActivity  
+         	//å…³é—­æ‰è¿™ä¸ªActivity  
          	this.finish();
 		}
 		else
 		{
-			//Æô¶¯DoExamQuestion
+			//å¯åŠ¨DoExamQuestion
 			Intent mIntent = new Intent(this,QuestionDoExamActivity2.class);
 			mIntent.putExtra("action", "showQuestionWithAnswer");  
 			mIntent.putExtra("paperName", r.getPapername());
@@ -264,7 +264,7 @@ public class QuestionChooseActivity extends Activity implements OnClickListener{
 			mIntent.putExtra("questionListJson", questionListJson);
 			this.startActivity(mIntent);
 		}
-			//·ÇdoexamQuestion
+			//édoexamQuestion
 	}
 	public boolean onKeyDown(int paramInt, KeyEvent paramKeyEvent)
 	{

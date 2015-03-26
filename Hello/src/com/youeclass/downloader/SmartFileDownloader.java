@@ -20,7 +20,7 @@ import com.youeclass.dao.DownloadDao;
 import com.youeclass.entity.DownloadItem;
 
 /**
- * ÎÄ¼şÏÂÔØÆ÷
+ * æ–‡ä»¶ä¸‹è½½å™¨
  * 
  */
 public class SmartFileDownloader {
@@ -28,35 +28,35 @@ public class SmartFileDownloader {
 	private Context context;
 	private String username;
 	private DownloadDao DownloadDao;
-	/* ÒÑÏÂÔØÎÄ¼ş³¤¶È */
+	/* å·²ä¸‹è½½æ–‡ä»¶é•¿åº¦ */
 	private int downloadSize = 0;
-	/* Ô­Ê¼ÎÄ¼ş³¤¶È */
+	/* åŸå§‹æ–‡ä»¶é•¿åº¦ */
 	private int fileSize = 0;
-	/* Ïß³ÌÊı */
+	/* çº¿ç¨‹æ•° */
 	private SmartDownloadThread[] threads;
-	/* Ã¿ÌõÏß³ÌÏÂÔØµÄ³¤¶È */
+	/* æ¯æ¡çº¿ç¨‹ä¸‹è½½çš„é•¿åº¦ */
 	private int piece;
-	/* ±¾µØ±£´æÎÄ¼ş */
+	/* æœ¬åœ°ä¿å­˜æ–‡ä»¶ */
 	private File saveFile;
-	/* ÏÂÔØÂ·¾¶ */
+	/* ä¸‹è½½è·¯å¾„ */
 	private String downloadUrl;
-	/* ÏÂÔØ Ïß³ÌÊı¾İµÄ¼¯ºÏ */
+	/* ä¸‹è½½ çº¿ç¨‹æ•°æ®çš„é›†åˆ */
 	private List<DownloadItem> list;
-	/* ÊÇ·ñÃ»ÏÂÍê */
+	/* æ˜¯å¦æ²¡ä¸‹å®Œ */
 	private boolean isExist = false;
 	private boolean isOver = false;
-	/* ¸÷¸öÈÎÎñµÄÔİÍ£±êÊ¶ */
+	/* å„ä¸ªä»»åŠ¡çš„æš‚åœæ ‡è¯† */
 	public static Map<String,Boolean> flagMap = new HashMap<String,Boolean>();
 	/*handler*/
 	private Handler mHandler;
 	/**
-	 * »ñÈ¡Ïß³ÌÊı
+	 * è·å–çº¿ç¨‹æ•°
 	 */
 	public int getThreadSize() {
 		return threads.length;
 	}
 	/**
-	 * »ñÈ¡ÎÄ¼ş´óĞ¡
+	 * è·å–æ–‡ä»¶å¤§å°
 	 * 
 	 * @return
 	 */
@@ -65,7 +65,7 @@ public class SmartFileDownloader {
 	}
 
 	/**
-	 * ÀÛ¼ÆÒÑÏÂÔØ´óĞ¡
+	 * ç´¯è®¡å·²ä¸‹è½½å¤§å°
 	 * 
 	 * @param size
 	 */
@@ -74,20 +74,20 @@ public class SmartFileDownloader {
 	}
 
 	/**
-	 * ¸üĞÂÖ¸¶¨Ïß³Ì×îºóÏÂÔØµÄÎ»ÖÃ
+	 * æ›´æ–°æŒ‡å®šçº¿ç¨‹æœ€åä¸‹è½½çš„ä½ç½®
 	 */ 
 	protected synchronized void update(DownloadItem loader) {
 		this.DownloadDao.update(loader);
 	}
 	/**
-	 * ¹¹½¨ÎÄ¼şÏÂÔØÆ÷
+	 * æ„å»ºæ–‡ä»¶ä¸‹è½½å™¨
 	 * 
 	 * @param downloadUrl
-	 *            ÏÂÔØÂ·¾¶
+	 *            ä¸‹è½½è·¯å¾„
 	 * @param fileSaveDir
-	 *            ÎÄ¼ş±£´æÄ¿Â¼
+	 *            æ–‡ä»¶ä¿å­˜ç›®å½•
 	 * @param threadNum
-	 *            ÏÂÔØÏß³ÌÊı
+	 *            ä¸‹è½½çº¿ç¨‹æ•°
 	 */
 	public SmartFileDownloader(Context context, String downloadUrl,
 			File fileSaveDir, int threadNum,String username,Handler handler) {
@@ -119,42 +119,42 @@ public class SmartFileDownloader {
 			conn.connect();
 			//printResponseHeader(conn);
 			if (conn.getResponseCode() == 200) {
-				this.fileSize = conn.getContentLength();// ¸ù¾İÏìÓ¦»ñÈ¡ÎÄ¼ş´óĞ¡
+				this.fileSize = conn.getContentLength();// æ ¹æ®å“åº”è·å–æ–‡ä»¶å¤§å°
 				if (this.fileSize <= 0)
 				{
 					//throw new RuntimeException("Unkown file size ");
 					mHandler.sendEmptyMessage(-3);
 				}
 				String filename = getFileName(conn);
-				this.saveFile = new File(fileSaveDir, filename);/* ±£´æÎÄ¼ş */
+				this.saveFile = new File(fileSaveDir, filename);/* ä¿å­˜æ–‡ä»¶ */
 				list = DownloadDao.findByUrl(downloadUrl,username);
 				if (this.saveFile.exists()) {
 					System.out.println(list.size());
 					if (list.size() > 0) {
-						// ±íÊ¾»¹ÓĞÃ»ÓĞÏÂÔØÍê³ÉµÄ
+						// è¡¨ç¤ºè¿˜æœ‰æ²¡æœ‰ä¸‹è½½å®Œæˆçš„
 						if (list.size() == this.threads.length) {
 							for (int i = 0; i < list.size(); i++) {
-								// ÒÑ¾­ÏÂÔØµÄ³¤¶È
+								// å·²ç»ä¸‹è½½çš„é•¿åº¦
 								this.downloadSize += list.get(i)
 										.getCompleteSize();
 							}
-							print("ÒÑ¾­ÏÂÔØµÄ³¤¶È" + this.downloadSize);
+							print("å·²ç»ä¸‹è½½çš„é•¿åº¦" + this.downloadSize);
 						}
 						isExist = true;
 					} else {
-						print("ÎÄ¼şÒÑ¾­ÏÂÔØ");
-						//É¾³ıÎÄ¼ş,ÖØĞÂÏÂÔØ
+						print("æ–‡ä»¶å·²ç»ä¸‹è½½");
+						//åˆ é™¤æ–‡ä»¶,é‡æ–°ä¸‹è½½
 						this.saveFile.delete();
 					}
 				} 
-				// ÎÄ¼ş»¹²»´æÔÚ
+				// æ–‡ä»¶è¿˜ä¸å­˜åœ¨
 				if(!this.saveFile.exists()){
-					// ½«ÎÄ¼ş·Ö¿é,Èç¹û²»ÄÜÕû³ı,ÓàÊı·Åµ½×îºóÒ»¿é
-					this.piece = this.fileSize / this.threads.length; // Ã¿Ò»¿éµÄ´óĞ¡
-					//µÚÒ»¿é 0-(piece-1)
-					//µÚ¶ş¿é piece*1-piece*2-1
+					// å°†æ–‡ä»¶åˆ†å—,å¦‚æœä¸èƒ½æ•´é™¤,ä½™æ•°æ”¾åˆ°æœ€åä¸€å—
+					this.piece = this.fileSize / this.threads.length; // æ¯ä¸€å—çš„å¤§å°
+					//ç¬¬ä¸€å— 0-(piece-1)
+					//ç¬¬äºŒå— piece*1-piece*2-1
 					if (!isExist) {	
-						DownloadDao.deleteAll(this.downloadUrl,username);//ÎÄ¼ş´æÔÚ¼ÇÂ¼´æÔÚÃ»ÓĞÒâÒå
+						DownloadDao.deleteAll(this.downloadUrl,username);//æ–‡ä»¶å­˜åœ¨è®°å½•å­˜åœ¨æ²¡æœ‰æ„ä¹‰
 						list.clear();
 						DownloadItem loader = new DownloadItem();
 						loader.setStartPos(0);
@@ -185,13 +185,13 @@ public class SmartFileDownloader {
 							loader2.setUsername(username);
 							list.add(loader2);
 						}
-						//½«°²ÅÅµÄÏß³Ì±£´æ½øÊı¾İ¿â
+						//å°†å®‰æ’çš„çº¿ç¨‹ä¿å­˜è¿›æ•°æ®åº“
 						DownloadDao.save(list);
 					}
 				}
 			} else {
 				//throw new RuntimeException("server no response ");
-				//Ã»ÓĞÏìÓ¦
+				//æ²¡æœ‰å“åº”
 				//to do something !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 				handler.sendEmptyMessage(-1);
 			}
@@ -199,18 +199,18 @@ public class SmartFileDownloader {
 			e.printStackTrace();
 			print(e.toString());
 			//throw new RuntimeException("don't connection this url");
-			//ÎŞ·¨Á¬½Ó
+			//æ— æ³•è¿æ¥
 			//to do something !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			handler.sendEmptyMessage(-1);
 		}
 	}
 	/**
-	 * »ñÈ¡ÎÄ¼şÃû
+	 * è·å–æ–‡ä»¶å
 	 */
 	private String getFileName(HttpURLConnection conn) {
 		String filename = this.downloadUrl.substring(this.downloadUrl
 				.lastIndexOf('/') + 1);
-		if (filename == null || "".equals(filename.trim())) {// Èç¹û»ñÈ¡²»µ½ÎÄ¼şÃû³Æ
+		if (filename == null || "".equals(filename.trim())) {// å¦‚æœè·å–ä¸åˆ°æ–‡ä»¶åç§°
 			for (int i = 0;; i++) {
 				String mine = conn.getHeaderField(i);
 				if (mine == null)
@@ -223,17 +223,17 @@ public class SmartFileDownloader {
 						return m.group(1);
 				}
 			}
-			filename = UUID.randomUUID() + ".tmp";// Ä¬ÈÏÈ¡Ò»¸öÎÄ¼şÃû
+			filename = UUID.randomUUID() + ".tmp";// é»˜è®¤å–ä¸€ä¸ªæ–‡ä»¶å
 		}
 		return filename;
 	}
 
 	/**
-	 * ¿ªÊ¼ÏÂÔØÎÄ¼ş
+	 * å¼€å§‹ä¸‹è½½æ–‡ä»¶
 	 * 
 	 * @param listener
-	 *            ¼àÌıÏÂÔØÊıÁ¿µÄ±ä»¯,Èç¹û²»ĞèÒªÁË½âÊµÊ±ÏÂÔØµÄÊıÁ¿,¿ÉÒÔÉèÖÃÎªnull
-	 * @return ÒÑÏÂÔØÎÄ¼ş´óĞ¡
+	 *            ç›‘å¬ä¸‹è½½æ•°é‡çš„å˜åŒ–,å¦‚æœä¸éœ€è¦äº†è§£å®æ—¶ä¸‹è½½çš„æ•°é‡,å¯ä»¥è®¾ç½®ä¸ºnull
+	 * @return å·²ä¸‹è½½æ–‡ä»¶å¤§å°
 	 * @throws Exception
 	 */
 	public int download(SmartDownloadProgressListener listener)
@@ -258,14 +258,14 @@ public class SmartFileDownloader {
 					this.threads[i] = null;
 				}
 			}
-			boolean notFinish = true;// ÏÂÔØÎ´Íê³É
-			while (notFinish&&SmartFileDownloader.flagMap.get(downloadUrl)) {// Ñ­»·ÅĞ¶ÏÊÇ·ñÏÂÔØÍê±Ï
+			boolean notFinish = true;// ä¸‹è½½æœªå®Œæˆ
+			while (notFinish&&SmartFileDownloader.flagMap.get(downloadUrl)) {// å¾ªç¯åˆ¤æ–­æ˜¯å¦ä¸‹è½½å®Œæ¯•
 				Thread.sleep(900);
-				notFinish = false;// ¼Ù¶¨ÏÂÔØÍê³É
+				notFinish = false;// å‡å®šä¸‹è½½å®Œæˆ
 				for (int i = 0; i < this.threads.length; i++) {
 					if (this.threads[i] != null && !this.threads[i].isFinish()) {
-						notFinish = true;// ÏÂÔØÃ»ÓĞÍê³É
-						if (this.threads[i].getDownLength() == -1) {// Èç¹ûÏÂÔØÊ§°Ü,ÔÙÖØĞÂÏÂÔØ
+						notFinish = true;// ä¸‹è½½æ²¡æœ‰å®Œæˆ
+						if (this.threads[i].getDownLength() == -1) {// å¦‚æœä¸‹è½½å¤±è´¥,å†é‡æ–°ä¸‹è½½
 							this.threads[i] = new SmartDownloadThread(this,
 									url, list.get(i), this.saveFile);
 							this.threads[i].setPriority(7);
@@ -277,7 +277,7 @@ public class SmartFileDownloader {
 					System.out.println(this.downloadSize);
 					listener.onDownloadSize(this.downloadSize);
 			}
-			if(!notFinish)	//ÒÑ¾­ÏÂÔØÍê
+			if(!notFinish)	//å·²ç»ä¸‹è½½å®Œ
 			{
 				DownloadDao.deleteAll(this.downloadUrl,this.downloadSize,this.saveFile.getPath(),username);
 			}else
@@ -294,7 +294,7 @@ public class SmartFileDownloader {
 	}
 
 	/**
-	 * »ñÈ¡HttpÏìÓ¦Í·×Ö¶Î
+	 * è·å–Httpå“åº”å¤´å­—æ®µ
 	 * 
 	 * @param http
 	 * @return
@@ -312,7 +312,7 @@ public class SmartFileDownloader {
 	}
 
 	/**
-	 * ´òÓ¡HttpÍ·×Ö¶Î
+	 * æ‰“å°Httpå¤´å­—æ®µ
 	 * 
 	 * @param http
 	 */
@@ -324,7 +324,7 @@ public class SmartFileDownloader {
 		}
 	}
 
-	// ´òÓ¡ÈÕÖ¾
+	// æ‰“å°æ—¥å¿—
 	private static void print(String msg) {
 		Log.i(TAG, msg);
 	}
@@ -343,7 +343,7 @@ public class SmartFileDownloader {
 		boolean flag = true ;
 		for(SmartDownloadThread t:threads)
 		{
-			//isAliveÎªÕæ±íÊ¾Îª»î¶¯Ïß³Ì
+			//isAliveä¸ºçœŸè¡¨ç¤ºä¸ºæ´»åŠ¨çº¿ç¨‹
 			flag = flag&&!t.isAlive();
 		}
 		return flag&&isOver;

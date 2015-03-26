@@ -73,17 +73,17 @@ import com.youeclass.entity.ExamRecord;
 import com.youeclass.entity.ExamRule;
 
 /**
- * ÊÔÌâ½çÃæ ÓĞ¼¸¸ö²Ù×÷¶¼¹²ÓÃ´Ë½çÃæ doExam, examTitle ÏÔÊ¾ÊÔ¾í±êÌâ,·µ»Ø¼üÌáÊ¾ÊÇ·ñÍË³ö¿¼ÊÔ,ÏÂÃæÊÇ½»¾í°´Å¥
- * ½øÀ´ÏÈ¼Ó¿¼ÊÔ¼ÇÂ¼,Ñ¡ÌâÒª¿´ÊÇ·ñÓĞ´ğ°¸,´ğ°¸µÄ³õÊ¼»¯ doErrors,examTitleÏÔÊ¾´íÌâ¼¯,·µ»Ø¼üÖ±½Ófinish,ÏÂÃæÊÇ´ğ°¸°´Å¥
- * doFavors,examTitleÏÔÊ¾ÎÒµÄÊÕ²Ø,·µ»Ø¼üÖ±½Ófinish,ÏÂÃæÊÇ´ğ°¸°´Å¥
- * doNotes,examTitleÏÔÊ¾ÎÒµÄ±Ê¼Ç,·µ»Ø¼üÖ±½Ófinish,ÏÂÃæÊÇ´ğ°¸°´Å¥,Ñ¡ÌâÃ»ÓĞ,´óÌâÏîÃ»ÓĞ
+ * è¯•é¢˜ç•Œé¢ æœ‰å‡ ä¸ªæ“ä½œéƒ½å…±ç”¨æ­¤ç•Œé¢ doExam, examTitle æ˜¾ç¤ºè¯•å·æ ‡é¢˜,è¿”å›é”®æç¤ºæ˜¯å¦é€€å‡ºè€ƒè¯•,ä¸‹é¢æ˜¯äº¤å·æŒ‰é’®
+ * è¿›æ¥å…ˆåŠ è€ƒè¯•è®°å½•,é€‰é¢˜è¦çœ‹æ˜¯å¦æœ‰ç­”æ¡ˆ,ç­”æ¡ˆçš„åˆå§‹åŒ– doErrors,examTitleæ˜¾ç¤ºé”™é¢˜é›†,è¿”å›é”®ç›´æ¥finish,ä¸‹é¢æ˜¯ç­”æ¡ˆæŒ‰é’®
+ * doFavors,examTitleæ˜¾ç¤ºæˆ‘çš„æ”¶è—,è¿”å›é”®ç›´æ¥finish,ä¸‹é¢æ˜¯ç­”æ¡ˆæŒ‰é’®
+ * doNotes,examTitleæ˜¾ç¤ºæˆ‘çš„ç¬”è®°,è¿”å›é”®ç›´æ¥finish,ä¸‹é¢æ˜¯ç­”æ¡ˆæŒ‰é’®,é€‰é¢˜æ²¡æœ‰,å¤§é¢˜é¡¹æ²¡æœ‰
  * 
  * @author Administrator
  * 
  */
 public class QuestionDoExamActivity extends Activity implements
 		OnClickListener, OnGestureListener {
-	// ×é¼ş
+	// ç»„ä»¶
 	private ImageButton exitExamImgBtn, notebookImgBtn, nextBtn, preBtn,
 			removeBtn, answerBtn, favoriteBtn;
 	private TextView timeCountDown, examTitle, examTypeTextView,
@@ -101,7 +101,7 @@ public class QuestionDoExamActivity extends Activity implements
 			examImages2, examImages3, examAnswerLayout3;
 	private RadioGroup examOption1;
 	private Handler timeHandler;
-	// Êı¾İ
+	// æ•°æ®
 	private String papername, username;
 	private String paperid;
 	private String action;
@@ -119,17 +119,17 @@ public class QuestionDoExamActivity extends Activity implements
 	private Gson gson;
 	private static boolean timerFlag = true;
 	private ExamFavor favor;
-	// Ñ¡Ôñµ¯³ö¿ò
+	// é€‰æ‹©å¼¹å‡ºæ¡†
 	private PopupWindow popupWindow;
 	private ListView lv_group;
 	private AlertDialog exitDialog;
-	// ÌáÊ¾½çÃæ
+	// æç¤ºç•Œé¢
 	private PopupWindow tipWindow;
 	private Handler mHandler;
 	private SharedPreferences guidefile;
-	// Êı¾İ¿â²Ù×÷
+	// æ•°æ®åº“æ“ä½œ
 	private PaperDao dao;
-	// Í¼Æ¬±£´æÄ¿Â¼
+	// å›¾ç‰‡ä¿å­˜ç›®å½•
 	private String imageSavePath;
 	private ProgressDialog proDialog;
 	@Override
@@ -137,14 +137,14 @@ public class QuestionDoExamActivity extends Activity implements
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_question_doexam);
-		// Êı¾İ³õÊ¼»¯
+		// æ•°æ®åˆå§‹åŒ–
 		Intent intent = this.getIntent();
 		this.paperid = intent.getStringExtra("paperId");
 		this.papername = intent.getStringExtra("paperName");
 		this.ruleListJson = intent.getStringExtra("ruleListJson");
 		this.username = intent.getStringExtra("username");
 		this.paperTime = intent.getIntExtra("tempTime", 0);
-		this.time = intent.getIntExtra("paperTime", 0) * 60; // Ãë
+		this.time = intent.getIntExtra("paperTime", 0) * 60; // ç§’
 		this.paperScore = intent.getIntExtra("paperScore", 0);
 		this.action = intent.getStringExtra("action");
 		this.questionCursor = intent.getIntExtra("cursor", 0);
@@ -166,7 +166,7 @@ public class QuestionDoExamActivity extends Activity implements
 		if (favor == null)
 			favor = new ExamFavor(username, paperid);
 		this.favorQids = dao.findFavorQids(username, paperid);
-		// ¸ù¾İactionµÄ²»Í¬,Çø·Ö
+		// æ ¹æ®actionçš„ä¸åŒ,åŒºåˆ†
 		if ("DoExam".equals(action)) {
 			this.record = dao.insertRecord(new ExamRecord(paperid, username));
 			isDone = this.record.getIsDone() == null ? new SparseBooleanArray()
@@ -186,20 +186,20 @@ public class QuestionDoExamActivity extends Activity implements
 						.indexOf("   ") + 3));
 			}
 			initQuestionAnswer(tempAnswer);
-			this.examTitle.setText(this.papername); // ÊÔ¾íÃû×Ö
+			this.examTitle.setText(this.papername); // è¯•å·åå­—
 		} else if ("myNoteBook".equals(action)) {
-			this.examTitle.setText("ÎÒµÄ±Ê¼Ç");
+			this.examTitle.setText("æˆ‘çš„ç¬”è®°");
 			this.examTypeTextView.setVisibility(View.GONE);
-			this.chooseQuestionBtn.setVisibility(View.GONE);// Ñ¡Ìâ
+			this.chooseQuestionBtn.setVisibility(View.GONE);// é€‰é¢˜
 		} else if ("myErrors".equals(action)) {
-			this.examTitle.setText("´íÌâ¼¯");
+			this.examTitle.setText("é”™é¢˜é›†");
 			this.examTypeTextView.setVisibility(View.GONE);
 			this.removeBtn.setVisibility(View.VISIBLE);
 		} else if ("myFavors".equals(action)) {
-			this.examTitle.setText("ÎÒµÄÊÕ²Ø");
+			this.examTitle.setText("æˆ‘çš„æ”¶è—");
 			this.examTypeTextView.setVisibility(View.GONE);
 		} else if ("showNoteSource".equals(action)) {
-			this.examTitle.setText("ÎÒµÄ±Ê¼Ç");
+			this.examTitle.setText("æˆ‘çš„ç¬”è®°");
 			this.examTypeTextView.setVisibility(View.GONE);
 		}
 		mGestureDetector = new GestureDetector(this, this);
@@ -211,7 +211,7 @@ public class QuestionDoExamActivity extends Activity implements
 		this.chooseQuestionBtn.setOnClickListener(this);
 		this.answerBtn.setOnClickListener(this);
 		this.favoriteBtn.setOnClickListener(this);
-		// È¥ÁËÕâ¸ö·´¶øÁéÃôÁË
+		// å»äº†è¿™ä¸ªåè€Œçµæ•äº†
 		// this.scrollView.setOnTouchListener(new OnTouchListener() {
 		//
 		// @Override
@@ -233,31 +233,31 @@ public class QuestionDoExamActivity extends Activity implements
 		}
 	}
 
-	// È¡µÃÖ÷½çÃæµÄ×é¼ş,Ö»È¡µÃ²»²Ù×÷
+	// å–å¾—ä¸»ç•Œé¢çš„ç»„ä»¶,åªå–å¾—ä¸æ“ä½œ
 	private void initView() {
 		this.exitExamImgBtn = (ImageButton) this
-				.findViewById(R.id.exitExamImgBtn);// ÍË³ö¿¼ÊÔ
+				.findViewById(R.id.exitExamImgBtn);// é€€å‡ºè€ƒè¯•
 		this.notebookImgBtn = (ImageButton) this
-				.findViewById(R.id.notebook_ImgBtn);// ±Ê¼Ç°´Å¥
-		this.preBtn = (ImageButton) this.findViewById(R.id.previousBtn); // ÉÏÒ»Ìâ
-		this.nextBtn = (ImageButton) this.findViewById(R.id.nextBtn); // ÏÂÒ»Ìâ
+				.findViewById(R.id.notebook_ImgBtn);// ç¬”è®°æŒ‰é’®
+		this.preBtn = (ImageButton) this.findViewById(R.id.previousBtn); // ä¸Šä¸€é¢˜
+		this.nextBtn = (ImageButton) this.findViewById(R.id.nextBtn); // ä¸‹ä¸€é¢˜
 		this.favoriteBtn = (ImageButton) this.findViewById(R.id.favoriteBtn);
 		this.removeBtn = (ImageButton) this.findViewById(R.id.removeBtn);
 		this.timeCountDown = (TextView) this
-				.findViewById(R.id.timecount_down_TextView);// µ¹¼ÆÊ±
-		this.examTitle = (TextView) this.findViewById(R.id.examTitle_TextView);// ¿¼ÊÔ±êÌâ
+				.findViewById(R.id.timecount_down_TextView);// å€’è®¡æ—¶
+		this.examTitle = (TextView) this.findViewById(R.id.examTitle_TextView);// è€ƒè¯•æ ‡é¢˜
 		this.chooseQuestionBtn = (Button) this
-				.findViewById(R.id.selectTopicId_ImgBtn);// Ñ¡Ìâ
+				.findViewById(R.id.selectTopicId_ImgBtn);// é€‰é¢˜
 		this.examTypeTextView = (TextView) this
-				.findViewById(R.id.examTypeTextView);// ´óÌâ±êÌâ
+				.findViewById(R.id.examTypeTextView);// å¤§é¢˜æ ‡é¢˜
 		this.ruleTypeLayout = (LinearLayout) this
 				.findViewById(R.id.ruleTypeLayout);
 		this.scrollView = (ScrollView) this
 				.findViewById(R.id.ContentscrollView);
 		this.examAnswerLayout = (LinearLayout) this
 				.findViewById(R.id.exam_answer_layout);
-		this.submitExamBtn = (Button) this.findViewById(R.id.submitExamBtn); // Ìá½»´ğ°¸
-		this.answerBtn = (ImageButton) this.findViewById(R.id.answerBtn);// ½»¾í»òÕß²é¿´´ğ°¸
+		this.submitExamBtn = (Button) this.findViewById(R.id.submitExamBtn); // æäº¤ç­”æ¡ˆ
+		this.answerBtn = (ImageButton) this.findViewById(R.id.answerBtn);// äº¤å·æˆ–è€…æŸ¥çœ‹ç­”æ¡ˆ
 		this.analysisTextView = (TextView) this
 				.findViewById(R.id.exam_analysisTextView);
 		this.myAnswerTextView = (TextView) this
@@ -289,7 +289,7 @@ public class QuestionDoExamActivity extends Activity implements
 		this.modeLayout4.setVisibility(8);
 	}
 
-	// µ¥Ñ¡ÌâµÄ²¼¾Ö
+	// å•é€‰é¢˜çš„å¸ƒå±€
 	private void initModeLayout1() {
 		this.examContent1 = ((TextView) findViewById(R.id.exam_Content)); // exam_Content1
 		// /
@@ -300,17 +300,17 @@ public class QuestionDoExamActivity extends Activity implements
 		// // exam_ListView1
 	}
 
-	// ¶àÑ¡Ìâ
+	// å¤šé€‰é¢˜
 	private void initModeLayout2() {
-		this.examContent2 = (TextView) this.findViewById(R.id.exam_Content2);// ÌâÄ¿ÄÚÈİ
-		this.examOption2 = (CheckBoxGroup) this.findViewById(R.id.examOption2);// checkbox×éµÄÈİÆ÷
+		this.examContent2 = (TextView) this.findViewById(R.id.exam_Content2);// é¢˜ç›®å†…å®¹
+		this.examOption2 = (CheckBoxGroup) this.findViewById(R.id.examOption2);// checkboxç»„çš„å®¹å™¨
 //		this.examAnswerLayout2 = (LinearLayout) this
 //				.findViewById(R.id.exam_answer_layout2);
 		this.examImages2 = (LinearLayout) findViewById(R.id.examImages2);
 		// this.examAnswerLayout2.setVisibility(8);
 	}
 
-	// ÎÊ´ğÌâ
+	// é—®ç­”é¢˜
 	private void initModeLayout3() {
 		this.examContent3 = (TextView) this.findViewById(R.id.exam_Content3);
 		this.answerEditText = (EditText) this
@@ -338,21 +338,21 @@ public class QuestionDoExamActivity extends Activity implements
 		// if(tempAnswer!=null&&tempAnswer.indexOf(str)!=-1)
 		// {
 		// String temp = tempAnswer.substring(tempAnswer.indexOf(str));
-		// if("ÎÊ´ğÌâ".equals(type))
+		// if("é—®ç­”é¢˜".equals(type))
 		// {
 		// answer = temp.substring(str.length(),temp.indexOf("   "));
 		// }else
 		// answer= temp.substring(str.length(),temp.indexOf("&"));
 		// }
-		if ("µ¥Ñ¡Ìâ".equals(type)) {
+		if ("å•é€‰é¢˜".equals(type)) {
 			this.modeLayout1.setVisibility(0);
 			this.modeLayout2.setVisibility(8);
 			this.modeLayout3.setVisibility(8);
 			this.modeLayout4.setVisibility(8);
 			String[] arr = currentQuestion.getContent().replaceAll("\n", "")
-					.replaceAll("[A-Z][.£®¡¢)]", "@@@").split("@@@");
+					.replaceAll("[A-Z][.ï¼ã€)]", "@@@").split("@@@");
 			String title = arr[0];
-			// ÏÔÊ¾Í¼Æ¬
+			// æ˜¾ç¤ºå›¾ç‰‡
 			String zuheName = currentQuestion.getRuleId() + "-"
 					+ currentQuestion.getQid();
 			;
@@ -375,7 +375,7 @@ public class QuestionDoExamActivity extends Activity implements
 					this.examOption1.addView(rb, i - 1);
 				}
 				rb = (RadioButton) this.examOption1.getChildAt(i - 1);
-				rb.setText((char) (64 + i) + "£®" + arr[i]);
+				rb.setText((char) (64 + i) + "ï¼" + arr[i]);
 				if (answer != null
 						&& answer.indexOf(String.valueOf((char) (64 + i))) != -1) {
 					rb.setChecked(true);
@@ -393,20 +393,20 @@ public class QuestionDoExamActivity extends Activity implements
 							saveChoiceAnswer(((char) (64 + id)) + "");
 						}
 					});
-		} else if ("¶àÑ¡Ìâ".equals(type)) {
+		} else if ("å¤šé€‰é¢˜".equals(type)) {
 			this.modeLayout1.setVisibility(8);
 			this.modeLayout2.setVisibility(0);
 			this.modeLayout3.setVisibility(8);
 			this.modeLayout4.setVisibility(8);
 			String[] arr = currentQuestion.getContent().replaceAll("\n", "")
-					.replaceAll("[A-Z][.£®¡¢)]", "@@@").split("@@@");
+					.replaceAll("[A-Z][.ï¼ã€)]", "@@@").split("@@@");
 			String title = arr[0];
-			// ÏÔÊ¾Í¼Æ¬
+			// æ˜¾ç¤ºå›¾ç‰‡
 			String zuheName = currentQuestion.getRuleId() + "-"
 					+ currentQuestion.getQid();
 			;
 			showPics(title, imageSavePath, zuheName, examImages2, examContent2);
-			// ÏÔÊ¾Ñ¡Ïî
+			// æ˜¾ç¤ºé€‰é¡¹
 			if (this.examOption2.getChildCount() > arr.length - 1) {
 				for (int j = arr.length - 1; j < this.examOption2
 						.getChildCount(); j++) {
@@ -425,7 +425,7 @@ public class QuestionDoExamActivity extends Activity implements
 					this.examOption2.addView(cb, i - 1);
 				}
 				cb = (MyCheckBox) this.examOption2.getChildAt(i - 1);
-				cb.setText((char) (64 + i) + "£®" + arr[i]);
+				cb.setText((char) (64 + i) + "ï¼" + arr[i]);
 				if (answer != null
 						&& answer.indexOf(String.valueOf((char) (64 + i))) != -1) {
 					cb.setChecked(true);
@@ -445,16 +445,16 @@ public class QuestionDoExamActivity extends Activity implements
 					}
 				});
 			}
-		} else if ("ÅĞ¶ÏÌâ".equals(type)) {
+		} else if ("åˆ¤æ–­é¢˜".equals(type)) {
 			this.modeLayout1.setVisibility(0);
 			this.modeLayout2.setVisibility(8);
 			this.modeLayout3.setVisibility(8);
 			this.modeLayout4.setVisibility(8);
-			// this.examContent1.setText(questionCursor + 1 + "¡¢"
+			// this.examContent1.setText(questionCursor + 1 + "ã€"
 			// + currentQuestion.getContent());
-			// ¼ÓÔØÍ¼Æ¬
+			// åŠ è½½å›¾ç‰‡
 			String title = currentQuestion.getContent();
-			// ÏÔÊ¾Í¼Æ¬
+			// æ˜¾ç¤ºå›¾ç‰‡
 			String zuheName = currentQuestion.getRuleId() + "-"
 					+ currentQuestion.getQid();
 			;
@@ -466,10 +466,10 @@ public class QuestionDoExamActivity extends Activity implements
 				rb_t.setId(1);
 				rb_f = new RadioButton(this);
 				rb_f.setId(2);
-				rb_t.setText(" ¡Ì");
+				rb_t.setText(" âˆš");
 				rb_t.setTextColor(getResources().getColor(R.color.black));
 				rb_t.setButtonDrawable(R.drawable.radio_btn_img);
-				rb_f.setText(" ¡Á");
+				rb_f.setText(" Ã—");
 				rb_f.setTextColor(getResources().getColor(R.color.black));
 				rb_f.setButtonDrawable(R.drawable.radio_btn_img);
 				this.examOption1.addView(rb_t, 0);
@@ -482,10 +482,10 @@ public class QuestionDoExamActivity extends Activity implements
 				this.examOption1.removeAllViews();
 				rb_t.setId(1);
 				rb_f.setId(2);
-				rb_t.setText(" ¡Ì");
+				rb_t.setText(" âˆš");
 				rb_t.setTextColor(getResources().getColor(R.color.black));
 				rb_t.setButtonDrawable(R.drawable.radio_btn_img);
-				rb_f.setText(" ¡Á");
+				rb_f.setText(" Ã—");
 				rb_f.setTextColor(getResources().getColor(R.color.black));
 				rb_f.setButtonDrawable(R.drawable.radio_btn_img);
 				this.examOption1.addView(rb_t, 0);
@@ -517,13 +517,13 @@ public class QuestionDoExamActivity extends Activity implements
 								saveChoiceAnswer("F");
 						}
 					});
-		} else if ("ÎÊ´ğÌâ".equals(type)) {
+		} else if ("é—®ç­”é¢˜".equals(type)) {
 			this.modeLayout1.setVisibility(8);
 			this.modeLayout2.setVisibility(8);
 			this.modeLayout3.setVisibility(0);
 			this.modeLayout4.setVisibility(8);
 			String title = currentQuestion.getContent();
-			// ÏÔÊ¾Í¼Æ¬
+			// æ˜¾ç¤ºå›¾ç‰‡
 			String zuheName = currentQuestion.getRuleId() + "-"
 					+ currentQuestion.getQid();
 			;
@@ -539,7 +539,7 @@ public class QuestionDoExamActivity extends Activity implements
 			this.myAnswerTextView.setText(answer);
 			this.sysAnswerTextView.setText(trueAnswer);
 			this.analysisTextView.setText(currentQuestion.getAnalysis());
-			if ("ÎÊ´ğÌâ".equals(type)) {
+			if ("é—®ç­”é¢˜".equals(type)) {
 				this.answerResultImg.setVisibility(View.GONE);
 			} else {
 				this.answerResultImg.setVisibility(View.VISIBLE);
@@ -630,7 +630,7 @@ public class QuestionDoExamActivity extends Activity implements
 	private void removeFromErrors() {
 		currentQuestion = questionList.get(questionCursor);
 		dao.deleteError(username, currentQuestion.getQid());
-		Toast.makeText(this, "ÒÆ³ı³É¹¦,ÏÂ´Î²»ÔÙÏÔÊ¾", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "ç§»é™¤æˆåŠŸ,ä¸‹æ¬¡ä¸å†æ˜¾ç¤º", Toast.LENGTH_SHORT).show();
 	}
 
 	private void favorQuestion() {
@@ -638,27 +638,27 @@ public class QuestionDoExamActivity extends Activity implements
 		String qid = currentQuestion.getQid();
 		favor.setQid(qid);
 		if ("myFavors".equals(action)) {
-			// ±íÊ¾ÒÑ¾­ÊÕ²ØÁË,ÏÖÔÚÒªÈ¡ÏûÊÕ²Ø
+			// è¡¨ç¤ºå·²ç»æ”¶è—äº†,ç°åœ¨è¦å–æ¶ˆæ”¶è—
 			if (favorQids.indexOf(qid) == -1) {
-				Toast.makeText(this, "ÒÑ¾­È¡Ïû", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "å·²ç»å–æ¶ˆ", Toast.LENGTH_SHORT).show();
 				return;
 			}
 			this.favoriteBtn.setImageResource(R.drawable.exam_favorite_img);
 			dao.deleteFavor(favor);
 			favorQids.replace(favorQids.indexOf(qid), favorQids.indexOf(qid)
 					+ qid.length() + 1, "");
-			Toast.makeText(this, "È¡Ïû³É¹¦,ÏÂ´Î²»ÔÙÏÔÊ¾", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "å–æ¶ˆæˆåŠŸ,ä¸‹æ¬¡ä¸å†æ˜¾ç¤º", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		if (favorQids.indexOf(qid) != -1) {
-			Toast.makeText(this, "ÒÑ¾­ÊÕ²Ø", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "å·²ç»æ”¶è—", Toast.LENGTH_SHORT).show();
 			return;
 		} else {
-			// Ã»ÊÕ²Ø,ÒªÊÕ²Ø
+			// æ²¡æ”¶è—,è¦æ”¶è—
 			this.favoriteBtn.setImageResource(R.drawable.exam_favorited_img);
 			dao.insertFavor(favor);
 			favorQids.append(qid).append(",");
-			Toast.makeText(this, "ÊÕ²Ø³É¹¦", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "æ”¶è—æˆåŠŸ", Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -677,7 +677,7 @@ public class QuestionDoExamActivity extends Activity implements
 
 	private void gotoChooseActivity() {
 		Intent mIntent = new Intent(this, QuestionChooseActivity.class);
-		// °óÊı¾İ
+		// ç»‘æ•°æ®
 		if ("DoExam".equals(action)) {
 			mIntent.putExtra("action", "chooseQuestion");
 			mIntent.putExtra("ruleListJson", ruleListJson);
@@ -691,7 +691,7 @@ public class QuestionDoExamActivity extends Activity implements
 
 	private void gotoChooseActivity2() {
 		Intent mIntent = new Intent(this, QuestionChooseActivity.class);
-		// °óÊı¾İ
+		// ç»‘æ•°æ®
 		mIntent.putExtra("action", "submitPaper");
 		mIntent.putExtra("questionList", gson.toJson(questionList));
 		mIntent.putExtra("paperScore", paperScore);
@@ -700,8 +700,8 @@ public class QuestionDoExamActivity extends Activity implements
 		mIntent.putExtra("paperid", paperid);
 		mIntent.putExtra("useTime", record.getUseTime());
 		mIntent.putExtra("isDone", gson.toJson(isDone));
-		mIntent.putExtra("userScore", record.getScore()); // ±¾´ÎµÃ·Ö
-		mIntent.putExtra("hasDoneNum", isDone.size()); // ×öÁË¶àÉÙÌâ
+		mIntent.putExtra("userScore", record.getScore()); // æœ¬æ¬¡å¾—åˆ†
+		mIntent.putExtra("hasDoneNum", isDone.size()); // åšäº†å¤šå°‘é¢˜
 		this.startActivityForResult(mIntent, 1);
 	}
 
@@ -709,7 +709,7 @@ public class QuestionDoExamActivity extends Activity implements
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		if (20 == resultCode) {
-			// ¸ü»»ÊÔÌâ,µ±Ç°ÊÔÌâ
+			// æ›´æ¢è¯•é¢˜,å½“å‰è¯•é¢˜
 			String ruleTitle = data.getStringExtra("ruleTitle");
 			this.examTypeTextView.setText(ruleTitle);
 			questionCursor = data.getIntExtra("cursor", 0);
@@ -733,7 +733,7 @@ public class QuestionDoExamActivity extends Activity implements
 
 	private void showNoteBookActivity() {
 		Intent mIntent = new Intent(this, QuestionWriteNoteActivity.class);
-		// °óÊı¾İ,µ±Ç°µÄÊÔÌâµÄid,username
+		// ç»‘æ•°æ®,å½“å‰çš„è¯•é¢˜çš„id,username
 		mIntent.putExtra("paperid", paperid);
 		mIntent.putExtra("qid", questionList.get(questionCursor).getQid());
 		mIntent.putExtra("username", username);
@@ -744,7 +744,7 @@ public class QuestionDoExamActivity extends Activity implements
 	private void preQuestion() {
 		this.scrollView.fullScroll(33);
 		if (questionCursor == 0) {
-			Toast.makeText(this, "ÒÑ¾­ÊÇµÚÒ»ÌâÁË", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "å·²ç»æ˜¯ç¬¬ä¸€é¢˜äº†", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		this.examOption1.clearCheck();
@@ -756,7 +756,7 @@ public class QuestionDoExamActivity extends Activity implements
 	private void nextQuestion() {
 		this.scrollView.fullScroll(33);
 		if (questionCursor == questionList.size() - 1) {
-			Toast.makeText(this, "ÒÑ¾­ÊÇ×îºóÒ»ÌâÁË", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "å·²ç»æ˜¯æœ€åä¸€é¢˜äº†", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		this.examOption1.clearCheck();
@@ -765,7 +765,7 @@ public class QuestionDoExamActivity extends Activity implements
 		showContent();
 	}
 
-	// ±£´æÑ¡ÔñÌâ(µ¥Ñ¡ºÍ¶àÑ¡)´ğ°¸
+	// ä¿å­˜é€‰æ‹©é¢˜(å•é€‰å’Œå¤šé€‰)ç­”æ¡ˆ
 	private void saveChoiceAnswer(String abcd) // 1001-A&1002-B&
 	{
 		if (!"DoExam".equals(action)) {
@@ -779,9 +779,9 @@ public class QuestionDoExamActivity extends Activity implements
 			String left = answerBuf.substring(0, answerBuf.indexOf(str));
 			String temp = answerBuf.substring(answerBuf.indexOf(str));
 			String right = temp.substring(temp.indexOf("&") + 1);
-			if ("".equals(abcd)) // ¶àÑ¡Ìâ,Ã»ÓĞÑ¡´ğ°¸
+			if ("".equals(abcd)) // å¤šé€‰é¢˜,æ²¡æœ‰é€‰ç­”æ¡ˆ
 			{
-				// ´Ó´ğ°¸ÀïÈ¥³ı
+				// ä»ç­”æ¡ˆé‡Œå»é™¤
 				answerBuf.delete(0, answerBuf.length()).append(left)
 						.append(right);
 				isDone.delete(questionCursor);
@@ -794,23 +794,23 @@ public class QuestionDoExamActivity extends Activity implements
 		record.setTempAnswer(answerBuf.toString()
 				+ (txtAnswerBuf.length() == 0 ? "" : "   "
 						+ txtAnswerBuf.toString()));
-		// Ã¿×öÍê5µÀÌâ×Ô¶¯±£´æ´ğ°¸
+		// æ¯åšå®Œ5é“é¢˜è‡ªåŠ¨ä¿å­˜ç­”æ¡ˆ
 		if (answerBuf.toString().split("&").length % 5 == 0) {
 			record.setIsDone(gson.toJson(isDone));
 			dao.updateTempAnswerForRecord(record);
 		}
-		currentQuestion.setUserAnswer("".equals(abcd) ? null : abcd); // ±£´æÑ§Ô±´ğ°¸
+		currentQuestion.setUserAnswer("".equals(abcd) ? null : abcd); // ä¿å­˜å­¦å‘˜ç­”æ¡ˆ
 	}
 
-	// ±£´æÎÊ´ğÌâ´ğ°¸
+	// ä¿å­˜é—®ç­”é¢˜ç­”æ¡ˆ
 	private void saveTextAnswer() {
 		if (!"DoExam".equals(action)) {
-			return; // ·Ç¿¼ÊÔ²»±Ø±£´æ´ğ°¸
+			return; // éè€ƒè¯•ä¸å¿…ä¿å­˜ç­”æ¡ˆ
 		}
 		String str = currentQuestion.getQid() + "-";
 		String txtAnswer = this.answerEditText.getText().toString();
 		if ("".equals(txtAnswer.trim())) {
-			Toast.makeText(this, "ÇëÌîĞ´´ğ°¸", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "è¯·å¡«å†™ç­”æ¡ˆ", Toast.LENGTH_LONG).show();
 			return;
 		}
 		if (txtAnswerBuf.indexOf(str) == -1) {
@@ -829,73 +829,73 @@ public class QuestionDoExamActivity extends Activity implements
 				+ txtAnswerBuf.toString());
 		record.setIsDone(gson.toJson(isDone));
 		dao.updateTempAnswerForRecord(record);
-		Toast.makeText(this, "±£´æ³É¹¦", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "ä¿å­˜æˆåŠŸ", Toast.LENGTH_SHORT).show();
 	}
 
-	// ½»¾í,ÆÀÅĞ·Ö
+	// äº¤å·,è¯„åˆ¤åˆ†
 	private void submitPaper() {
 		/**
 		 * 
 		 */
 		if (record.getTempAnswer() == null
 				|| "".equals(record.getTempAnswer().trim())) {
-			Toast.makeText(this, "»¹Ã»×ö½»Ã«¾í°¡", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "è¿˜æ²¡åšäº¤æ¯›å·å•Š", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		try {
-			double score = 0; // ×Ü·Ö
-			double score1 = 0; // ´ğ´í¿Û·ÖµÄÇé¿ö
-			double score2 = 0; // ¼ÆËã´óÌâµÄÁÙÊ±±äÁ¿
+			double score = 0; // æ€»åˆ†
+			double score1 = 0; // ç­”é”™æ‰£åˆ†çš„æƒ…å†µ
+			double score2 = 0; // è®¡ç®—å¤§é¢˜çš„ä¸´æ—¶å˜é‡
 			StringBuffer buf = new StringBuffer();
 			StringBuffer scoreBuf = new StringBuffer("eachScore&");
-			for (int k = 0; k < ruleList.size(); k++) // Ñ­»·´óÌâ
+			for (int k = 0; k < ruleList.size(); k++) // å¾ªç¯å¤§é¢˜
 			{
 				ExamRule r = ruleList.get(k);
-				double fen = r.getScoreForEach();// Ã¿ÌâµÄ·ÖÊı
-				String fenRule = r.getScoreSet();// ÅĞ·Ö¹æÔò 0|N±íÊ¾Ã¿Ìâ¶àÉÙ·Ö¾ÍÊÇ¶àÉÙ·Ö£¬
-													// 1|N,±íÊ¾´ğ¶ÔÒ»¸öÑ¡ÏîµÃN·Ö£¬È«²¿´ğ¶ÔµÃ¸ÃÌâµÄÂú·Ö
-													// 2|N,±íÊ¾´ò´í¿ÛN·Ö,×îÉÙµÃ0·Ö
-				for (int j = 0; j < questionList.size(); j++) // Ñ­»·ÌâÄ¿
+				double fen = r.getScoreForEach();// æ¯é¢˜çš„åˆ†æ•°
+				String fenRule = r.getScoreSet();// åˆ¤åˆ†è§„åˆ™ 0|Nè¡¨ç¤ºæ¯é¢˜å¤šå°‘åˆ†å°±æ˜¯å¤šå°‘åˆ†ï¼Œ
+													// 1|N,è¡¨ç¤ºç­”å¯¹ä¸€ä¸ªé€‰é¡¹å¾—Nåˆ†ï¼Œå…¨éƒ¨ç­”å¯¹å¾—è¯¥é¢˜çš„æ»¡åˆ†
+													// 2|N,è¡¨ç¤ºæ‰“é”™æ‰£Nåˆ†,æœ€å°‘å¾—0åˆ†
+				for (int j = 0; j < questionList.size(); j++) // å¾ªç¯é¢˜ç›®
 				{
 					ExamQuestion q = questionList.get(j);
 					double tempScore = 0;
-					if (q.getRuleId().equals(r.getRuleId())) // ÊôÓÚ¸Ã´óÌâµÄÌâÄ¿£¬°´¸Ã¹æÔò½øĞĞÅĞ·Ö
+					if (q.getRuleId().equals(r.getRuleId())) // å±äºè¯¥å¤§é¢˜çš„é¢˜ç›®ï¼ŒæŒ‰è¯¥è§„åˆ™è¿›è¡Œåˆ¤åˆ†
 					{
 						System.out.println(q.getAnswer() + ", userAnswer:"
 								+ q.getUserAnswer());
-						if (fenRule.startsWith("0|")) // ´ğ´í²»¿Û·Ö£¬È«¶Ô²ÅµÃÂú·Ö
+						if (fenRule.startsWith("0|")) // ç­”é”™ä¸æ‰£åˆ†ï¼Œå…¨å¯¹æ‰å¾—æ»¡åˆ†
 						{
 							if (q.getAnswer().equals(q.getUserAnswer())) {
-								score = score + fen; // µÃ·Ö
+								score = score + fen; // å¾—åˆ†
 								tempScore = fen;
 							}
-						} else if (fenRule.startsWith("1|"))// ´ğ¶ÔÒ»¸öÑ¡ÏîµÃ¶àÉÙ·Ö
+						} else if (fenRule.startsWith("1|"))// ç­”å¯¹ä¸€ä¸ªé€‰é¡¹å¾—å¤šå°‘åˆ†
 						{
 							String answer = q.getAnswer();
 							String userAnswer = q.getUserAnswer() == null ? "@"
 									: q.getUserAnswer();
-							if (answer.contains(userAnswer)) { // °üº¬´ğ°¸Ëã·Ö
+							if (answer.contains(userAnswer)) { // åŒ…å«ç­”æ¡ˆç®—åˆ†
 								if (answer.equals(userAnswer)) {
 									score = score + fen;
 									tempScore = fen;
 								} else {
-									String[] ua = userAnswer.split("[,]"); // ÉÙÑ¡µÃ·Ö£¬ÊÇÃ¿¸öÑ¡ÏîµÄµÃ·Ö»¹ÊÇÖ»ÒªÊÇÉÙÑ¡¾ÍµÃ¶àÉÙ·Ö
+									String[] ua = userAnswer.split("[,]"); // å°‘é€‰å¾—åˆ†ï¼Œæ˜¯æ¯ä¸ªé€‰é¡¹çš„å¾—åˆ†è¿˜æ˜¯åªè¦æ˜¯å°‘é€‰å°±å¾—å¤šå°‘åˆ†
 									double fen1 = Double.parseDouble(fenRule
 											.split("[|]")[1]) * ua.length;
 									score = score + fen1;
 									tempScore = fen1;
 								}
 							}
-						} else if (fenRule.startsWith("2|"))// ´ğ´í¿Û·Ö
+						} else if (fenRule.startsWith("2|"))// ç­”é”™æ‰£åˆ†
 						{
-							if (q.getAnswer().equals(q.getUserAnswer())) // ´ğ¶Ô
+							if (q.getAnswer().equals(q.getUserAnswer())) // ç­”å¯¹
 							{
 								score1 = score1
 										+ Double.parseDouble(fenRule
 												.split("[|]")[1]);
 								tempScore = Double.parseDouble(fenRule
 										.split("[|]")[1]);
-							} else // ´ğ´í
+							} else // ç­”é”™
 							{
 								score1 = score1
 										- Double.parseDouble(fenRule
@@ -906,10 +906,10 @@ public class QuestionDoExamActivity extends Activity implements
 						}
 						scoreBuf.append(r.getRuleId()).append("-")
 								.append(q.getQid()).append("-")
-								.append(tempScore).append("&"); // Ã¿µÀÌâµÄµÃ·Ö
+								.append(tempScore).append("&"); // æ¯é“é¢˜çš„å¾—åˆ†
 					}
 				}
-				// Ã¿´óÌâµÃ·Ö
+				// æ¯å¤§é¢˜å¾—åˆ†
 				if (fenRule.startsWith("2|")) {
 					buf.append(r.getRuleId());
 					buf.append("=");
@@ -925,11 +925,11 @@ public class QuestionDoExamActivity extends Activity implements
 				}
 			}
 			score = score1 > 0 ? (score + score1) : score;
-			// Ñ§Ô±´ğ°¸´æ½øÈ¥
+			// å­¦å‘˜ç­”æ¡ˆå­˜è¿›å»
 			record.setScore(score);
 			System.out.println(scoreBuf.toString());
-			// ¸üĞÂrecord¼ÇÂ¼
-			// record.setRcdScoreForEachQuestion(scoreBuf.toString());//Ã¿ÌâµÄµÃ·ÖÇé¿ö
+			// æ›´æ–°recordè®°å½•
+			// record.setRcdScoreForEachQuestion(scoreBuf.toString());//æ¯é¢˜çš„å¾—åˆ†æƒ…å†µ
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -940,7 +940,7 @@ public class QuestionDoExamActivity extends Activity implements
 		// TODO Auto-generated method stub
 		// Log.i("MyGesture", "onDown");
 		// Toast.makeText(this, "onDown", Toast.LENGTH_SHORT).show();
-		return true; // ÊÂ¼şÒÑ´¦Àí·µ»Øtrue
+		return true; // äº‹ä»¶å·²å¤„ç†è¿”å›true
 	}
 
 	@Override
@@ -1011,24 +1011,24 @@ public class QuestionDoExamActivity extends Activity implements
 					R.layout.popupwindow_rule_layout, null);
 
 			lv_group = (ListView) view.findViewById(R.id.lvGroup);
-			// ¼ÓÔØÊı¾İ
+			// åŠ è½½æ•°æ®
 
 			PopRuleListAdapter groupAdapter = new PopRuleListAdapter(this,
 					ruleList);
 			lv_group.setAdapter(groupAdapter);
-			// ´´½¨Ò»¸öPopuWidow¶ÔÏó
+			// åˆ›å»ºä¸€ä¸ªPopuWidowå¯¹è±¡
 			popupWindow = new PopupWindow(view, 200, 250);
 		}
 
-		// Ê¹Æä¾Û¼¯
+		// ä½¿å…¶èšé›†
 		popupWindow.setFocusable(true);
-		// ÉèÖÃÔÊĞíÔÚÍâµã»÷ÏûÊ§
+		// è®¾ç½®å…è®¸åœ¨å¤–ç‚¹å‡»æ¶ˆå¤±
 		popupWindow.setOutsideTouchable(true);
 
-		// Õâ¸öÊÇÎªÁËµã»÷¡°·µ»ØBack¡±Ò²ÄÜÊ¹ÆäÏûÊ§£¬²¢ÇÒ²¢²»»áÓ°ÏìÄãµÄ±³¾°
+		// è¿™ä¸ªæ˜¯ä¸ºäº†ç‚¹å‡»â€œè¿”å›Backâ€ä¹Ÿèƒ½ä½¿å…¶æ¶ˆå¤±ï¼Œå¹¶ä¸”å¹¶ä¸ä¼šå½±å“ä½ çš„èƒŒæ™¯
 		popupWindow.setBackgroundDrawable(new BitmapDrawable());
 		WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-		// ÏÔÊ¾µÄÎ»ÖÃÎª:ÆÁÄ»µÄ¿í¶ÈµÄÒ»°ë-PopupWindowµÄ¸ß¶ÈµÄÒ»°ë
+		// æ˜¾ç¤ºçš„ä½ç½®ä¸º:å±å¹•çš„å®½åº¦çš„ä¸€åŠ-PopupWindowçš„é«˜åº¦çš„ä¸€åŠ
 		int xPos = windowManager.getDefaultDisplay().getWidth() / 2
 				- popupWindow.getWidth() / 2;
 
@@ -1046,8 +1046,8 @@ public class QuestionDoExamActivity extends Activity implements
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view,
 					int position, long id) {
-				// ÇĞÌâ,¸Ä±ä´óÌâÃû³Æ,ÇĞµ½¸Ã´óÌâµÚÒ»Ìâ
-				// µ±Ç°´óÌâ
+				// åˆ‡é¢˜,æ”¹å˜å¤§é¢˜åç§°,åˆ‡åˆ°è¯¥å¤§é¢˜ç¬¬ä¸€é¢˜
+				// å½“å‰å¤§é¢˜
 				ExamRule rule = QuestionDoExamActivity.this.ruleList
 						.get(position);
 				int questionPosition = 0;
@@ -1057,7 +1057,7 @@ public class QuestionDoExamActivity extends Activity implements
 				}
 				QuestionDoExamActivity.this.examTypeTextView.setText(rule
 						.getRuleTitle());
-				QuestionDoExamActivity.this.questionCursor = questionPosition; // cursor´Ó0¿ªÊ¼
+				QuestionDoExamActivity.this.questionCursor = questionPosition; // cursorä»0å¼€å§‹
 				QuestionDoExamActivity.this.showContent();
 				if (popupWindow != null) {
 					popupWindow.dismiss();
@@ -1066,9 +1066,9 @@ public class QuestionDoExamActivity extends Activity implements
 		});
 	}
 
-	// ÍË³ö¿¼ÊÔ(²»½»¾íÖ±½ÓÍË³ö)
+	// é€€å‡ºè€ƒè¯•(ä¸äº¤å·ç›´æ¥é€€å‡º)
 	private void exitExam() {
-		// ¸üĞÂÒ»´Îrecord
+		// æ›´æ–°ä¸€æ¬¡record
 		timerFlag = false;
 		record.setLastTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 				.format(new Date()));
@@ -1079,20 +1079,20 @@ public class QuestionDoExamActivity extends Activity implements
 		this.finish();
 	}
 
-	// ½»¾í
+	// äº¤å·
 	private void submitExam() {
 		if (this.exitDialog != null && this.exitDialog.isShowing()) {
 			this.exitDialog.dismiss();
 		}
 		if (record.getTempAnswer() == null
 				|| "".equals(record.getTempAnswer().trim())) {
-			Toast.makeText(this, "»¹Ã»×ö½»Ã«¾í°¡", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "è¿˜æ²¡åšäº¤æ¯›å·å•Š", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		//¿ªÒ»¸öÏß³Ì½øĞĞ½»¾í  2013-09-25ĞŞ¸Ä
+		//å¼€ä¸€ä¸ªçº¿ç¨‹è¿›è¡Œäº¤å·  2013-09-25ä¿®æ”¹
 		if(proDialog == null)
 		{
-			proDialog = ProgressDialog.show(this, null, "ÕıÔÚ½»¾í..", true, false);
+			proDialog = ProgressDialog.show(this, null, "æ­£åœ¨äº¤å·..", true, false);
 			proDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		}else
 		{
@@ -1100,9 +1100,9 @@ public class QuestionDoExamActivity extends Activity implements
 		}
 		new Thread(){
 			public void run() {
-				submitPaper();// ½»¾í
+				submitPaper();// äº¤å·
 				timerFlag = false;
-				// ¸üĞÂ¼ÇÂ¼,×ªµ½ Ñ¡Ìâ½çÃæ
+				// æ›´æ–°è®°å½•,è½¬åˆ° é€‰é¢˜ç•Œé¢
 				record.setLastTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 						.format(new Date()));
 				record.setAnswers(record.getTempAnswer());
@@ -1116,7 +1116,7 @@ public class QuestionDoExamActivity extends Activity implements
 		}.start();
 	}
 
-	// °´·µ»Ø¼ü,ÌáÊ¾
+	// æŒ‰è¿”å›é”®,æç¤º
 	public boolean onKeyDown(int paramInt, KeyEvent paramKeyEvent) {
 		if ((paramKeyEvent.getKeyCode() == 4)
 				&& (paramKeyEvent.getRepeatCount() == 0)) {
@@ -1136,7 +1136,7 @@ public class QuestionDoExamActivity extends Activity implements
 			Button submitBtn = (Button) v.findViewById(R.id.exitSubmitExamBtn);
 			Button cancelBtn = (Button) v.findViewById(R.id.exitCancelExamBtn);
 			AlertDialog.Builder localBuilder = new AlertDialog.Builder(this);
-			localBuilder.setTitle("×¢Ïú").setMessage("ÊÇ·ñ×¢ÏúÓÃ»§").setView(v);
+			localBuilder.setTitle("æ³¨é”€").setMessage("æ˜¯å¦æ³¨é”€ç”¨æˆ·").setView(v);
 			exitDialog = localBuilder.create();
 			exitBtn.setOnClickListener(this);
 			submitBtn.setOnClickListener(this);
@@ -1155,7 +1155,7 @@ public class QuestionDoExamActivity extends Activity implements
 			this.examAnswerLayout.setVisibility(View.GONE);
 			if (ruleList != null && ruleList.size() > 0) {
 				currentRule = ruleList.get(0);
-				this.examTypeTextView.setText(currentRule.getRuleTitle()); // ´óÌâÃû×Ö
+				this.examTypeTextView.setText(currentRule.getRuleTitle()); // å¤§é¢˜åå­—
 				this.ruleTypeLayout.setOnClickListener(this);
 				showContent();
 			} else {
@@ -1230,7 +1230,7 @@ public class QuestionDoExamActivity extends Activity implements
 				theActivity.timeCountDown
 						.setText(getTimeText(theActivity.paperTime));
 				if (theActivity.paperTime == 0) {
-					// ½»¾í
+					// äº¤å·
 					timerFlag = false;
 					Toast.makeText(theActivity, "Time Over", Toast.LENGTH_LONG)
 							.show();
@@ -1242,7 +1242,7 @@ public class QuestionDoExamActivity extends Activity implements
 				{
 					theActivity.proDialog.dismiss();
 				}
-				theActivity.gotoChooseActivity2(); //½»¾í
+				theActivity.gotoChooseActivity2(); //äº¤å·
 				break;
 			}
 		}
@@ -1287,11 +1287,11 @@ public class QuestionDoExamActivity extends Activity implements
 		for (int i = 0; i < listSize; i++) {
 			ExamQuestion q = questionList.get(i);
 			String str = q.getQid() + "-";
-			if ((!"ÎÊ´ğÌâ".equals(q.getQType()))
+			if ((!"é—®ç­”é¢˜".equals(q.getQType()))
 					&& choiceAnswer.indexOf(str) != -1) {
 				String temp = choiceAnswer.substring(choiceAnswer.indexOf(str));
 				q.setUserAnswer(temp.substring(str.length(), temp.indexOf("&")));
-			} else if (textAnswer != null && "ÎÊ´ğÌâ".equals(q.getQType())
+			} else if (textAnswer != null && "é—®ç­”é¢˜".equals(q.getQType())
 					&& textAnswer.indexOf(str) != -1) {
 				String temp = textAnswer.substring(textAnswer.indexOf(str));
 				q.setUserAnswer(temp.substring(str.length(),
@@ -1306,7 +1306,7 @@ public class QuestionDoExamActivity extends Activity implements
 		}
 	}
 
-	// ½âÎöÍ¼Æ¬ÏÂÔØµØÖ·
+	// è§£æå›¾ç‰‡ä¸‹è½½åœ°å€
 	private String[] parseAddress(String address) {
 		String[] addr = null;
 		// if(address.contains("<IMG "))
@@ -1326,7 +1326,7 @@ public class QuestionDoExamActivity extends Activity implements
 		return addr;
 	}
 
-	// Òì²½ÏÂÔØÍ¼Æ¬
+	// å¼‚æ­¥ä¸‹è½½å›¾ç‰‡
 	private class GetImageTask extends AsyncTask<String, Void, Bitmap> {
 		private String fileName;
 
@@ -1343,22 +1343,22 @@ public class QuestionDoExamActivity extends Activity implements
 			try {
 				fileName = fileName
 						+ params[0].substring(params[0].lastIndexOf("."));
-				url = new URL(params[0]); // ÉèÖÃURL
+				url = new URL(params[0]); // è®¾ç½®URL
 				HttpURLConnection con;
-				con = (HttpURLConnection) url.openConnection(); // ´ò¿ªÁ¬½Ó
-				con.setRequestMethod("GET"); // ÉèÖÃÇëÇó·½·¨
-				// ÉèÖÃÁ¬½Ó³¬Ê±Ê±¼äÎª5s
+				con = (HttpURLConnection) url.openConnection(); // æ‰“å¼€è¿æ¥
+				con.setRequestMethod("GET"); // è®¾ç½®è¯·æ±‚æ–¹æ³•
+				// è®¾ç½®è¿æ¥è¶…æ—¶æ—¶é—´ä¸º5s
 				con.setConnectTimeout(5000);
-				InputStream in = con.getInputStream(); // È¡µÃ×Ö½ÚÊäÈëÁ÷
+				InputStream in = con.getInputStream(); // å–å¾—å­—èŠ‚è¾“å…¥æµ
 				int len = 0;
 				byte buf[] = new byte[1024];
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				while ((len = in.read(buf)) != -1) {
-					out.write(buf, 0, len); // °ÑÊı¾İĞ´ÈëÄÚ´æ
+					out.write(buf, 0, len); // æŠŠæ•°æ®å†™å…¥å†…å­˜
 				}
 				byte[] data = out.toByteArray();
-				out.close(); // ¹Ø±ÕÄÚ´æÊä³öÁ÷
-				// ¶ş½øÖÆÊı¾İÉú³ÉÎ»Í¼
+				out.close(); // å…³é—­å†…å­˜è¾“å‡ºæµ
+				// äºŒè¿›åˆ¶æ•°æ®ç”Ÿæˆä½å›¾
 				Bitmap bit = BitmapFactory
 						.decodeByteArray(data, 0, data.length);
 				return bit;
@@ -1408,27 +1408,27 @@ public class QuestionDoExamActivity extends Activity implements
 		tipWindow.setFocusable(true);
 		tipWindow.setBackgroundDrawable(new BitmapDrawable());
 		tipWindow.setAnimationStyle(R.style.AnimationFade);
-		/***************** ÒÔÏÂ´úÂëÓÃÀ´Ñ­»·¼ì²âactivityÊÇ·ñ³õÊ¼»¯Íê±Ï ***************/
+		/***************** ä»¥ä¸‹ä»£ç ç”¨æ¥å¾ªç¯æ£€æµ‹activityæ˜¯å¦åˆå§‹åŒ–å®Œæ¯• ***************/
 		Runnable showPopWindowRunnable = new Runnable() {
 			@Override
 			public void run() {
-				// µÃµ½activityÖĞµÄ¸ùÔªËØ
+				// å¾—åˆ°activityä¸­çš„æ ¹å…ƒç´ 
 				View view = findViewById(R.id.parent);
-				// ÈçºÎ¸ùÔªËØµÄwidthºÍheight´óÓÚ0ËµÃ÷activityÒÑ¾­³õÊ¼»¯Íê±Ï
+				// å¦‚ä½•æ ¹å…ƒç´ çš„widthå’Œheightå¤§äº0è¯´æ˜activityå·²ç»åˆå§‹åŒ–å®Œæ¯•
 				if (view != null && view.getWidth() > 0 && view.getHeight() > 0) {
-					// ÏÔÊ¾popwindow
+					// æ˜¾ç¤ºpopwindow
 					tipWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-					// Í£Ö¹¼ì²â
+					// åœæ­¢æ£€æµ‹
 					mHandler.removeCallbacks(this);
 				} else {
-					// Èç¹ûactivityÃ»ÓĞ³õÊ¼»¯Íê±ÏÔòµÈ´ı5ºÁÃëÔÙ´Î¼ì²â
+					// å¦‚æœactivityæ²¡æœ‰åˆå§‹åŒ–å®Œæ¯•åˆ™ç­‰å¾…5æ¯«ç§’å†æ¬¡æ£€æµ‹
 					mHandler.postDelayed(this, 5);
 				}
 			}
 		};
-		// ¿ªÊ¼¼ì²â
+		// å¼€å§‹æ£€æµ‹
 		mHandler.post(showPopWindowRunnable);
-		/****************** ÒÔÉÏ´úÂëÓÃÀ´Ñ­»·¼ì²âactivityÊÇ·ñ³õÊ¼»¯Íê±Ï *************/
+		/****************** ä»¥ä¸Šä»£ç ç”¨æ¥å¾ªç¯æ£€æµ‹activityæ˜¯å¦åˆå§‹åŒ–å®Œæ¯• *************/
 	}
 
 	public void disPopupWin(View v) {
@@ -1442,13 +1442,13 @@ public class QuestionDoExamActivity extends Activity implements
 		editor.commit();
 	}
 
-	// ÏÔÊ¾ÌâÄ¿ÖĞµÄÍ¼Æ¬
+	// æ˜¾ç¤ºé¢˜ç›®ä¸­çš„å›¾ç‰‡
 	private void showPics(String title, String imageSavePath, String zuheName,
 			LinearLayout examImages, TextView examContent) {
-		if (title.contains("<IMG ")) // °üº¬Í¼Æ¬
+		if (title.contains("<IMG ")) // åŒ…å«å›¾ç‰‡
 		{
 			// String s = currentRule.getRuleId()+"-"+currentQuestion.getQid();
-			// ÏÈÈ¥sdÖĞÕÒ,ÕÒµ½¾ÍÏÔÊ¾,ÕÒ²»µ½ÏÈÏÂÔØÔÙÏÔÊ¾
+			// å…ˆå»sdä¸­æ‰¾,æ‰¾åˆ°å°±æ˜¾ç¤º,æ‰¾ä¸åˆ°å…ˆä¸‹è½½å†æ˜¾ç¤º
 			File dir = new File(imageSavePath);
 			if (dir.exists()) {
 				// dir.mkdirs();
@@ -1462,7 +1462,7 @@ public class QuestionDoExamActivity extends Activity implements
 						count--;
 					}
 				}
-				if (count == files.length) // Ã»ÓĞÍ¼Æ¬,Ã»¿¼ÂÇ¶àÍ¼Æ¬Ã»ÓĞ¼ÓÔØÍêÈ«µÄÇé¿ö
+				if (count == files.length) // æ²¡æœ‰å›¾ç‰‡,æ²¡è€ƒè™‘å¤šå›¾ç‰‡æ²¡æœ‰åŠ è½½å®Œå…¨çš„æƒ…å†µ
 				{
 					String[] imageUrls = parseAddress(title);
 					for (int i = 0; i < imageUrls.length; i++) {
@@ -1484,9 +1484,9 @@ public class QuestionDoExamActivity extends Activity implements
 					new GetImageTask(zuheName + "-" + i).execute(url);
 				}
 			}
-			examContent.setText(questionCursor + 1 + "¡¢"
+			examContent.setText(questionCursor + 1 + "ã€"
 					+ title.replaceAll("<IMG[\\S\\s]+>", ""));
 		} else
-			examContent.setText(questionCursor + 1 + "¡¢" + title);
+			examContent.setText(questionCursor + 1 + "ã€" + title);
 	}
 }

@@ -13,7 +13,7 @@ import android.widget.TextView;
 public class Player implements SurfaceHolder.Callback {
 	private int videoWidth;
 	private int videoHeight;
-	public MyMediaPlayer mediaPlayer;	//Ê¹ÓÃÕâ¸ö×´Ì¬°ü¹üÀà,ÀïÃæÓĞmediaPlayerµÄÒıÓÃ
+	public MyMediaPlayer mediaPlayer;	//ä½¿ç”¨è¿™ä¸ªçŠ¶æ€åŒ…è£¹ç±»,é‡Œé¢æœ‰mediaPlayerçš„å¼•ç”¨
 	private SurfaceHolder surfaceHolder;
 	private SeekBar skbProgress;
 	private TextView currentTime;
@@ -23,7 +23,7 @@ public class Player implements SurfaceHolder.Callback {
 	private int recordTime;
 	private OnErrorListener errorListener;
 	private OnCompletionListener completionListener;
-	private boolean flag; //surface´´½¨Óë·ñµÄ±êÊ¶
+	private boolean flag; //surfaceåˆ›å»ºä¸å¦çš„æ ‡è¯†
 	public Player(SurfaceView surfaceView, SeekBar skbProgress,
 			TextView currentTime, TextView totalTime,int recordTime,RelativeLayout loadLayout,OnErrorListener listener, OnCompletionListener completionListener) {
 		this.skbProgress = skbProgress;
@@ -46,7 +46,7 @@ public class Player implements SurfaceHolder.Callback {
 		try {
 			mediaPlayer.reset();
 			mediaPlayer.setDataSource(videoUrl);
-			mediaPlayer.prepareAsync();// prepareÖ®ºó×Ô¶¯²¥·Å
+			mediaPlayer.prepareAsync();// prepareä¹‹åè‡ªåŠ¨æ’­æ”¾
 			// mediaPlayer.start();
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
@@ -102,11 +102,11 @@ public class Player implements SurfaceHolder.Callback {
 		return mediaPlayer.isPlaying();
 	}
 
-	// »ñÈ¡ÊÓÆµµÄºÁÃëÖµ
+	// è·å–è§†é¢‘çš„æ¯«ç§’å€¼
 	public int getDuration() {
 		return duration;
 	}
-	// »ñµÃµ±Ç°²¥·ÅµÄºÁÃëÊı
+	// è·å¾—å½“å‰æ’­æ”¾çš„æ¯«ç§’æ•°
 	public int getCurrentTime()
 	{
 		if(mediaPlayer!=null)

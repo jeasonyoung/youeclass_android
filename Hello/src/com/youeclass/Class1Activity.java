@@ -52,7 +52,7 @@ public class Class1Activity extends Activity implements OnClickListener{
 		this.searchEdit = (EditText) this.findViewById(R.id.serchkey);
 		this.username = this.getIntent().getStringExtra("username");
 		//this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		dialog = ProgressDialog.show(Class1Activity.this,null,"Å¬Á¦¼ÓÔØÖĞÇëÉÔºò",true,true);
+		dialog = ProgressDialog.show(Class1Activity.this,null,"åŠªåŠ›åŠ è½½ä¸­è¯·ç¨å€™",true,true);
 		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		returnBtn = (ImageButton) this.findViewById(R.id.returnbtn);
 		returnBtn.setOnClickListener(this);
@@ -72,7 +72,7 @@ public class Class1Activity extends Activity implements OnClickListener{
 				String result = HttpConnectUtil.httpGetRequest(Class1Activity.this, Constant.DOMAIN_URL+"mobile/examTree");
 				if(result!=null&&!result.equals("null"))
             	{
-            		//½âÎöjson×Ö·û´®,ÅäÖÃListViewµÄadapter
+            		//è§£æjsonå­—ç¬¦ä¸²,é…ç½®ListViewçš„adapter
             		try
             		{
             			JSONArray exams = new JSONArray(result);
@@ -117,14 +117,14 @@ public class Class1Activity extends Activity implements OnClickListener{
         			mActivity.get().list.setAdapter(new ArrayAdapter<String>(mActivity.get(), R.layout.listlayout_1,R.id.text1, array));
                 	break;
                 case -1:
-                	//Á¬²»ÉÏ,
+                	//è¿ä¸ä¸Š,
                 	theActivity.dialog.dismiss();
-            		theActivity.nodata.setVisibility(View.VISIBLE);//ÎŞÊı¾İÏÔÊ¾
-            		Toast.makeText(theActivity, "ÔİÊ±Á¬²»ÉÏ·şÎñÆ÷,ÇëÉÔºò", Toast.LENGTH_SHORT).show();//ÌáÊ¾
+            		theActivity.nodata.setVisibility(View.VISIBLE);//æ— æ•°æ®æ˜¾ç¤º
+            		Toast.makeText(theActivity, "æš‚æ—¶è¿ä¸ä¸ŠæœåŠ¡å™¨,è¯·ç¨å€™", Toast.LENGTH_SHORT).show();//æç¤º
             		break;
                 case -2:
                 	theActivity.dialog.dismiss();
-            		theActivity.nodata.setVisibility(View.VISIBLE);//ÎŞÊı¾İÏÔÊ¾
+            		theActivity.nodata.setVisibility(View.VISIBLE);//æ— æ•°æ®æ˜¾ç¤º
                 	break;
                 }
         }
@@ -154,7 +154,7 @@ public class Class1Activity extends Activity implements OnClickListener{
 		case R.id.returnbtn:
 			this.finish();return;
 		case R.id.LearningRecord_layout_btn:
-			Toast.makeText(this, "Ãâ·ÑÌåÑé²»Ìá¹©¸Ã¹¦ÄÜ", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "å…è´¹ä½“éªŒä¸æä¾›è¯¥åŠŸèƒ½", Toast.LENGTH_SHORT).show();
 			return;
 		case R.id.MyCourse_layout_btn:
 			Intent intent = new Intent(this,MyCourseActivity.class);
@@ -171,7 +171,7 @@ public class Class1Activity extends Activity implements OnClickListener{
 		String keywords = this.searchEdit.getText().toString();
 		if("".equals(keywords.trim()))
 		{
-			Toast.makeText(this, "ÇëÊäÈëËÑË÷¹Ø¼ü×Ö", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "è¯·è¾“å…¥æœç´¢å…³é”®å­—", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		Intent intent = new Intent(Class1Activity.this,SearchActivity.class);

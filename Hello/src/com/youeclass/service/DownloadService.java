@@ -20,8 +20,8 @@ import com.youeclass.downloader.SmartDownloadProgressListener;
 import com.youeclass.downloader.SmartFileDownloader;
 
 /**
- * serviceÊÇ¿´²»¼ûµÄActivity ÏÂÔØ·şÎñ,ÔÚ·şÎñÀïÆô¶¯Ïß³Ì½øĞĞÏÂÔØ,Í¬Ê±×¢²á¹ã²¥,½ÓÊÕÀ´×ÔActivityµÄ¹ã²¥ĞÅÏ¢ ÔÚÏß³ÌÖĞ·¢ËÍ
- * ÌØ¶¨µÄ¹ã²¥ÈÃactivity½øĞĞ½ÓÊÕ,¸üĞÂUI
+ * serviceæ˜¯çœ‹ä¸è§çš„Activity ä¸‹è½½æœåŠ¡,åœ¨æœåŠ¡é‡Œå¯åŠ¨çº¿ç¨‹è¿›è¡Œä¸‹è½½,åŒæ—¶æ³¨å†Œå¹¿æ’­,æ¥æ”¶æ¥è‡ªActivityçš„å¹¿æ’­ä¿¡æ¯ åœ¨çº¿ç¨‹ä¸­å‘é€
+ * ç‰¹å®šçš„å¹¿æ’­è®©activityè¿›è¡Œæ¥æ”¶,æ›´æ–°UI
  * 
  * @author Administrator
  * 
@@ -43,27 +43,27 @@ public class DownloadService extends Service {
 		// TODO Auto-generated method stub
 		cmdReceiver = new CommandReceiver();
 		mHandler = new MyHandler(this);
-		// ×¢²á¹ã²¥
+		// æ³¨å†Œå¹¿æ’­
 		IntentFilter filter = new IntentFilter();
-		filter.addAction("commandFromActivity");// ¶¨Òå½ÓÊÕÊ²Ã´ÑùµÄ¹ã²¥
+		filter.addAction("commandFromActivity");// å®šä¹‰æ¥æ”¶ä»€ä¹ˆæ ·çš„å¹¿æ’­
 		registerReceiver(cmdReceiver, filter);
 		this.downloaderMap = new HashMap<String, SmartFileDownloader>();
 		super.onCreate();
 	}
 
-	// service¿ÉÒÔÖØ¸´µ÷ÓÃ
+	// serviceå¯ä»¥é‡å¤è°ƒç”¨
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
 		downloaderCount++;
 		if (downloaderCount >= 3) {
-			Toast.makeText(this, "×î¶àÔÊĞíÁ½¸öÈÎÎñÍ¬Ê±ÏÂÔØ", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "æœ€å¤šå…è®¸ä¸¤ä¸ªä»»åŠ¡åŒæ—¶ä¸‹è½½", Toast.LENGTH_LONG).show();
 			return super.onStartCommand(intent, flags, startId);
 		}
 		String url = intent.getStringExtra("url");
 		String dir = intent.getStringExtra("dir");
 		String username = intent.getStringExtra("username");
-		dojob(url, dir, username); // Æô¶¯Ïß³ÌÈ¥ÏÂÔØ
+		dojob(url, dir, username); // å¯åŠ¨çº¿ç¨‹å»ä¸‹è½½
 		return super.onStartCommand(intent, flags, startId);
 	}
 
@@ -71,7 +71,7 @@ public class DownloadService extends Service {
 		new MyThread(id, new File(dir + "/" + username), username).start();
 	}
 
-	// ¶¨Ò»¸öÏß³ÌÆô¶¯ÏÂÔØÆ÷
+	// å®šä¸€ä¸ªçº¿ç¨‹å¯åŠ¨ä¸‹è½½å™¨
 	private class MyThread extends Thread {
 		private String url;
 		private File dir;
@@ -87,13 +87,13 @@ public class DownloadService extends Service {
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			// ¶¨Ò»¸öÏÂÔØÆ÷,ÏÂÔØÆ÷ÔÚ³õÊ¼»¯Ê±»á½øĞĞÒ»Ğ©ºÄÊ±µÄ²Ù×÷
+			// å®šä¸€ä¸ªä¸‹è½½å™¨,ä¸‹è½½å™¨åœ¨åˆå§‹åŒ–æ—¶ä¼šè¿›è¡Œä¸€äº›è€—æ—¶çš„æ“ä½œ
 			SmartFileDownloader loader = new SmartFileDownloader(
 					DownloadService.this, url, dir, 2, username,
 					DownloadService.mHandler);
 			downloaderMap.put(url, loader);
 			try {
-				// Æô¶¯ÏÂÔØ²¢ÇÒ¼àÌıÏÂÔØ½ø¶È
+				// å¯åŠ¨ä¸‹è½½å¹¶ä¸”ç›‘å¬ä¸‹è½½è¿›åº¦
 				System.out
 						.println("!!!!!!!!!!!!!start the download listener!!!!!!!!!!!!");
 				loader.download(new SmartDownloadProgressListener() {
@@ -101,11 +101,11 @@ public class DownloadService extends Service {
 					public void onDownloadSize(int size) {
 						// TODO Auto-generated method stub
 						if (size > 0) {
-							Intent intent = new Intent();// ´´½¨Intent¶ÔÏó
-							intent.setAction("updateUI"); // ¶¨Òå¹ã²¥ÀàĞÍ
-							intent.putExtra("url", url); // °ó¶¨Êı¾İ
+							Intent intent = new Intent();// åˆ›å»ºIntentå¯¹è±¡
+							intent.setAction("updateUI"); // å®šä¹‰å¹¿æ’­ç±»å‹
+							intent.putExtra("url", url); // ç»‘å®šæ•°æ®
 							intent.putExtra("data", size);
-							sendBroadcast(intent);// ·¢ËÍ¹ã²¥
+							sendBroadcast(intent);// å‘é€å¹¿æ’­
 							System.out
 									.println("!!!!!downloadService set broadcase!!!!!!");
 						}
@@ -114,7 +114,7 @@ public class DownloadService extends Service {
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				// ÏÂÔØÊ§°Ü
+				// ä¸‹è½½å¤±è´¥
 			}
 		}
 	}
@@ -122,31 +122,31 @@ public class DownloadService extends Service {
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
-		// ×¢Ïú¹ã²¥
+		// æ³¨é”€å¹¿æ’­
 		unregisterReceiver(cmdReceiver);
 		downloaderMap.clear();
 		super.onDestroy();
 	}
 
-	// ¶¨ÒåÒ»¸ö¹ã²¥½ÓÊÕÕß
+	// å®šä¹‰ä¸€ä¸ªå¹¿æ’­æ¥æ”¶è€…
 	private class CommandReceiver extends BroadcastReceiver {
-		// ½ÓÊÕÀ´×ÔActivityµÄ¹ã²¥,´Ó¶ø¿ØÖÆ¸÷¸öÏÂÔØÏß³Ì
+		// æ¥æ”¶æ¥è‡ªActivityçš„å¹¿æ’­,ä»è€Œæ§åˆ¶å„ä¸ªä¸‹è½½çº¿ç¨‹
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
 			int cmd = intent.getIntExtra("cmd", -1);
 			final String url = intent.getStringExtra("url");
 			final String path = intent.getStringExtra("path");
-			if (cmd == 0) // ±íÊ¾ÔİÍ£
+			if (cmd == 0) // è¡¨ç¤ºæš‚åœ
 			{
-				// ÉèÖÃÏÂÔØÆ÷ÀïµÄ±êÊ¶
-				SmartFileDownloader.flagMap.put(url, false);// Í£Ö¹Ïß³Ì
+				// è®¾ç½®ä¸‹è½½å™¨é‡Œçš„æ ‡è¯†
+				SmartFileDownloader.flagMap.put(url, false);// åœæ­¢çº¿ç¨‹
 				// downloaderMap.remove(url);
 				downloaderCount--;
 			} else if (cmd == 2) {
-				// ÉèÖÃÏÂÔØÆ÷ÀïµÄ±êÊ¶
+				// è®¾ç½®ä¸‹è½½å™¨é‡Œçš„æ ‡è¯†
 				if (SmartFileDownloader.flagMap.get(url)) {
-					SmartFileDownloader.flagMap.put(url, false);// Í£Ö¹Ïß³Ì
+					SmartFileDownloader.flagMap.put(url, false);// åœæ­¢çº¿ç¨‹
 					new Thread() {
 						public void run() {
 							SmartFileDownloader l = downloaderMap.get(url);
@@ -158,10 +158,10 @@ public class DownloadService extends Service {
 									e.printStackTrace();
 								}
 							}
-							Log.i("DownloadService", "¸ÃÏÂÔØÈÎÎñÒÑ¾­Í£Ö¹");
+							Log.i("DownloadService", "è¯¥ä¸‹è½½ä»»åŠ¡å·²ç»åœæ­¢");
 							File file = l.getSaveFile();
 							file.delete();
-							Log.i("DownloadService", file.exists() + "ÎÄ¼ş»¹´æÔÚÃ´?");
+							Log.i("DownloadService", file.exists() + "æ–‡ä»¶è¿˜å­˜åœ¨ä¹ˆ?");
 							mHandler.sendEmptyMessage(3);
 							downloaderMap.remove(url);
 							downloaderCount--;
@@ -179,16 +179,16 @@ public class DownloadService extends Service {
 					if (f.exists()) {
 						boolean flag = f.delete();
 						Toast.makeText(DownloadService.this,
-								"É¾³ıÎÄ¼ş" + (flag ? "³É¹¦" : "Ê§°Ü"),
+								"åˆ é™¤æ–‡ä»¶" + (flag ? "æˆåŠŸ" : "å¤±è´¥"),
 								Toast.LENGTH_SHORT).show();
 					}
 				}
 			} else {
-				// ½áÊøËùÓĞ½ø³ÌÍ¬Ê±Í£Ö¹·şÎñ
+				// ç»“æŸæ‰€æœ‰è¿›ç¨‹åŒæ—¶åœæ­¢æœåŠ¡
 				stopAll();
 				downloaderMap.clear();
 				downloaderCount = 0;
-				// Í£Ö¹·şÎñ
+				// åœæ­¢æœåŠ¡
 				stopSelf();
 
 			}
@@ -203,7 +203,7 @@ public class DownloadService extends Service {
 		downloaderCount = 0;
 	}
 
-	// ±ØĞë³ÖÓĞÒ»¸ö½ÓÊÕÕßµÄÒıÓÃ,Îª×¢²áÕâ¸ö¹ã²¥¶¨Òå½ÓÊÕÆ÷
+	// å¿…é¡»æŒæœ‰ä¸€ä¸ªæ¥æ”¶è€…çš„å¼•ç”¨,ä¸ºæ³¨å†Œè¿™ä¸ªå¹¿æ’­å®šä¹‰æ¥æ”¶å™¨
 	private CommandReceiver cmdReceiver;
 
 	private static class MyHandler extends Handler {
@@ -219,18 +219,18 @@ public class DownloadService extends Service {
 			// TODO Auto-generated method stub
 			switch (msg.what) {
 			case -1:
-				Toast.makeText(weak.get(), "·şÎñÆ÷Ã»ÓĞÏìÓ¦", Toast.LENGTH_SHORT)
+				Toast.makeText(weak.get(), "æœåŠ¡å™¨æ²¡æœ‰å“åº”", Toast.LENGTH_SHORT)
 						.show();
 				break;
 			case -2:
-				Toast.makeText(weak.get(), "ÎŞ·¨Á¬½Óµ½ÏÂÔØµØÖ·", Toast.LENGTH_SHORT)
+				Toast.makeText(weak.get(), "æ— æ³•è¿æ¥åˆ°ä¸‹è½½åœ°å€", Toast.LENGTH_SHORT)
 						.show();
 				break;
 			case -3:
-				Toast.makeText(weak.get(), "Î´ÖªÎÄ¼ş´óĞ¡", Toast.LENGTH_SHORT).show();
+				Toast.makeText(weak.get(), "æœªçŸ¥æ–‡ä»¶å¤§å°", Toast.LENGTH_SHORT).show();
 				break;
 			case 3:
-				Toast.makeText(weak.get(), "É¾³ı³É¹¦", Toast.LENGTH_SHORT).show();
+				Toast.makeText(weak.get(), "åˆ é™¤æˆåŠŸ", Toast.LENGTH_SHORT).show();
 				break;
 			}
 		}

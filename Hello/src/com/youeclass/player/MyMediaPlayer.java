@@ -31,7 +31,7 @@ public class MyMediaPlayer extends MediaPlayerStateWrapper{
 		mTimer.schedule(mTimerTask, 0, 1000);
 	}
 	/*******************************************************
-	 * Í¨¹ı¶¨Ê±Æ÷ºÍHandlerÀ´¸üĞÂÍÏ¶¯Ìõ
+	 * é€šè¿‡å®šæ—¶å™¨å’ŒHandleræ¥æ›´æ–°æ‹–åŠ¨æ¡
 	 ******************************************************/
 	TimerTask mTimerTask = new TimerTask() {
 		@Override
@@ -68,7 +68,7 @@ public class MyMediaPlayer extends MediaPlayerStateWrapper{
 	@Override
 	public void onCompletion(android.media.MediaPlayer mp) {
 		currentTime.setText(totalTime.getText());
-		//ÍË³öÀ´
+		//é€€å‡ºæ¥
 		skbProgress.setProgress(0);
 		currentTime.setText("00:00");
 	};
@@ -105,16 +105,16 @@ public class MyMediaPlayer extends MediaPlayerStateWrapper{
 	@Override
 	public void stop() {
 		// TODO Auto-generated method stub
-		mTimer.cancel();//È¡ÏûÕâ¸ö¶¨Ê±ÈÎÎñ
+		mTimer.cancel();//å–æ¶ˆè¿™ä¸ªå®šæ—¶ä»»åŠ¡
 		super.stop();
 	}
-	//seekbar¼àÌıÊÂ¼ş
+	//seekbarç›‘å¬äº‹ä»¶
 	class SeekBarChangeEvent implements SeekBar.OnSeekBarChangeListener {
 		int progress;
 		@Override
 		public void onProgressChanged(SeekBar seekBar, int progress,
 				boolean fromUser) {
-			// Ô­±¾ÊÇ(progress/seekBar.getMax())*player.mediaPlayer.getDuration()
+			// åŸæœ¬æ˜¯(progress/seekBar.getMax())*player.mediaPlayer.getDuration()
 			this.progress = progress * getDuration()
 					/ seekBar.getMax();
 		}
@@ -126,13 +126,13 @@ public class MyMediaPlayer extends MediaPlayerStateWrapper{
 
 		@Override
 		public void onStopTrackingTouch(SeekBar seekBar) {
-			// seekTo()µÄ²ÎÊıÊÇÏà¶ÔÓëÓ°Æ¬Ê±¼äµÄÊı×Ö£¬¶ø²»ÊÇÓëseekBar.getMax()Ïà¶ÔµÄÊı×Ö
+			// seekTo()çš„å‚æ•°æ˜¯ç›¸å¯¹ä¸å½±ç‰‡æ—¶é—´çš„æ•°å­—ï¼Œè€Œä¸æ˜¯ä¸seekBar.getMax()ç›¸å¯¹çš„æ•°å­—
 			seekTo(progress);
-			//¸ü¸ÄÊ±¼ä
+			//æ›´æ”¹æ—¶é—´
 			currentTime.setText(getTime(progress/1000));
 		}
 	}
-	//¿ì½ø
+	//å¿«è¿›
 	public void setForward()
 	{
 		int ct = this.getCurrentPosition();
@@ -144,7 +144,7 @@ public class MyMediaPlayer extends MediaPlayerStateWrapper{
 			currentTime.setText(getTime(ct/1000));
 		}
 	}
-	//¿ìÍË
+	//å¿«é€€
 	public void setBack()
 	{
 		int ct = this.getCurrentPosition();

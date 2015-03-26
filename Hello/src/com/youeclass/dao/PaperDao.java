@@ -28,22 +28,22 @@ public class PaperDao {
 	}
 	
 	/**
-	 * ²åÈëÊÔ¾íºÍ´óÌâ
-	 * @param paper	ÊÔ¾í
-	 * @param rules ´óÌâµÄ¼¯ºÏ
+	 * æ’å…¥è¯•å·å’Œå¤§é¢˜
+	 * @param paper	è¯•å·
+	 * @param rules å¤§é¢˜çš„é›†åˆ
 	 */
 	public void insertPaper(Paper paper,List<ExamRule> rules)
 	{
 		/*
-		 * ÏÈ¿´´æ²»´æÔÚ,²»´æÔÚ¾Í¼ÓÈë
+		 * å…ˆçœ‹å­˜ä¸å­˜åœ¨,ä¸å­˜åœ¨å°±åŠ å…¥
 		 */
 		if(paper==null) return;
 		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
-		Log.d(TAG, "insertPaper·½·¨´ò¿ªÁËÊı¾İ¿âÁ¬½Ó");
+		Log.d(TAG, "insertPaperæ–¹æ³•æ‰“å¼€äº†æ•°æ®åº“è¿æ¥");
 		Cursor cursor = db.rawQuery("select * from ExamPaperTab where paperid = ?",new String[]{paper.getPaperId()});
 		if(cursor.getCount()>0)
 		{
-			Log.d(TAG,"¸ÃÊÔ¾íÒÑ¾­¼Ó¹ıÁË");
+			Log.d(TAG,"è¯¥è¯•å·å·²ç»åŠ è¿‡äº†");
 			cursor.close();
 			dbhelper.closeDb();
 			return;
@@ -69,7 +69,7 @@ public class PaperDao {
 			db.endTransaction();
 		}
 		dbhelper.closeDb();
-		Log.d(TAG, "insertPaper·½·¨¹Ø±ÕÁËÊı¾İ¿âÁ¬½Ó");
+		Log.d(TAG, "insertPaperæ–¹æ³•å…³é—­äº†æ•°æ®åº“è¿æ¥");
 	}
 	public List<Paper> findPapers(String gid)
 	{
@@ -122,7 +122,7 @@ public class PaperDao {
 		return list;
 	}
 	/**
-	 * ²åÈë´óÌâ×é
+	 * æ’å…¥å¤§é¢˜ç»„
 	 * @param rules
 	 */
 	public void insertRules(List<ExamRule> rules)
@@ -328,11 +328,11 @@ public class PaperDao {
 		return list;
 	}
 	/**
-	 * ±£´æ»ò¸üĞÂ¿¼ÊÔ¼ÇÂ¼
+	 * ä¿å­˜æˆ–æ›´æ–°è€ƒè¯•è®°å½•
 	 * @param r
 	 * PAPERID ,USERNAME ,SCORE ,LASTIME ,USETIME ,TEMPTIME ,ANSWERS ,TEMPANSWER 
 	 */
-	public void saveOrUpdateRecord(ExamRecord r) //Ã¿ÈËÃ¿Ì×ÊÔ¾íÖ»ÓĞÒ»¸ö¼ÇÂ¼
+	public void saveOrUpdateRecord(ExamRecord r) //æ¯äººæ¯å¥—è¯•å·åªæœ‰ä¸€ä¸ªè®°å½•
 	{
 		if(r==null) return;
 		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
@@ -361,7 +361,7 @@ public class PaperDao {
 		dbhelper.closeDb();
 	}
 	/*
-	 * ¿ªÊ¼¿¼ÊÔ¾ÍÒª¼Ó¼ÇÂ¼
+	 * å¼€å§‹è€ƒè¯•å°±è¦åŠ è®°å½•
 	 */
 	public ExamRecord insertRecord(ExamRecord r)
 	{
@@ -396,7 +396,7 @@ public class PaperDao {
 		}
 	}
 	/**
-	 * ²éÕÒ¿¼ÊÔ¼ÇÂ¼
+	 * æŸ¥æ‰¾è€ƒè¯•è®°å½•
 	 */
 	public ExamRecord findRecord(String username,String paperId)
 		{
@@ -450,7 +450,7 @@ public class PaperDao {
 		dbhelper.closeDb();
 	}
 	/**
-	 * ¸üĞÂÁÙÊ±µÄ´ğ°¸
+	 * æ›´æ–°ä¸´æ—¶çš„ç­”æ¡ˆ
 	 * @param r
 	 */
 	public void updateTempAnswerForRecord(ExamRecord r)

@@ -60,9 +60,9 @@ public class ChooseListAdapter2 extends BaseAdapter{
 					Intent data=new Intent();  
 		         	data.putExtra("action", "showQuestionWithAnswer");  
 		         	data.putExtra("cursor", Integer.parseInt(((TextView)arg1.findViewById(R.id.optionTextView)).getText().toString())-1);  
-		         	//请求代码可以自己设置，这里设置成20  
+		         	//璇锋眰浠ｇ爜鍙互鑷繁璁剧疆锛岃繖閲岃缃垚20  
 		         	activity.setResult(20, data);  
-		         	//关闭掉这个Activity  
+		         	//鍏抽棴鎺夎繖涓狝ctivity  
 		         	activity.finish();
 				}else
 				{

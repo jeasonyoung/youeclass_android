@@ -84,12 +84,12 @@ public class DownFinishActivity extends BaseActivity {
 		{
 			actionbar = new QuickActionPopupWindow(DownFinishActivity.this);
 			action_delete = new ActionItem();
-			action_delete.setTitle("É¾³ı");
+			action_delete.setTitle("åˆ é™¤");
 			action_delete.setIcon(getResources().getDrawable(
 					R.drawable.action_delete));
 			
 			actionbar.addActionItem(action_delete);
-			// ÉèÖÃ¶¯»­·ç¸ñ
+			// è®¾ç½®åŠ¨ç”»é£æ ¼
 			actionbar.setAnimStyle(QuickActionPopupWindow.ANIM_AUTO);
 		}
 		if(listener == null)
@@ -98,7 +98,7 @@ public class DownFinishActivity extends BaseActivity {
 		}
 		listener.setIndex(location);
 		action_delete.setClickListener(listener); 
-		// ÏÔÊ¾
+		// æ˜¾ç¤º
 		actionbar.show(v);
 		}
 	}
@@ -111,11 +111,11 @@ public class DownFinishActivity extends BaseActivity {
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			//µ¯¿òÊÇ·ñÈ·ÈÏÉ¾³ı
+			//å¼¹æ¡†æ˜¯å¦ç¡®è®¤åˆ é™¤
 			AlertDialog dialog = new AlertDialog.Builder(DownFinishActivity.this)
-			.setTitle("É¾³ıÎÄ¼ş")
-			.setMessage("ÊÇ·ñÈ·ÈÏÉ¾³ı¸ÃÊÓÆµÎÄ¼ş")
-			.setPositiveButton("È·¶¨", new  DialogInterface.OnClickListener() {
+			.setTitle("åˆ é™¤æ–‡ä»¶")
+			.setMessage("æ˜¯å¦ç¡®è®¤åˆ é™¤è¯¥è§†é¢‘æ–‡ä»¶")
+			.setPositiveButton("ç¡®å®š", new  DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					// TODO Auto-generated method stub
@@ -124,12 +124,12 @@ public class DownFinishActivity extends BaseActivity {
 					//to do something
 					Course c = list.get(index);
 					new File(c.getFilePath()).delete();
-					Log.i("DownFinish","É¾³ıÁËÎÄ¼ş");
+					Log.i("DownFinish","åˆ é™¤äº†æ–‡ä»¶");
 					dao.updateState(c.getFileUrl(), 0, c.getUsername());
 					list.remove(index);
 					mAdapter.notifyDataSetChanged();
 					}
-			}).setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
+			}).setNegativeButton("å–æ¶ˆ", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					// TODO Auto-generated method stub

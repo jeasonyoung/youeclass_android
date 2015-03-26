@@ -54,7 +54,7 @@ public class MyCourseDetailActivity extends BaseActivity implements OnClickListe
 		{
 			setList(intent.getStringExtra("classDetails"));
 		}
-		//ÉèÖÃ»º´æÑÕÉ«ÎªÍ¸Ã÷
+		//è®¾ç½®ç¼“å­˜é¢œè‰²ä¸ºé€æ˜
 		list.setCacheColorHint(Color.TRANSPARENT);
 		list.setAlwaysDrawnWithCacheEnabled(true); 
 		rbtn.setOnClickListener(this);
@@ -102,15 +102,15 @@ public class MyCourseDetailActivity extends BaseActivity implements OnClickListe
 		// TODO Auto-generated method stub
 		switch(v.getId())
 		{
-		case R.id.Lookonline_layout_btn://ÔÚÏß²¥·Å
+		case R.id.Lookonline_layout_btn://åœ¨çº¿æ’­æ”¾
 			break;
-		case R.id.MyfileDown_layout_btn://ÀëÏß²¥·Å
+		case R.id.MyfileDown_layout_btn://ç¦»çº¿æ’­æ”¾
 			Intent intent = new Intent(this,DownloadActivity.class);
 			intent.putExtra("actionName", "outline");
 			intent.putExtra("username", username);
 			this.startActivity(intent);
 			break;
-		case R.id.LearningRecord_layout_btn://Ñ§Ï°¼ÇÂ¼
+		case R.id.LearningRecord_layout_btn://å­¦ä¹ è®°å½•
 			Intent mIntent = new Intent(this,PlayrecordActivity.class);
 			mIntent.putExtra("username", username);
 			mIntent.putExtra("loginType", loginType);

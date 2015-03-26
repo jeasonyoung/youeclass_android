@@ -39,7 +39,7 @@ public class VitamioPlayer implements OnBufferingUpdateListener,
 	private long duration;
 	private int recordTime;
 	private Timer mTimer ;
-	private boolean flag; // surface´´½¨Óë·ñµÄ±êÊ¶
+	private boolean flag; // surfaceåˆ›å»ºä¸å¦çš„æ ‡è¯†
 	private boolean mIsVideoSizeKnown = false;
 	private boolean mIsVideoReadyToBePlayed = false;
 	TimerTask mTimerTask = new TimerTask() {
@@ -50,7 +50,7 @@ public class VitamioPlayer implements OnBufferingUpdateListener,
 					handleProgress.sendEmptyMessage(0);
 				}
 			} catch (NullPointerException e) {
-				Log.e(TAG, "²¥·ÅÆ÷»¹Ã»ÓĞ´´½¨");
+				Log.e(TAG, "æ’­æ”¾å™¨è¿˜æ²¡æœ‰åˆ›å»º");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -89,7 +89,7 @@ public class VitamioPlayer implements OnBufferingUpdateListener,
 
 	private Context context;
 
-	// ³õÊ¼»¯vitamioPlayer
+	// åˆå§‹åŒ–vitamioPlayer
 	public VitamioPlayer(Context context, SurfaceView surfaceView,
 			SeekBar skbProgress, TextView currentTime, TextView totalTime,
 			int recordTime, RelativeLayout loadLayout) {
@@ -114,8 +114,8 @@ public class VitamioPlayer implements OnBufferingUpdateListener,
 	@Override
 	public void onCompletion(MediaPlayer mp) {
 		// TODO Auto-generated method stub
-		// ÍË³öÀ´
-		Log.e("mediaPlayer", "onCompletion ²¥·ÅÍê±Ï");
+		// é€€å‡ºæ¥
+		Log.e("mediaPlayer", "onCompletion æ’­æ”¾å®Œæ¯•");
 		skbProgress.setProgress(0);
 		currentTime.setText("00:00");
 		mediaPlayer.stop();
@@ -148,14 +148,14 @@ public class VitamioPlayer implements OnBufferingUpdateListener,
 		}
 	}
 
-	// seekbar¼àÌıÊÂ¼ş
+	// seekbarç›‘å¬äº‹ä»¶
 	class SeekBarChangeEvent implements SeekBar.OnSeekBarChangeListener {
 		int progress;
 
 		@Override
 		public void onProgressChanged(SeekBar seekBar, int progress,
 				boolean fromUser) {
-			// Ô­±¾ÊÇ(progress/seekBar.getMax())*player.mediaPlayer.getDuration()
+			// åŸæœ¬æ˜¯(progress/seekBar.getMax())*player.mediaPlayer.getDuration()
 			this.progress = (int) (progress * mediaPlayer.getDuration() / seekBar
 					.getMax());
 		}
@@ -167,9 +167,9 @@ public class VitamioPlayer implements OnBufferingUpdateListener,
 
 		@Override
 		public void onStopTrackingTouch(SeekBar seekBar) {
-			// seekTo()µÄ²ÎÊıÊÇÏà¶ÔÓëÓ°Æ¬Ê±¼äµÄÊı×Ö£¬¶ø²»ÊÇÓëseekBar.getMax()Ïà¶ÔµÄÊı×Ö
+			// seekTo()çš„å‚æ•°æ˜¯ç›¸å¯¹ä¸å½±ç‰‡æ—¶é—´çš„æ•°å­—ï¼Œè€Œä¸æ˜¯ä¸seekBar.getMax()ç›¸å¯¹çš„æ•°å­—
 			mediaPlayer.seekTo(progress);
-			// ¸ü¸ÄÊ±¼ä
+			// æ›´æ”¹æ—¶é—´
 			currentTime.setText(getTime(progress / 1000));
 		}
 	}
@@ -230,7 +230,7 @@ public class VitamioPlayer implements OnBufferingUpdateListener,
 		// TODO Auto-generated method stub
 		switch (what) {
         case MediaPlayer.MEDIA_INFO_BUFFERING_START:
-            //¿ªÊ¼»º´æ£¬ÔİÍ£²¥·Å
+            //å¼€å§‹ç¼“å­˜ï¼Œæš‚åœæ’­æ”¾
             if (isPlaying()) {
                 mediaPlayer.pause();
                 needResume = true;
@@ -238,19 +238,19 @@ public class VitamioPlayer implements OnBufferingUpdateListener,
             loadLayout.setVisibility(View.VISIBLE);
             break;
         case MediaPlayer.MEDIA_INFO_BUFFERING_END:
-            //»º´æÍê³É£¬¼ÌĞø²¥·Å
+            //ç¼“å­˜å®Œæˆï¼Œç»§ç»­æ’­æ”¾
             if (needResume)
                 mediaPlayer.start();
             loadLayout.setVisibility(View.GONE);
             break;
         case MediaPlayer.MEDIA_INFO_DOWNLOAD_RATE_CHANGED:
-            //ÏÔÊ¾ ÏÂÔØËÙ¶È
+            //æ˜¾ç¤º ä¸‹è½½é€Ÿåº¦
             Log.e(TAG,"download rate:" + extra);
             break;
         }
         return true;
 	}
-	// ¿ì½ø
+	// å¿«è¿›
 	public void setForward() {
 		long ct = mediaPlayer.getCurrentPosition();
 		if (ct + 5000 < mediaPlayer.getDuration()) {
@@ -262,7 +262,7 @@ public class VitamioPlayer implements OnBufferingUpdateListener,
 		}
 	}
 
-	// ¿ìÍË
+	// å¿«é€€
 	public void setBack() {
 		long ct = mediaPlayer.getCurrentPosition();
 		if (ct - 5000 > 0) {
@@ -278,12 +278,12 @@ public class VitamioPlayer implements OnBufferingUpdateListener,
 		return mediaPlayer.isPlaying();
 	}
 
-	// »ñÈ¡ÊÓÆµµÄºÁÃëÖµ
+	// è·å–è§†é¢‘çš„æ¯«ç§’å€¼
 	public long getDuration() {
 		return duration;
 	}
 
-	// »ñµÃµ±Ç°²¥·ÅµÄºÁÃëÊı
+	// è·å¾—å½“å‰æ’­æ”¾çš„æ¯«ç§’æ•°
 	public long getCurrentTime() {
 		if (mediaPlayer != null) {
 			return mediaPlayer.getCurrentPosition();
@@ -308,14 +308,14 @@ public class VitamioPlayer implements OnBufferingUpdateListener,
 			mediaPlayer.prepareAsync();
 		} catch (Exception e) {
 			e.printStackTrace();
-			Log.e(TAG, "²¥·Å´íÎó");
+			Log.e(TAG, "æ’­æ”¾é”™è¯¯");
 		}
 	}
 
 	public void play() {
 		if (mIsVideoReadyToBePlayed && mIsVideoSizeKnown) {
 			surfaceHolder.setFixedSize(videoWidth, videoHeight);
-			Log.e(TAG,"¿ªÊ¼²¥·Å¡£¡£¡£¡£¡£");
+			Log.e(TAG,"å¼€å§‹æ’­æ”¾ã€‚ã€‚ã€‚ã€‚ã€‚");
 			mediaPlayer.start();
 			if(mTimer==null)
 			{

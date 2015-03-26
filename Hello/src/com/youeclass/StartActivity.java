@@ -64,15 +64,15 @@ public class StartActivity extends Activity{
 		handler = new MyHandler(this);
 		if(isfirst==1)
 		{
-			//¼ì²é¸üĞÂ
-			//ÏÈ»ñÈ¡°æ±¾ĞÅÏ¢
+			//æ£€æŸ¥æ›´æ–°
+			//å…ˆè·å–ç‰ˆæœ¬ä¿¡æ¯
 			if(isNeedCheck())
 			{
 				if(checkNetWork())
 				{
 					CheckUpdateTask checkup = new CheckUpdateTask();
 					try {
-						int oldVersion = getVersionCode();	//»ñÈ¡¾ÉµÄ°æ±¾ºÅ
+						int oldVersion = getVersionCode();	//è·å–æ—§çš„ç‰ˆæœ¬å·
 						checkup.execute(Constant.DOMAIN_URL+"mobile/checkup?appType=1&oldVersion="+oldVersion);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
@@ -110,17 +110,17 @@ public class StartActivity extends Activity{
 		editor.putLong("lastCheckUpdateTime", 0);
 		editor.commit();
 	}
-	//»ñÈ¡µ±Ç°Ó¦ÓÃµÄ°æ±¾ºÅ
+	//è·å–å½“å‰åº”ç”¨çš„ç‰ˆæœ¬å·
 	private int getVersionCode() throws Exception
 	   {
-	           // »ñÈ¡packagemanagerµÄÊµÀı
+	           // è·å–packagemanagerçš„å®ä¾‹
 	           PackageManager packageManager = getPackageManager();
-	           // getPackageName()ÊÇÄãµ±Ç°ÀàµÄ°üÃû£¬0´ú±íÊÇ»ñÈ¡°æ±¾ĞÅÏ¢
+	           // getPackageName()æ˜¯ä½ å½“å‰ç±»çš„åŒ…åï¼Œ0ä»£è¡¨æ˜¯è·å–ç‰ˆæœ¬ä¿¡æ¯
 	           PackageInfo packInfo = packageManager.getPackageInfo(getPackageName(),0);
 	           int versionCode = packInfo.versionCode;
 	           return versionCode;
 	   }
-	//ÅĞ¶ÏÊÇ·ñĞèÒª½øĞĞ¸üĞÂ
+	//åˆ¤æ–­æ˜¯å¦éœ€è¦è¿›è¡Œæ›´æ–°
 	private boolean isNeedCheck()
 	{
 		int checkMode = settingfile.getInt("setCheckUpdateMode", 0);
@@ -164,7 +164,7 @@ public class StartActivity extends Activity{
 			editor.commit();
 			super.onPreExecute();
 		}
-		//¼ì²é£¬·µ»ØÖµ¾ÍÊÇ½áÊøÊ±µÄ½á¹û²ÎÊı
+		//æ£€æŸ¥ï¼Œè¿”å›å€¼å°±æ˜¯ç»“æŸæ—¶çš„ç»“æœå‚æ•°
 		@Override
 		protected String doInBackground(String... params) {
 			// TODO Auto-generated method stub
@@ -175,7 +175,7 @@ public class StartActivity extends Activity{
 				result = HttpConnectUtil.httpGetRequest(StartActivity.this, params[0]);
 			}catch(Exception e)
 			{
-				//¸÷ÖÖ´íÎó
+				//å„ç§é”™è¯¯
 //				e.printStackTrace();
 				return null;
 			}finally
@@ -187,14 +187,14 @@ public class StartActivity extends Activity{
 			}
 			return result;
 		}
-		//½áÊø¼ì²é
+		//ç»“æŸæ£€æŸ¥
 		@Override
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
 			if(result==null||"".equals(result))
 			{
-				//Ìø×ªµ½µÇÂ¼½çÃæ
+				//è·³è½¬åˆ°ç™»å½•ç•Œé¢
 				Intent intent = new Intent();
 				intent.setClass(StartActivity.this, LoginActivity.class);
 				StartActivity.this.startActivity(intent);
@@ -203,7 +203,7 @@ public class StartActivity extends Activity{
 			}
 			try {
 				JSONObject json = new JSONObject(result);
-				if(json.getInt("S")==1)//±íÊ¾ÓĞ¸üĞÂ
+				if(json.getInt("S")==1)//è¡¨ç¤ºæœ‰æ›´æ–°
 				{
 					final String version = json.optString("version");
 			        final String url = URLDecoder.decode(json.optString("url"),"UTF-8");
@@ -211,31 +211,31 @@ public class StartActivity extends Activity{
 			        String content=null;
 			        content = json.optString("Content");
 			        alertDialog = new AlertDialog.Builder(StartActivity.this)
-					.setTitle("¸üĞÂ¼ì²â")
-					.setMessage("¼ì²âµ½×îĞÂ°æ±¾£º" + version + "\n" + "¸üĞÂÄÚÈİ£º" + "\n" + content)
-					.setPositiveButton("¸üĞÂ", new OnClickListener() {
+					.setTitle("æ›´æ–°æ£€æµ‹")
+					.setMessage("æ£€æµ‹åˆ°æœ€æ–°ç‰ˆæœ¬ï¼š" + version + "\n" + "æ›´æ–°å†…å®¹ï¼š" + "\n" + content)
+					.setPositiveButton("æ›´æ–°", new OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							// TODO Auto-generated method stub
 							dialog.cancel();
-							//¿ªÆôÏÂÔØ·şÎñ£¬ÒÔ¼°½ø¶È¶Ô»°¿ò£¬½øĞĞÏÂÔØ
+							//å¼€å¯ä¸‹è½½æœåŠ¡ï¼Œä»¥åŠè¿›åº¦å¯¹è¯æ¡†ï¼Œè¿›è¡Œä¸‹è½½
 							//to do something 
 							progressDialog = new ProgressDialog(StartActivity.this);
 						    progressDialog.setProgressStyle(1);
-						    progressDialog.setTitle("Èí¼ş¸üĞÂ");
-						    progressDialog.setMessage("×îĞÂ°æ±¾£º" + version);
+						    progressDialog.setTitle("è½¯ä»¶æ›´æ–°");
+						    progressDialog.setMessage("æœ€æ–°ç‰ˆæœ¬ï¼š" + version);
 						    progressDialog.setIcon(R.drawable.down2);
 						    progressDialog.setProgress(10);
 						    progressDialog.setMax(100);
 						    progressDialog.setIndeterminate(false);
 						    progressDialog.setCancelable(false);
-						    //¿ªÆôÒ»¸öÒì²½ÈÎÎñ½øĞĞappÏÂÔØ
+						    //å¼€å¯ä¸€ä¸ªå¼‚æ­¥ä»»åŠ¡è¿›è¡Œappä¸‹è½½
 						    downloader = new DownLoaderTask();
-						    progressDialog.setButton("È¡Ïû", new OnClickListener() {	//È¡ÏûÏÂÔØ
+						    progressDialog.setButton("å–æ¶ˆ", new OnClickListener() {	//å–æ¶ˆä¸‹è½½
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
 									// TODO Auto-generated method stub
-									//È¡Ïû
+									//å–æ¶ˆ
 									dialog.cancel();
 									isCanceled =true;
 									downloader.cancel(true);
@@ -244,9 +244,9 @@ public class StartActivity extends Activity{
 								    StartActivity.this.finish();
 								}
 							});
-						    downloader.execute(url);	//ÏÂÔØµØÖ·
+						    downloader.execute(url);	//ä¸‹è½½åœ°å€
 						    progressDialog.show();
-						  //¼àÌı°´¼üÊÂ¼ş,Èç¹û°´È¡ÏûÊ²Ã´¶¼²»×ö,Ïàµ±ÓÚ¶ÔÕâ¸ö¶Ô»°¿ò½ûÓÃÁË·µ»Ø¼ü
+						  //ç›‘å¬æŒ‰é”®äº‹ä»¶,å¦‚æœæŒ‰å–æ¶ˆä»€ä¹ˆéƒ½ä¸åš,ç›¸å½“äºå¯¹è¿™ä¸ªå¯¹è¯æ¡†ç¦ç”¨äº†è¿”å›é”®
 						    progressDialog.setOnKeyListener(new OnKeyListener() {
 								@Override
 								public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
@@ -260,7 +260,7 @@ public class StartActivity extends Activity{
 							});
 						}
 					})
-					.setNegativeButton("È¡Ïû", new OnClickListener() {
+					.setNegativeButton("å–æ¶ˆ", new OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							// TODO Auto-generated method stub
@@ -271,7 +271,7 @@ public class StartActivity extends Activity{
 						}
 					})
 					.show();
-			        //¼àÌı°´¼üÊÂ¼ş,Èç¹û°´È¡ÏûÊ²Ã´¶¼²»×ö,Ïàµ±ÓÚ¶ÔÕâ¸ö¶Ô»°¿ò½ûÓÃÁË·µ»Ø¼ü
+			        //ç›‘å¬æŒ‰é”®äº‹ä»¶,å¦‚æœæŒ‰å–æ¶ˆä»€ä¹ˆéƒ½ä¸åš,ç›¸å½“äºå¯¹è¿™ä¸ªå¯¹è¯æ¡†ç¦ç”¨äº†è¿”å›é”®
 			        alertDialog.setOnKeyListener(new OnKeyListener() {
 						@Override
 						public boolean onKey(DialogInterface dialog,
@@ -284,19 +284,19 @@ public class StartActivity extends Activity{
 							return false;
 						}
 					});
-				}else //Ã»ÓĞ¸üĞÂ
+				}else //æ²¡æœ‰æ›´æ–°
 				{
 					gotoLogin();
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();	//½âÎö³ö´í
+				e.printStackTrace();	//è§£æå‡ºé”™
 				gotoLogin();
 			}
 		}
 	}
 	
-	//ÏÂÔØ¸üĞÂapp
+	//ä¸‹è½½æ›´æ–°app
 	private class DownLoaderTask extends AsyncTask<String, Integer, String> {
 		//The method (doInBackground) runs always on a background thread. You shouldn't do any UI tasks there.
 	    @Override
@@ -332,7 +332,7 @@ public class StartActivity extends Activity{
 	        	e.printStackTrace();
 	        }
 	        if(isCanceled||this.isCancelled()){
-	        	System.out.println("È¡ÏûÁËÏÂÔØ");
+	        	System.out.println("å–æ¶ˆäº†ä¸‹è½½");
 	        	new File(Environment.getExternalStorageDirectory().getPath()+"/Hello.apk").delete();
 	        }
 	        return null;
@@ -354,7 +354,7 @@ public class StartActivity extends Activity{
 	    	super.onPostExecute(result);
 	    	if(!isCanceled&&!this.isCancelled()){
 	    		progressDialog.dismiss();
-	    		//ÏÔÊ¾Õâ¸öÓ¦ÓÃ£¬ÈÃÓÃ»§°²×°
+	    		//æ˜¾ç¤ºè¿™ä¸ªåº”ç”¨ï¼Œè®©ç”¨æˆ·å®‰è£…
 	    		Uri localUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath()+"/Hello.apk"));
 	        	Intent localIntent = new Intent("android.intent.action.VIEW");
 	        	localIntent.setDataAndType(localUri, "application/vnd.android.package-archive");
@@ -368,13 +368,13 @@ public class StartActivity extends Activity{
 	    	
 	    }
 	}
-	//¼ì²éÍøÂç
+	//æ£€æŸ¥ç½‘ç»œ
 	private boolean checkNetWork() {
 		ConnectivityManager manager = (ConnectivityManager) this
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo info = manager.getActiveNetworkInfo();
 		if (info == null || !info.isConnected()) {
-			Toast.makeText(this,"Çë¼ì²éÍøÂç", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this,"è¯·æ£€æŸ¥ç½‘ç»œ", Toast.LENGTH_SHORT).show();
 			return false;
 		}
 		return true;

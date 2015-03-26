@@ -55,7 +55,7 @@ public class ProblemListAdapter extends BaseAdapter {
 		Problem p = list.get(position);
 		holder.title.setText(p.getTitle());
 		int num = getAnswerNum(p);
-		holder.answerNum.setText("�ѻش�("+num+")");
+		holder.answerNum.setText("已回答("+num+")");
 		holder.path.setText(p.getPath());
 		holder.addTime.setText(p.getAddTime());
 		return v;

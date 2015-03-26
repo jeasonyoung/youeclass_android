@@ -24,7 +24,7 @@ public class AboutusActivity extends Activity{
 		PackageInfo localPackageInfo;
 		try {
 			localPackageInfo = getApplicationContext().getPackageManager().getPackageInfo(getPackageName(), 0);
-			this.version.setText("�汾�ţ�V" + localPackageInfo.versionName);
+			this.version.setText("版本号：V" + localPackageInfo.versionName);
 		} catch (NameNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

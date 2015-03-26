@@ -49,7 +49,7 @@ public class QuestionFromCourseActivity extends Activity{
 		userinfo = getSharedPreferences("userinfo", 0);
 		id = userinfo.getInt("id", 0);
 		username = getIntent().getStringExtra("username");
-		dialog = ProgressDialog.show(QuestionFromCourseActivity.this,null,"Å¬Á¦¼ÓÔØÖĞÇëÉÔºò",true,false);
+		dialog = ProgressDialog.show(QuestionFromCourseActivity.this,null,"åŠªåŠ›åŠ è½½ä¸­è¯·ç¨å€™",true,false);
 		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		expandList = (ExpandableListView) this.findViewById(R.id.explist2);
 		returnBtn = (ImageButton) this.findViewById(R.id.returnbtn);
@@ -71,7 +71,7 @@ public class QuestionFromCourseActivity extends Activity{
 				String result = HttpConnectUtil.httpGetRequest(QuestionFromCourseActivity.this, Constant.DOMAIN_URL+"mobile/myLessons?stuId="+id);
 				if(result!=null&&!result.equals("null"))
             	{
-            		//½âÎöjson×Ö·û´®,ÅäÖÃexpandableListViewµÄadapter
+            		//è§£æjsonå­—ç¬¦ä¸²,é…ç½®expandableListViewçš„adapter
             		try
             		{
             			JSONObject json = new JSONObject(result);
@@ -80,14 +80,14 @@ public class QuestionFromCourseActivity extends Activity{
             			int plength = packages.length();
             			int glength = grades.length();
             			List<UserClass> list = new ArrayList<UserClass>();
-            			//´óÏî,Ì×²Í»òµ¥°à¼¶
+            			//å¤§é¡¹,å¥—é¤æˆ–å•ç­çº§
             			group = new String[plength+glength];
-            			//×ÓÏî,Ì×²ÍÏÂµÄ°à¼¶,µ¥°à¼¶Ã»ÓĞ×ÓÏî
-            			//×¢Òâ×ÓÏîµÄ³¤¶È±È´óÏîµÄ¶Ì
+            			//å­é¡¹,å¥—é¤ä¸‹çš„ç­çº§,å•ç­çº§æ²¡æœ‰å­é¡¹
+            			//æ³¨æ„å­é¡¹çš„é•¿åº¦æ¯”å¤§é¡¹çš„çŸ­
             			child = new String[plength][];
-            			//¿Î³ÌÏêÏ¸,µã»÷°à¼¶Ê±Ìø×ª
+            			//è¯¾ç¨‹è¯¦ç»†,ç‚¹å‡»ç­çº§æ—¶è·³è½¬
             			gids = new int[plength+glength][];
-            			//Ñ­»·Ì×²Í( classid,classname,username,fatherid,classtype)
+            			//å¾ªç¯å¥—é¤( classid,classname,username,fatherid,classtype)
             			for(int i=0;i<plength;i++)
             			{
             				JSONObject p = packages.getJSONObject(i);
@@ -97,7 +97,7 @@ public class QuestionFromCourseActivity extends Activity{
             				gids[i] = new int[p_grades.length()];
             				UserClass c = new UserClass(p.optInt("pkgId")+"",p.optString("pkgName"),username,0+"",1+"");
             				list.add(c);
-            				//Ñ­»·Ì×²ÍÏÂµÄ°à¼¶
+            				//å¾ªç¯å¥—é¤ä¸‹çš„ç­çº§
             				for(int k=0;k<p_grades.length();k++)
             				{
             					p = p_grades.getJSONObject(k);
@@ -106,7 +106,7 @@ public class QuestionFromCourseActivity extends Activity{
             					gids[i][k] = gid;
             				}
             			}
-            			//Ñ­»·°à¼¶
+            			//å¾ªç¯ç­çº§
             			for(int j=0;j<glength;j++)
             			{
             				JSONObject p = grades.getJSONObject(j);
@@ -148,19 +148,19 @@ public class QuestionFromCourseActivity extends Activity{
                 	break;
                 case 0:
                 	theActivity.dialog.dismiss();
-            		theActivity.nodata.setVisibility(View.VISIBLE);//ÎŞÊı¾İÏÔÊ¾
-            		Toast.makeText(theActivity, "ÄúÃ»ÓĞ¹ºÂò¿Î³Ì", Toast.LENGTH_SHORT).show();//ÌáÊ¾
+            		theActivity.nodata.setVisibility(View.VISIBLE);//æ— æ•°æ®æ˜¾ç¤º
+            		Toast.makeText(theActivity, "æ‚¨æ²¡æœ‰è´­ä¹°è¯¾ç¨‹", Toast.LENGTH_SHORT).show();//æç¤º
                 	break;
                 case -1:
-                	//Á¬²»ÉÏ,
+                	//è¿ä¸ä¸Š,
                 	theActivity.dialog.dismiss();
-            		theActivity.nodata.setVisibility(View.VISIBLE);//ÎŞÊı¾İÏÔÊ¾
-            		Toast.makeText(theActivity, "ÔİÊ±Á¬²»ÉÏ·şÎñÆ÷,ÇëÉÔºò", Toast.LENGTH_SHORT).show();//ÌáÊ¾
+            		theActivity.nodata.setVisibility(View.VISIBLE);//æ— æ•°æ®æ˜¾ç¤º
+            		Toast.makeText(theActivity, "æš‚æ—¶è¿ä¸ä¸ŠæœåŠ¡å™¨,è¯·ç¨å€™", Toast.LENGTH_SHORT).show();//æç¤º
             		break;
                 case -2:
                 	theActivity.dialog.dismiss();
-            		theActivity.nodata.setVisibility(View.VISIBLE);//ÎŞÊı¾İÏÔÊ¾
-            		Toast.makeText(theActivity, "½âÎöÊı¾İ³ö´í", Toast.LENGTH_SHORT).show();//ÌáÊ¾
+            		theActivity.nodata.setVisibility(View.VISIBLE);//æ— æ•°æ®æ˜¾ç¤º
+            		Toast.makeText(theActivity, "è§£ææ•°æ®å‡ºé”™", Toast.LENGTH_SHORT).show();//æç¤º
             		break;
                 }
         }
@@ -185,7 +185,7 @@ public class QuestionFromCourseActivity extends Activity{
 		public boolean onGroupClick(ExpandableListView parent, View v,
 				int groupPosition, long id) {
 			// TODO Auto-generated method stub
-			//Èç¹ûÃ»ÓĞ×ÓÀàÁË,±íÊ¾ÊÇµ¥¶ÀµÄ¿Î³Ì
+			//å¦‚æœæ²¡æœ‰å­ç±»äº†,è¡¨ç¤ºæ˜¯å•ç‹¬çš„è¯¾ç¨‹
 			if(parent.getExpandableListAdapter().getChildrenCount(groupPosition)==0)
 			{
 				Intent intent = new Intent(QuestionFromCourseActivity.this,QuestionPaperListActivity.class);

@@ -22,7 +22,7 @@ public class UserClassDao {
 	public void addClasses(List<UserClass> classes) throws IllegalArgumentException, IllegalAccessException
 	{
 		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
-		Log.d(TAG, "addClasses方法打开了数据库连接");
+		Log.d(TAG, "addClasses鏂规硶鎵撳紑浜嗘暟鎹簱杩炴帴");
 		db.beginTransaction();
 		try
 		{
@@ -36,13 +36,13 @@ public class UserClassDao {
 			db.endTransaction();
 		}
 		dbhelper.closeDb();
-		Log.d(TAG, "addClasses方法关闭了数据库连接");
+		Log.d(TAG, "addClasses鏂规硶鍏抽棴浜嗘暟鎹簱杩炴帴");
 	}
 	public List<UserClass> findByUsername(String username)
 	{
 		List<UserClass> list = new ArrayList<UserClass>();
 		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
-		Log.d(TAG, "findByUsername方法打开了数据库连接");
+		Log.d(TAG, "findByUsername鏂规硶鎵撳紑浜嗘暟鎹簱杩炴帴");
 		String sql = "select classid,classname,username,fatherid,classtype from ClassTab where username = ?";
 		Cursor cursor = db.rawQuery(sql, new String[]{username});
 		while(cursor.moveToNext())
@@ -53,14 +53,14 @@ public class UserClassDao {
 		}
 		cursor.close();
 		dbhelper.closeDb();
-		Log.d(TAG, "findByUsername方法关闭了数据库连接");
+		Log.d(TAG, "findByUsername鏂规硶鍏抽棴浜嗘暟鎹簱杩炴帴");
 		return list;
 	}
 	public String[] findBigClassName(String username)
 	{
 		String[] arr = null;
 		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
-		Log.d(TAG, "findByUsername方法打开了数据库连接");
+		Log.d(TAG, "findByUsername鏂规硶鎵撳紑浜嗘暟鎹簱杩炴帴");
 		String sql = "select classname from ClassTab where username=? and fatherclassid = 0 order by classtype desc,classid asc";
 		Cursor cursor = db.rawQuery(sql, new String[]{username});
 		if(cursor.getCount()==0)
@@ -78,13 +78,13 @@ public class UserClassDao {
 		}
 		cursor.close();
 		dbhelper.closeDb();
-		Log.d(TAG, "findByUsername方法关闭了数据库连接");
+		Log.d(TAG, "findByUsername鏂规硶鍏抽棴浜嗘暟鎹簱杩炴帴");
 		return arr;
 	}
 	public String[][] findChildrenClass(String username)
 	{
 		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
-		Log.d(TAG, "findByUsername方法打开了数据库连接");
+		Log.d(TAG, "findByUsername鏂规硶鎵撳紑浜嗘暟鎹簱杩炴帴");
 		String sql = "select classid from ClassTab where username=? and fatherclassid = 0 and classtype = 1 order by classtype desc,classid asc";
 		Cursor cursor = db.rawQuery(sql, new String[]{username});
 		if(cursor.getCount()==0)
@@ -111,14 +111,14 @@ public class UserClassDao {
 		}
 		cursor.close();
 		dbhelper.closeDb();
-		Log.d(TAG, "findByUsername方法关闭了数据库连接");
+		Log.d(TAG, "findByUsername鏂规硶鍏抽棴浜嗘暟鎹簱杩炴帴");
 		System.out.println(Arrays.toString(arr[0]));
 		return arr;
 	}
 	public String[][] findChildrenClassid(String username)
 	{
 		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
-		Log.d(TAG, "findByUsername方法打开了数据库连接");
+		Log.d(TAG, "findByUsername鏂规硶鎵撳紑浜嗘暟鎹簱杩炴帴");
 		String sql = "select classid,classtype from ClassTab where username=? and fatherclassid = 0 order by classtype desc,classid asc";
 		Cursor cursor = db.rawQuery(sql, new String[]{username});
 		if(cursor.getCount()==0)
@@ -152,13 +152,13 @@ public class UserClassDao {
 		}
 		cursor.close();
 		dbhelper.closeDb();
-		Log.d(TAG, "findByUsername方法关闭了数据库连接");
+		Log.d(TAG, "findByUsername鏂规硶鍏抽棴浜嗘暟鎹簱杩炴帴");
 		return arr;
 	}
 	public void deleteAll(String username)
 	{
 		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
-		Log.d(TAG, "deleteAll方法打开了数据库连接");
+		Log.d(TAG, "deleteAll鏂规硶鎵撳紑浜嗘暟鎹簱杩炴帴");
 		db.beginTransaction();
 		try
 		{
@@ -170,7 +170,7 @@ public class UserClassDao {
 			db.endTransaction();
 		}
 		dbhelper.closeDb();
-		Log.d(TAG, "deleteAll方法关闭了数据库连接");
+		Log.d(TAG, "deleteAll鏂规硶鍏抽棴浜嗘暟鎹簱杩炴帴");
 	}
 	public void closeDB()
 	{

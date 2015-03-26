@@ -42,7 +42,7 @@ public class Class2Activity extends Activity implements OnClickListener{
 		this.title = (TextView) this.findViewById(R.id.TopTitle1);
 		this.nodata = (LinearLayout) this.findViewById(R.id.nodataLayout);
 		//this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		dialog = ProgressDialog.show(Class2Activity.this,null,"Å¬Á¦¼ÓÔØÖĞÇëÉÔºò",true,true);
+		dialog = ProgressDialog.show(Class2Activity.this,null,"åŠªåŠ›åŠ è½½ä¸­è¯·ç¨å€™",true,true);
 		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		returnBtn = (ImageButton) this.findViewById(R.id.returnbtn);
 		this.myCourseBtn = (LinearLayout) this.findViewById(R.id.MyCourse_layout_btn);
@@ -56,7 +56,7 @@ public class Class2Activity extends Activity implements OnClickListener{
 		Intent intent = this.getIntent();
 		String name = intent.getStringExtra("name");
 		this.username = intent.getStringExtra("username");
-		this.title.setText(name);	//ÉèÖÃ±êÌâ
+		this.title.setText(name);	//è®¾ç½®æ ‡é¢˜
 		String arr = intent.getStringExtra("children");
 		try {
 			JSONArray json = new JSONArray(arr);
@@ -107,7 +107,7 @@ public class Class2Activity extends Activity implements OnClickListener{
 		case R.id.returnbtn:
 			this.finish();return;
 		case R.id.LearningRecord_layout_btn:
-			Toast.makeText(this, "Ãâ·ÑÌåÑé²»Ìá¹©¸Ã¹¦ÄÜ", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "å…è´¹ä½“éªŒä¸æä¾›è¯¥åŠŸèƒ½", Toast.LENGTH_SHORT).show();
 			return;
 		case R.id.MyCourse_layout_btn:
 			Intent intent = new Intent(this,MyCourseActivity.class);
@@ -124,7 +124,7 @@ public class Class2Activity extends Activity implements OnClickListener{
 		String keywords = this.searchEdit.getText().toString();
 		if("".equals(keywords.trim()))
 		{
-			Toast.makeText(this, "ÇëÊäÈëËÑË÷¹Ø¼ü×Ö", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "è¯·è¾“å…¥æœç´¢å…³é”®å­—", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		Intent intent = new Intent(Class2Activity.this,SearchActivity.class);

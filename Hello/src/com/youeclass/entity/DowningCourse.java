@@ -1,12 +1,12 @@
 package com.youeclass.entity;
 
 public class DowningCourse {
-	private String courseName;//¿Î³ÌµÄÃû×Ö
-	private int filesize;	//ÎÄ¼ş´óĞ¡
-	private int finishsize;//Íê³ÉÊı
-	private String filePath;//ÎÄ¼şÂ·¾¶
-	private String fileurl;	//ÎÄ¼şÏÂÔØÂ·¾¶
-	private int status;//ÎÄ¼şµÄÏÂÔØ×´Ì¬     0:ÔİÍ£×´Ì¬, -1:³õÊ¼×´Ì¬»¹Ã»ÓĞ»ñµÃÎÄ¼ş´óĞ¡
+	private String courseName;//è¯¾ç¨‹çš„åå­—
+	private int filesize;	//æ–‡ä»¶å¤§å°
+	private int finishsize;//å®Œæˆæ•°
+	private String filePath;//æ–‡ä»¶è·¯å¾„
+	private String fileurl;	//æ–‡ä»¶ä¸‹è½½è·¯å¾„
+	private int status;//æ–‡ä»¶çš„ä¸‹è½½çŠ¶æ€     0:æš‚åœçŠ¶æ€, -1:åˆå§‹çŠ¶æ€è¿˜æ²¡æœ‰è·å¾—æ–‡ä»¶å¤§å°
 	private String username;
 	public String getCourseName() {
 		return courseName;

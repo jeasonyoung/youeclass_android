@@ -73,7 +73,7 @@ public class AnswerAskActivity extends Activity implements OnClickListener,OnIte
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_answerask);
-		//½øÈëÊ±,Òş²Ø¼üÅÌ
+		//è¿›å…¥æ—¶,éšè—é”®ç›˜
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		Intent intent = getIntent();
 		this.username = intent.getStringExtra("username");
@@ -108,11 +108,11 @@ public class AnswerAskActivity extends Activity implements OnClickListener,OnIte
 		ArrayAdapter<String> s3Adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,spinner3Data);
 		s3Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		this.spinner3.setAdapter(s3Adapter);
-		this.spinner3.setPrompt("ÇëÑ¡Ôñ½²Êı");
+		this.spinner3.setPrompt("è¯·é€‰æ‹©è®²æ•°");
 		ArrayAdapter<String> s4Adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,spinner4Data);
 		s4Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		this.spinner4.setAdapter(s4Adapter);
-		this.spinner4.setPrompt("ÇëÑ¡ÔñÎÊÌâÀàĞÍ");
+		this.spinner4.setPrompt("è¯·é€‰æ‹©é—®é¢˜ç±»å‹");
 		this.spinner3.setOnItemSelectedListener(this);
 		this.spinner4.setOnItemSelectedListener(this);
 		this.editView.addTextChangedListener(new TextWatcher() {
@@ -128,13 +128,13 @@ public class AnswerAskActivity extends Activity implements OnClickListener,OnIte
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				AnswerAskActivity.this.listenerText.setText("ÒÑÊäÈë: "
+				AnswerAskActivity.this.listenerText.setText("å·²è¾“å…¥: "
 						+ s.length() + "/" + maxLength);
 			}
 		});
-		//ÏŞÖÆ×ÖÊı
+		//é™åˆ¶å­—æ•°
 		this.editView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
-		//ÉèÖÃ¼àÌı
+		//è®¾ç½®ç›‘å¬
 		this.returnbtn.setOnClickListener(this);
 		this.submitBtn.setOnClickListener(this);
 		this.submitBtn2.setOnClickListener(this);
@@ -159,13 +159,13 @@ public class AnswerAskActivity extends Activity implements OnClickListener,OnIte
 	{
 		if(this.nodataLayout.getVisibility()==View.VISIBLE)
 		{
-			Toast.makeText(this, "ÄúÃ»ÓĞ¹ºÂò¿Î³Ì", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "æ‚¨æ²¡æœ‰è´­ä¹°è¯¾ç¨‹", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		String content = this.editView.getText().toString();
 		if("".equals(content.trim()))
 		{
-			Toast.makeText(this, "ÇëÊäÈëÄÚÈİ", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "è¯·è¾“å…¥å†…å®¹", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		int length = content.length();
@@ -184,10 +184,10 @@ public class AnswerAskActivity extends Activity implements OnClickListener,OnIte
 		//questionPath = URLEncoder.encode(questionPath);
 		new SubmitTask().execute();
 	}
-	private static String[] spinner3Data = new String[]{"µÚ1½²","µÚ2½²","µÚ3½²","µÚ4½²","µÚ5½²","µÚ6½²",
-		"µÚ7½²","µÚ8½²","µÚ9½²","µÚ10½²","µÚ11½²","µÚ12½²","µÚ13½²","µÚ14½²","µÚ15½²","µÚ16½²","µÚ17½²","µÚ18½²",
-		"µÚ19½²","µÚ20½²","µÚ21½²","µÚ22½²","µÚ23½²","µÚ24½²","µÚ25½²","µÚ26½²","µÚ27½²","µÚ28½²","µÚ29½²","µÚ30½²"};
-	private static String[] spinner4Data = new String[]{"ÊÓÆµ½²×ù","ÀúÄêÕæÌâ","½ÌÎñ°²ÅÅ"};
+	private static String[] spinner3Data = new String[]{"ç¬¬1è®²","ç¬¬2è®²","ç¬¬3è®²","ç¬¬4è®²","ç¬¬5è®²","ç¬¬6è®²",
+		"ç¬¬7è®²","ç¬¬8è®²","ç¬¬9è®²","ç¬¬10è®²","ç¬¬11è®²","ç¬¬12è®²","ç¬¬13è®²","ç¬¬14è®²","ç¬¬15è®²","ç¬¬16è®²","ç¬¬17è®²","ç¬¬18è®²",
+		"ç¬¬19è®²","ç¬¬20è®²","ç¬¬21è®²","ç¬¬22è®²","ç¬¬23è®²","ç¬¬24è®²","ç¬¬25è®²","ç¬¬26è®²","ç¬¬27è®²","ç¬¬28è®²","ç¬¬29è®²","ç¬¬30è®²"};
+	private static String[] spinner4Data = new String[]{"è§†é¢‘è®²åº§","å†å¹´çœŸé¢˜","æ•™åŠ¡å®‰æ’"};
 	
 	private String clientPost() {
 		BufferedReader reader = null;
@@ -195,7 +195,7 @@ public class AnswerAskActivity extends Activity implements OnClickListener,OnIte
 			HttpClient client = new DefaultHttpClient();
 			HttpPost request = new HttpPost();
 			request.setURI(new URI(Constant.DOMAIN_URL+"mobile/addQuestion"));
-			//ÉèÖÃ²ÎÊı ÓÃURLEncodedFormEntity  NameValuePair
+			//è®¾ç½®å‚æ•° ç”¨URLEncodedFormEntity  NameValuePair
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			//username;classId;examId;gradeId;questionSource;questionTitle;questionContent;questionPath;
 			params.add(new BasicNameValuePair("username",username));
@@ -206,7 +206,7 @@ public class AnswerAskActivity extends Activity implements OnClickListener,OnIte
 			params.add(new BasicNameValuePair("questionTitle",questionTitle));
 			params.add(new BasicNameValuePair("questionContent",questionContent));
 			params.add(new BasicNameValuePair("questionPath",questionPath));
-			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params,"utf-8"); //×¢ÒâÒªÉèÖÃ±àÂë
+			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params,"utf-8"); //æ³¨æ„è¦è®¾ç½®ç¼–ç 
 			request.setEntity(entity);
 			HttpResponse response = client.execute(request); 
 			reader = new BufferedReader(new InputStreamReader(response
@@ -274,17 +274,17 @@ public class AnswerAskActivity extends Activity implements OnClickListener,OnIte
 
 	        @Override
 	        protected void onPostExecute(String[] result) {
-	            //½âÎöjson
+	            //è§£æjson
 	        	spinnerData = parseJson(result[0],0);
 	        	spinner2Data = parseJson(result[1],1);
 	        	ArrayAdapter<String> sAdapter = new ArrayAdapter<String>(AnswerAskActivity.this,android.R.layout.simple_spinner_item,data1);
 	    		sAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	    		AnswerAskActivity.this.spinner.setAdapter(sAdapter);
-	    		AnswerAskActivity.this.spinner.setPrompt("ÇëÑ¡Ôñ¿¼ÊÔ");
+	    		AnswerAskActivity.this.spinner.setPrompt("è¯·é€‰æ‹©è€ƒè¯•");
 	    		ArrayAdapter<String> s2Adapter = new ArrayAdapter<String>(AnswerAskActivity.this,android.R.layout.simple_spinner_item,data2);
 	    		s2Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	    		AnswerAskActivity.this.spinner2.setAdapter(s2Adapter);
-	    		AnswerAskActivity.this.spinner2.setPrompt("ÇëÑ¡Ôñ°à¼¶");
+	    		AnswerAskActivity.this.spinner2.setPrompt("è¯·é€‰æ‹©ç­çº§");
 	    		AnswerAskActivity.this.loadLayout.setVisibility(View.GONE);
 	    		AnswerAskActivity.this.spinner.setOnItemSelectedListener(AnswerAskActivity.this);
 	    		AnswerAskActivity.this.spinner2.setOnItemSelectedListener(AnswerAskActivity.this);
@@ -352,7 +352,7 @@ public class AnswerAskActivity extends Activity implements OnClickListener,OnIte
 			// TODO Auto-generated method stub
 			uiLayout.setVisibility(View.GONE);
 			loadLayout.setVisibility(View.VISIBLE);
-			loadInfoText.setText("ÎÊÌâÌá½»ÖĞ");
+			loadInfoText.setText("é—®é¢˜æäº¤ä¸­");
 			super.onPreExecute();
 		}
 		@Override
@@ -372,11 +372,11 @@ public class AnswerAskActivity extends Activity implements OnClickListener,OnIte
 			// TODO Auto-generated method stub
 			if("true".equals(result))
 			{
-				Toast.makeText(AnswerAskActivity.this, "Ìá½»³É¹¦", Toast.LENGTH_SHORT).show();
+				Toast.makeText(AnswerAskActivity.this, "æäº¤æˆåŠŸ", Toast.LENGTH_SHORT).show();
 				finish();
 			}else
 			{
-				Toast.makeText(AnswerAskActivity.this, "Ìá½»Ê§°Ü,ÉÔºóÔÙÊÔ", Toast.LENGTH_SHORT).show();
+				Toast.makeText(AnswerAskActivity.this, "æäº¤å¤±è´¥,ç¨åå†è¯•", Toast.LENGTH_SHORT).show();
 			}
 			AnswerAskActivity.this.finish();
 			super.onPostExecute(result);
@@ -428,7 +428,7 @@ public class AnswerAskActivity extends Activity implements OnClickListener,OnIte
 			case -2:
 				theActivity.loadLayout.setVisibility(View.GONE);
 				theActivity.nodataLayout.setVisibility(View.VISIBLE);
-				Toast.makeText(theActivity, "ÎŞ·¨Á¬½Ó", Toast.LENGTH_SHORT).show();
+				Toast.makeText(theActivity, "æ— æ³•è¿æ¥", Toast.LENGTH_SHORT).show();
 				break;
 			}
 		}

@@ -24,7 +24,7 @@ public class HelpActivity extends Activity{
 		this.returnBtn = (ImageButton) this.findViewById(R.id.returnbtn);
 		this.helpExpList = (ExpandableListView) this.findViewById(R.id.helpExpList);
 		this.returnBtn.setOnClickListener(new ReturnBtnClickListener(this));
-		this.helpExpList.setGroupIndicator(null);	//È¡Ïû×éÍ¼±ê
+		this.helpExpList.setGroupIndicator(null);	//å–æ¶ˆç»„å›¾æ ‡
 		initExpList();
 		//this.helpExpList.setAdapter(new HelpAdapter());
 	}

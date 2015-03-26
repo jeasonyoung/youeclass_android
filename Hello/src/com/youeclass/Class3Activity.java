@@ -54,7 +54,7 @@ public class Class3Activity extends Activity implements OnClickListener{
 		returnBtn.setOnClickListener(this);
 		this.myCourseBtn.setOnClickListener(this);
 		this.learnRecordBtn.setOnClickListener(this);
-		dialog = ProgressDialog.show(Class3Activity.this,null,"Å¬Á¦¼ÓÔØÖĞÇëÉÔºò",true,true);
+		dialog = ProgressDialog.show(Class3Activity.this,null,"åŠªåŠ›åŠ è½½ä¸­è¯·ç¨å€™",true,true);
 		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		this.expandlist = (ExpandableListView) this.findViewById(R.id.expandlist);
 		expandlist.setGroupIndicator(null); 
@@ -73,7 +73,7 @@ public class Class3Activity extends Activity implements OnClickListener{
 				String result = HttpConnectUtil.httpGetRequest(Class3Activity.this, Constant.DOMAIN_URL+"mobile/classGroup?examId="+examId);
 				if(result!=null&&!result.equals("null"))
             	{
-            		//½âÎöjson×Ö·û´®,ÅäÖÃexpandableListViewµÄadapter
+            		//è§£æjsonå­—ç¬¦ä¸²,é…ç½®expandableListViewçš„adapter
             		try
             		{
             			JSONArray json = new JSONArray(result);
@@ -90,18 +90,18 @@ public class Class3Activity extends Activity implements OnClickListener{
             				flag[i] = p.optInt("complex",0)+"";
             				child[i] = new String[p_grades.length()];
             				urls[i] = new String[p_grades.length()];
-            				//Ñ­»··ÖÀàÏÂµÄ°à¼¶
+            				//å¾ªç¯åˆ†ç±»ä¸‹çš„ç­çº§
             				for(int k=0;k<p_grades.length();k++)
             				{
             					p = p_grades.getJSONObject(k);
-            					//child[i][k]=p.getString("name"); 2014.02.17ĞŞ¸Ä
-            					if("1".equals(flag[i]))	//Ì×²Í
+            					//child[i][k]=p.getString("name"); 2014.02.17ä¿®æ”¹
+            					if("1".equals(flag[i]))	//å¥—é¤
             					{
             						urls[i][k] = p.optString("pkgId");
-            						child[i][k]=p.getString("pkgName");	//2014.02.17Ôö¼Ó
+            						child[i][k]=p.getString("pkgName");	//2014.02.17å¢åŠ 
             					}else{
             						urls[i][k] = p.optString("gradeId");
-            						child[i][k]=p.getString("name");//2014.02.17Ôö¼Ó
+            						child[i][k]=p.getString("name");//2014.02.17å¢åŠ 
             					}
             				}
             			}
@@ -139,17 +139,17 @@ public class Class3Activity extends Activity implements OnClickListener{
                 case 1:
                 	theActivity.dialog.dismiss();
                     theActivity.expandlist.setAdapter(new MyExpandableAdapter2(theActivity, theActivity.group, theActivity.child));
-                			//ÉèÖÃadapter
+                			//è®¾ç½®adapter
                 	break;
                 case 0:
                 	theActivity.dialog.dismiss();
-                	theActivity.nodata.setVisibility(View.VISIBLE);//ÎŞÊı¾İÏÔÊ¾
+                	theActivity.nodata.setVisibility(View.VISIBLE);//æ— æ•°æ®æ˜¾ç¤º
                 	break;
                 case -1:
-                	//Á¬²»ÉÏ,
+                	//è¿ä¸ä¸Š,
                 	theActivity.dialog.dismiss();
-            		theActivity.nodata.setVisibility(View.VISIBLE);//ÎŞÊı¾İÏÔÊ¾
-            		Toast.makeText(theActivity, "ÔİÊ±Á¬²»ÉÏ·şÎñÆ÷,ÇëÉÔºò", Toast.LENGTH_SHORT).show();//ÌáÊ¾
+            		theActivity.nodata.setVisibility(View.VISIBLE);//æ— æ•°æ®æ˜¾ç¤º
+            		Toast.makeText(theActivity, "æš‚æ—¶è¿ä¸ä¸ŠæœåŠ¡å™¨,è¯·ç¨å€™", Toast.LENGTH_SHORT).show();//æç¤º
             		break;
                 }
         }
@@ -187,7 +187,7 @@ public class Class3Activity extends Activity implements OnClickListener{
 		case R.id.returnbtn:
 			this.finish();return;
 		case R.id.LearningRecord_layout_btn:
-			Toast.makeText(this, "Ãâ·ÑÌåÑé²»Ìá¹©¸Ã¹¦ÄÜ", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "å…è´¹ä½“éªŒä¸æä¾›è¯¥åŠŸèƒ½", Toast.LENGTH_SHORT).show();
 			return;
 		case R.id.MyCourse_layout_btn:
 			Intent intent = new Intent(this,MyCourseActivity.class);

@@ -59,7 +59,7 @@ public class QuickActionPopupWindow extends PopupWindow {
 	private ViewGroup mTrack;
 	private ArrayList<ActionItem> actionItems;
 	/**
-	 * ÎªÁË¹«ÓÃÒ»¸öpopwindow
+	 * ä¸ºäº†å…¬ç”¨ä¸€ä¸ªpopwindow
 	 * @param context
 	 */
 	public QuickActionPopupWindow(Context context) {
@@ -67,7 +67,7 @@ public class QuickActionPopupWindow extends PopupWindow {
 		super(context);
 		this.window = new PopupWindow(context);
 		/**
-		 * ÔÚpopwindowÍâµã»÷¼´¹Ø±Õ¸Ãwindow
+		 * åœ¨popwindowå¤–ç‚¹å‡»å³å…³é—­è¯¥window
 		 */
 		window.setTouchInterceptor(new OnTouchListener() {
 
@@ -76,7 +76,7 @@ public class QuickActionPopupWindow extends PopupWindow {
 
 				if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
 
-					// ÈÃÆäÏûÊ§
+					// è®©å…¶æ¶ˆå¤±
 					QuickActionPopupWindow.this.window.dismiss();
 					return true;
 
@@ -96,7 +96,7 @@ public class QuickActionPopupWindow extends PopupWindow {
 
 		root = (ViewGroup) inflater.inflate(R.layout.quickbar, null);
 
-		// ÉÏÏÂÁ½¸ö¼ıÍ·
+		// ä¸Šä¸‹ä¸¤ä¸ªç®­å¤´
 		mArrowDown = (ImageView) root.findViewById(R.id.arrow_down);
 		mArrowUp = (ImageView) root.findViewById(R.id.arrow_up);
 		scroll = (HorizontalScrollView) root.findViewById(R.id.scroll);
@@ -104,7 +104,7 @@ public class QuickActionPopupWindow extends PopupWindow {
 		mTrackAnim = AnimationUtils.loadAnimation(context, R.anim.rail);
 
 		/**
-		 * ÉèÖÃ¼ÓËÙĞ§¹û
+		 * è®¾ç½®åŠ é€Ÿæ•ˆæœ
 		 */
 		mTrackAnim.setInterpolator(new Interpolator() {
 
@@ -115,10 +115,10 @@ public class QuickActionPopupWindow extends PopupWindow {
 			}
 		});
 
-		// Õâ¸öÊÇµ¯³ö´°¿ÚÄÚµÄË®Æ½²¼¾Ö
+		// è¿™ä¸ªæ˜¯å¼¹å‡ºçª—å£å†…çš„æ°´å¹³å¸ƒå±€
 		mTrack = (ViewGroup) root.findViewById(R.id.tracks);
 
-		animStyle = ANIM_AUTO;// ÉèÖÃ¶¯»­·ç¸ñ
+		animStyle = ANIM_AUTO;// è®¾ç½®åŠ¨ç”»é£æ ¼
 
 		animateTrack = true;
 	}
@@ -135,7 +135,7 @@ public class QuickActionPopupWindow extends PopupWindow {
 		this.window = new PopupWindow(anchor.getContext());
 
 		/**
-		 * ÔÚpopwindowÍâµã»÷¼´¹Ø±Õ¸Ãwindow
+		 * åœ¨popwindowå¤–ç‚¹å‡»å³å…³é—­è¯¥window
 		 */
 		window.setTouchInterceptor(new OnTouchListener() {
 
@@ -144,7 +144,7 @@ public class QuickActionPopupWindow extends PopupWindow {
 
 				if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
 
-					// ÈÃÆäÏûÊ§
+					// è®©å…¶æ¶ˆå¤±
 					QuickActionPopupWindow.this.window.dismiss();
 
 					return true;
@@ -167,7 +167,7 @@ public class QuickActionPopupWindow extends PopupWindow {
 
 		root = (ViewGroup) inflater.inflate(R.layout.quickbar, null);
 
-		// ÉÏÏÂÁ½¸ö¼ıÍ·
+		// ä¸Šä¸‹ä¸¤ä¸ªç®­å¤´
 		mArrowDown = (ImageView) root.findViewById(R.id.arrow_down);
 		mArrowUp = (ImageView) root.findViewById(R.id.arrow_up);
 
@@ -176,7 +176,7 @@ public class QuickActionPopupWindow extends PopupWindow {
 		mTrackAnim = AnimationUtils.loadAnimation(context, R.anim.rail);
 
 		/**
-		 * ÉèÖÃ¼ÓËÙĞ§¹û
+		 * è®¾ç½®åŠ é€Ÿæ•ˆæœ
 		 */
 		mTrackAnim.setInterpolator(new Interpolator() {
 
@@ -187,17 +187,17 @@ public class QuickActionPopupWindow extends PopupWindow {
 			}
 		});
 
-		// Õâ¸öÊÇµ¯³ö´°¿ÚÄÚµÄË®Æ½²¼¾Ö
+		// è¿™ä¸ªæ˜¯å¼¹å‡ºçª—å£å†…çš„æ°´å¹³å¸ƒå±€
 		mTrack = (ViewGroup) root.findViewById(R.id.tracks);
 
-		animStyle = ANIM_AUTO;// ÉèÖÃ¶¯»­·ç¸ñ
+		animStyle = ANIM_AUTO;// è®¾ç½®åŠ¨ç”»é£æ ¼
 
 		animateTrack = true;
 
 	}
 
 	/**
-	 * ÉèÖÃÒ»¸öflag À´±êÊ¶¶¯»­ÏÔÊ¾
+	 * è®¾ç½®ä¸€ä¸ªflag æ¥æ ‡è¯†åŠ¨ç”»æ˜¾ç¤º
 	 * 
 	 * @param animateTrack
 	 */
@@ -206,7 +206,7 @@ public class QuickActionPopupWindow extends PopupWindow {
 	}
 
 	/**
-	 * ÉèÖÃ¶¯»­·ç¸ñ
+	 * è®¾ç½®åŠ¨ç”»é£æ ¼
 	 * 
 	 * @param animStyle
 	 */
@@ -215,7 +215,7 @@ public class QuickActionPopupWindow extends PopupWindow {
 	}
 
 	/**
-	 * Ôö¼ÓÒ»¸öAction
+	 * å¢åŠ ä¸€ä¸ªAction
 	 * 
 	 * @param actionItem
 	 */
@@ -224,7 +224,7 @@ public class QuickActionPopupWindow extends PopupWindow {
 	}
 
 	/**
-	 * µ¯³ö´°Ìå
+	 * å¼¹å‡ºçª—ä½“
 	 */
 	public void show() {
 
@@ -232,10 +232,10 @@ public class QuickActionPopupWindow extends PopupWindow {
 
 		int[] location = new int[2];
 
-		// µÃµ½anchorµÄÎ»ÖÃ
+		// å¾—åˆ°anchorçš„ä½ç½®
 		anchor.getLocationOnScreen(location);
 
-		// ÒÔanchorµÄÎ»ÖÃ¹¹ÔìÒ»¸ö¾ØĞÎ
+		// ä»¥anchorçš„ä½ç½®æ„é€ ä¸€ä¸ªçŸ©å½¢
 		Rect anchorRect = new Rect(location[0], location[1], location[0]
 				+ anchor.getWidth(), location[1] + anchor.getHeight());
 
@@ -246,32 +246,32 @@ public class QuickActionPopupWindow extends PopupWindow {
 		int rootWidth = root.getMeasuredWidth();
 		int rootHeight = root.getMeasuredHeight();
 
-		// µÃµ½ÆÁÄ»µÄ¿í
+		// å¾—åˆ°å±å¹•çš„å®½
 		int screenWidth = windowManager.getDefaultDisplay().getWidth();
 
-		// ÉèÖÃµ¯´°µ¯³öµÄÎ»ÖÃµÄX y
+		// è®¾ç½®å¼¹çª—å¼¹å‡ºçš„ä½ç½®çš„X y
 		int xPos = (screenWidth - rootWidth) / 2;
 		int yPos = anchorRect.top - rootHeight;
 
 		boolean onTop = true;
-		// ÔÚµ×²¿µ¯³ö
+		// åœ¨åº•éƒ¨å¼¹å‡º
 		if (rootHeight > anchorRect.top) {
 			yPos = anchorRect.bottom;
 			onTop = false;
 		}
 
-		 //¸ù¾İµ¯³öÎ»ÖÃ£¬ÉèÖÃ²»Í¬µÄ·½Ïò¼ıÍ·Í¼Æ¬
+		 //æ ¹æ®å¼¹å‡ºä½ç½®ï¼Œè®¾ç½®ä¸åŒçš„æ–¹å‘ç®­å¤´å›¾ç‰‡
 //		 showArrow(((onTop) ? R.id.arrow_down : R.id.arrow_up),
 //		 anchorRect.centerX());
 
-		// ÉèÖÃµ¯³ö¶¯»­·ç¸ñ
+		// è®¾ç½®å¼¹å‡ºåŠ¨ç”»é£æ ¼
 		setAnimationStyle(screenWidth, anchorRect.centerX(), onTop);
-		// ´´½¨action list
+		// åˆ›å»ºaction list
 		createActionList();
-		// ÔÚÖ¸¶¨Î»ÖÃµ¯³öµ¯´°
+		// åœ¨æŒ‡å®šä½ç½®å¼¹å‡ºå¼¹çª—
 		window.showAtLocation(this.anchor, Gravity.NO_GRAVITY, xPos, yPos);
 
-		// ÉèÖÃµ¯´°ÄÚ²¿µÄË®Æ½²¼¾ÖµÄ¶¯»­
+		// è®¾ç½®å¼¹çª—å†…éƒ¨çš„æ°´å¹³å¸ƒå±€çš„åŠ¨ç”»
 		if (animateTrack) {
 			mTrack.startAnimation(mTrackAnim);
 		}
@@ -281,10 +281,10 @@ public class QuickActionPopupWindow extends PopupWindow {
 
 		preShow();
 		int[] location = new int[2];
-		// µÃµ½anchorµÄÎ»ÖÃ
+		// å¾—åˆ°anchorçš„ä½ç½®
 		v.getLocationOnScreen(location);
 
-		// ÒÔanchorµÄÎ»ÖÃ¹¹ÔìÒ»¸ö¾ØĞÎ
+		// ä»¥anchorçš„ä½ç½®æ„é€ ä¸€ä¸ªçŸ©å½¢
 		Rect anchorRect = new Rect(location[0], location[1], location[0]
 				+ v.getWidth(), location[1] + v.getHeight());
 
@@ -295,49 +295,49 @@ public class QuickActionPopupWindow extends PopupWindow {
 		int rootWidth = root.getMeasuredWidth();
 		int rootHeight = root.getMeasuredHeight();
 		
-		// µÃµ½ÆÁÄ»µÄ¿í,¸ß
+		// å¾—åˆ°å±å¹•çš„å®½,é«˜
 		int screenWidth = windowManager.getDefaultDisplay().getWidth();
 		int screenHeight = windowManager.getDefaultDisplay().getHeight();
 		
-		// ÉèÖÃµ¯´°µ¯³öµÄÎ»ÖÃµÄX y
+		// è®¾ç½®å¼¹çª—å¼¹å‡ºçš„ä½ç½®çš„X y
 		int xPos = (screenWidth - rootWidth) / 2;
 		int yPos = anchorRect.bottom;
-		// ³õÊ¼»¯±³¾°
-		scroll.setBackgroundResource(R.drawable.pop_back);	//¿ªÊ¼ÊÇÏòÉÏµÄ¼ıÍ·
+		// åˆå§‹åŒ–èƒŒæ™¯
+		scroll.setBackgroundResource(R.drawable.pop_back);	//å¼€å§‹æ˜¯å‘ä¸Šçš„ç®­å¤´
 		boolean onTop = true;
-		// ÔÚµ×²¿µ¯³ö
+		// åœ¨åº•éƒ¨å¼¹å‡º
 		if (anchorRect.top > screenHeight/2) {
 			yPos = anchorRect.top - rootHeight;
 			scroll.setBackgroundResource(R.drawable.pop_back2);
 			onTop = false;
 		}
-//		System.out.println("view µÄÎ»ÖÃ:"+"x1:"+location[0]+",y1:"+location[1]+",x2:"+(location[0]
+//		System.out.println("view çš„ä½ç½®:"+"x1:"+location[0]+",y1:"+location[1]+",x2:"+(location[0]
 //				+ v.getWidth())+",y2:"+(location[1] + v.getHeight()));
-//		System.out.println("rootµÄ´óĞ¡:width"+rootWidth+",height:"+rootHeight);
-//		System.out.println("¾ØĞÎ¶¥²¿:"+anchorRect.top+",¾ØĞÎµ×²¿:"+anchorRect.bottom);
+//		System.out.println("rootçš„å¤§å°:width"+rootWidth+",height:"+rootHeight);
+//		System.out.println("çŸ©å½¢é¡¶éƒ¨:"+anchorRect.top+",çŸ©å½¢åº•éƒ¨:"+anchorRect.bottom);
 //		System.out.println("x:"+xPos+",y:"+yPos);
 		
-		// ÉèÖÃµ¯³ö¶¯»­·ç¸ñ
+		// è®¾ç½®å¼¹å‡ºåŠ¨ç”»é£æ ¼
 		setAnimationStyle(screenWidth, anchorRect.centerX(), onTop);
-		// ´´½¨action list
+		// åˆ›å»ºaction list
 		createActionList();
 		
-		// ÔÚÖ¸¶¨Î»ÖÃµ¯³öµ¯´°
+		// åœ¨æŒ‡å®šä½ç½®å¼¹å‡ºå¼¹çª—
 		window.showAtLocation(v, Gravity.NO_GRAVITY, xPos, yPos);
 
-		// ÉèÖÃµ¯´°ÄÚ²¿µÄË®Æ½²¼¾ÖµÄ¶¯»­
+		// è®¾ç½®å¼¹çª—å†…éƒ¨çš„æ°´å¹³å¸ƒå±€çš„åŠ¨ç”»
 		if (animateTrack) {
 			mTrack.startAnimation(mTrackAnim);
 		}
 
 	}
 	/**
-	 * Ô¤´¦Àí´°¿Ú
+	 * é¢„å¤„ç†çª—å£
 	 */
 	protected void preShow() {
 
 		if (root == null) {
-			throw new IllegalStateException("ĞèÒªÎªµ¯´°ÉèÖÃ²¼¾Ö");
+			throw new IllegalStateException("éœ€è¦ä¸ºå¼¹çª—è®¾ç½®å¸ƒå±€");
 		}
 
 		if (background == null) {
@@ -346,22 +346,22 @@ public class QuickActionPopupWindow extends PopupWindow {
 			window.setBackgroundDrawable(background);
 		}
 
-		// ÉèÖÃ¿í¶È
+		// è®¾ç½®å®½åº¦
 		window.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-		// ÉèÖÃ¸ß¶È
+		// è®¾ç½®é«˜åº¦
 		window.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
 
 		window.setTouchable(true);
 		window.setFocusable(true);
 		window.setOutsideTouchable(true);
 
-		// Ö¸¶¨²¼¾Ö
+		// æŒ‡å®šå¸ƒå±€
 		window.setContentView(root);
 
 	}
 
 	/**
-	 * ÉèÖÃ¶¯»­·ç¸ñ
+	 * è®¾ç½®åŠ¨ç”»é£æ ¼
 	 * 
 	 * @param screenWidth
 	 * @param requestedX
@@ -414,7 +414,7 @@ public class QuickActionPopupWindow extends PopupWindow {
 	}
 
 	/**
-	 * ´´½¨Action List
+	 * åˆ›å»ºAction List
 	 */
 	private void createActionList() {
 
@@ -437,7 +437,7 @@ public class QuickActionPopupWindow extends PopupWindow {
 			icon = actionItems.get(i).getIcon();
 
 			clickListener = actionItems.get(i).getClickListener();
-			// µÃµ½Action item
+			// å¾—åˆ°Action item
 			view = getActionItem(title, icon, clickListener);
 			view.setFocusable(true);
 			view.setClickable(true);
@@ -448,7 +448,7 @@ public class QuickActionPopupWindow extends PopupWindow {
 	}
 
 	/**
-	 * µÃµ½Action Item
+	 * å¾—åˆ°Action Item
 	 * 
 	 * @param title
 	 * @param icon
@@ -458,7 +458,7 @@ public class QuickActionPopupWindow extends PopupWindow {
 	private View getActionItem(String title, Drawable icon,
 			OnClickListener listener) {
 
-		// ×°ÔØAction²¼¾Ö
+		// è£…è½½Actionå¸ƒå±€
 
 		LinearLayout linearLayout = (LinearLayout) inflater.inflate(
 				R.layout.action_item, null);
@@ -487,11 +487,11 @@ public class QuickActionPopupWindow extends PopupWindow {
 	}
 
 	 /**
-	 * ÏÔÊ¾¼ıÍ·
+	 * æ˜¾ç¤ºç®­å¤´
 	 *
-	 * @param whichArrow¼ıÍ·×ÊÔ´id
+	 * @param whichArrowç®­å¤´èµ„æºid
 	 * @param requestedX
-	 * ¾àÀëÆÁÄ»×ó±ßµÄ¾àÀë
+	 * è·ç¦»å±å¹•å·¦è¾¹çš„è·ç¦»
 	 */
 	 private void showArrow(int whichArrow, int requestedX) {
 	
@@ -504,7 +504,7 @@ public class QuickActionPopupWindow extends PopupWindow {
 	 ViewGroup.MarginLayoutParams param = (ViewGroup.MarginLayoutParams)
 	 showArrow
 	 .getLayoutParams();
-	 // ÒÔ´ËÉèÖÃ¾àÀë×ó±ßµÄ¾àÀë
+	 // ä»¥æ­¤è®¾ç½®è·ç¦»å·¦è¾¹çš„è·ç¦»
 	 param.leftMargin = requestedX - arrowWidth / 2;
 	 hideArrow.setVisibility(View.INVISIBLE);
 	

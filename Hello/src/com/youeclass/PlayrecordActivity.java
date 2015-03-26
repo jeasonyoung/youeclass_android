@@ -66,7 +66,7 @@ public class PlayrecordActivity extends ListActivity{
 		{
 			if(r.getCourseFilePath()==null)
 			{
-				Toast.makeText(this, "您没有下载该视频", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "鎮ㄦ病鏈変笅杞借瑙嗛", Toast.LENGTH_SHORT).show();
 				return;
 			}
 		}
@@ -119,8 +119,8 @@ public class PlayrecordActivity extends ListActivity{
 			TextView currentTime = (TextView) convertView.findViewById(R.id.currentTimeLab);
 			TextView playTime = (TextView) convertView.findViewById(R.id.palytimelab);
 			coursename.setText(r.getCourseName());
-			currentTime.setText("已学习到:"+r.getFormatCurrentTime());
-			playTime.setText("学习时间:"+r.getPlayTime());
+			currentTime.setText("宸插涔犲埌:"+r.getFormatCurrentTime());
+			playTime.setText("瀛︿範鏃堕棿:"+r.getPlayTime());
 			return convertView;
 		}
 	}

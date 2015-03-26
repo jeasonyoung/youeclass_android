@@ -18,7 +18,7 @@ public class MyExpandableAdapter2 extends BaseExpandableListAdapter{
 		this.context= context;
 		this.groups = group;
 	}
-	 //»ñµÃÖ¸¶¨×éÖÐµÄÖ¸¶¨Ë÷ÒýµÄ×ÓÑ¡ÏîÊý¾Ý
+	 //èŽ·å¾—æŒ‡å®šç»„ä¸­çš„æŒ‡å®šç´¢å¼•çš„å­é€‰é¡¹æ•°æ®
 	 public Object getChild(int groupPosition, int childPosition) {
 		 try{
 		 return children[groupPosition][childPosition];
@@ -27,11 +27,11 @@ public class MyExpandableAdapter2 extends BaseExpandableListAdapter{
 			 return null;
 		 }
 	 }
-	     //»ñµÃÖ¸¶¨×ÓÏîµÄID
+	     //èŽ·å¾—æŒ‡å®šå­é¡¹çš„ID
 	 public long getChildId(int groupPosition, int childPosition) {
 	  return childPosition;
 	 }
-	     //»ñµÃÖ¸¶¨×ÓÏîµÄview×é¼þ
+	     //èŽ·å¾—æŒ‡å®šå­é¡¹çš„viewç»„ä»¶
 	 public View getChildView(int groupPosition, int childPosition,
 	   boolean isLastChild, View convertView, ViewGroup parent) {
 		 	LayoutInflater inflater = LayoutInflater.from(context);
@@ -40,7 +40,7 @@ public class MyExpandableAdapter2 extends BaseExpandableListAdapter{
 		 	txt.setText(getChild(groupPosition,childPosition).toString());
 		 	return convertView;
 	 }
-	    //È¡µÃÖ¸¶¨×éÖÐËùÓÐ×ÓÏîµÄ¸öÊý
+	    //å–å¾—æŒ‡å®šç»„ä¸­æ‰€æœ‰å­é¡¹çš„ä¸ªæ•°
 	 public int getChildrenCount(int groupPosition) {
 		 try{
 			 return children[groupPosition].length;
@@ -49,19 +49,19 @@ public class MyExpandableAdapter2 extends BaseExpandableListAdapter{
 			 return 0;
 		 }
 	 }
-	     //È¡µÃÖ¸¶¨×éµÄÊý¾Ý
+	     //å–å¾—æŒ‡å®šç»„çš„æ•°æ®
 	 public Object getGroup(int groupPosition) {
 	  return groups[groupPosition];
 	 }
-	  //È¡µÃÖ¸¶¨×éµÄ¸öÊý
+	  //å–å¾—æŒ‡å®šç»„çš„ä¸ªæ•°
 	 public int getGroupCount() {
 	  return groups.length;
 	 }
-	  //È¡µÃÖ¸¶¨Ë÷ÒýµÄID
+	  //å–å¾—æŒ‡å®šç´¢å¼•çš„ID
 	 public long getGroupId(int groupPosition) {
 	  return groupPosition;
 	 }
-	  //È¡µÃÖ¸¶¨×éµÄView×é¼þ
+	  //å–å¾—æŒ‡å®šç»„çš„Viewç»„ä»¶
 	 public View getGroupView(int groupPosition, boolean isExpanded,
 	   View convertView, ViewGroup parent) {
 		 	LayoutInflater inflater = LayoutInflater.from(context);
@@ -70,11 +70,11 @@ public class MyExpandableAdapter2 extends BaseExpandableListAdapter{
 		 	txt.setText(groups[groupPosition]);
 		 	return convertView;
 	 }
-	      //Èç¹û·µ»Øtrue±íÊ¾×ÓÏîºÍ×éµÄIDÊ¼ÖÕ±íÊ¾Ò»¸ö¹Ì¶¨µÄ×é¼þ¶ÔÏó
+	      //å¦‚æžœè¿”å›žtrueè¡¨ç¤ºå­é¡¹å’Œç»„çš„IDå§‹ç»ˆè¡¨ç¤ºä¸€ä¸ªå›ºå®šçš„ç»„ä»¶å¯¹è±¡
 	 public boolean hasStableIds() {
 	  return true;
 	 }
-	//ÅÐ¶ÏÖ¸¶¨µÄ×ÓÑ¡ÔñÏîÊÇ·ñ±»Ñ¡Ôñ
+	//åˆ¤æ–­æŒ‡å®šçš„å­é€‰æ‹©é¡¹æ˜¯å¦è¢«é€‰æ‹©
 	 public boolean isChildSelectable(int groupPosition, int childPosition) {
 	  return true;
 	 }

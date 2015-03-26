@@ -63,7 +63,7 @@ public class QuestionPaperInfoActivity extends Activity implements OnClickListen
 		if(dao==null)
 			dao = new PaperDao(this);
 		record = dao.findRecord(username, paperid);
-		dialog = ProgressDialog.show(QuestionPaperInfoActivity.this,null,"¼ÓÔØÖĞÇëÉÔºò",true,true);
+		dialog = ProgressDialog.show(QuestionPaperInfoActivity.this,null,"åŠ è½½ä¸­è¯·ç¨å€™",true,true);
 		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		handler = new MyHandler(this);
 		new GetQuestionListThread().start();
@@ -97,23 +97,23 @@ public class QuestionPaperInfoActivity extends Activity implements OnClickListen
 				total_n += r.getQuestionNum();
 				View v = LayoutInflater.from(this).inflate(R.layout.list_ruleinfo, null);
 				TextView ruleTitle = (TextView) v.findViewById(R.id.ruleTitle);
-				ruleTitle.setText("µÚ"+(i+1)+"´óÌâ"+r.getRuleTitle());
+				ruleTitle.setText("ç¬¬"+(i+1)+"å¤§é¢˜"+r.getRuleTitle());
 				TextView ruleTitleInfo = (TextView) v.findViewById(R.id.ruleTitleInfo);
-				ruleTitleInfo.setText("ËµÃ÷:"+r.getFullTitle());
+				ruleTitleInfo.setText("è¯´æ˜:"+r.getFullTitle());
 				this.ruleInfo.addView(v,i);
 			}
 			if(record != null&&record.getTempAnswer()!=null&&!"".equals(record.getTempAnswer()))
 			{
-				this.startBtn.setText("¼ÌĞø¿¼ÊÔ");
+				this.startBtn.setText("ç»§ç»­è€ƒè¯•");
 				this.restartBtn.setVisibility(View.VISIBLE);
 				this.tempTime = record.getTempTime();
 			}else if(record!=null&&record.getAnswers()!=null)
 			{
-				this.startBtn.setText("²é¿´³É¼¨");
+				this.startBtn.setText("æŸ¥çœ‹æˆç»©");
 				this.restartBtn.setVisibility(View.VISIBLE);
 			}else
 			{
-				this.startBtn.setText("¿ªÊ¼¿¼ÊÔ");
+				this.startBtn.setText("å¼€å§‹è€ƒè¯•");
 				this.restartBtn.setVisibility(View.GONE);
 			}
 			this.totalNum.setText(total_n+"");
@@ -142,25 +142,25 @@ public class QuestionPaperInfoActivity extends Activity implements OnClickListen
 				total_n += r.getInt("ruleQuestionNum");
 				View v = LayoutInflater.from(this).inflate(R.layout.list_ruleinfo, null);
 				TextView ruleTitle = (TextView) v.findViewById(R.id.ruleTitle);
-				ruleTitle.setText("µÚ"+(i+1)+"´óÌâ"+r.getString("title"));
+				ruleTitle.setText("ç¬¬"+(i+1)+"å¤§é¢˜"+r.getString("title"));
 				TextView ruleTitleInfo = (TextView) v.findViewById(R.id.ruleTitleInfo);
-				ruleTitleInfo.setText("ËµÃ÷:"+r.getString("fullTitle"));
+				ruleTitleInfo.setText("è¯´æ˜:"+r.getString("fullTitle"));
 				rule.setFullTitle(r.getString("fullTitle"));
 				this.ruleInfo.addView(v,i);
 				ruleList.add(rule);
 			}
 			if(record != null&&record.getTempAnswer()!=null&&!"".equals(record.getTempAnswer()))
 			{
-				this.startBtn.setText("¼ÌĞø¿¼ÊÔ");
+				this.startBtn.setText("ç»§ç»­è€ƒè¯•");
 				this.restartBtn.setVisibility(View.VISIBLE);
 				this.tempTime = record.getTempTime();
 			}else if(record!=null&&record.getAnswers()!=null)
 			{
-				this.startBtn.setText("²é¿´³É¼¨");
+				this.startBtn.setText("æŸ¥çœ‹æˆç»©");
 				this.restartBtn.setVisibility(View.VISIBLE);
 			}else
 			{
-				this.startBtn.setText("¿ªÊ¼¿¼ÊÔ");
+				this.startBtn.setText("å¼€å§‹è€ƒè¯•");
 				this.restartBtn.setVisibility(View.GONE);
 			}
 			this.totalNum.setText(total_n+"");
@@ -204,12 +204,12 @@ public class QuestionPaperInfoActivity extends Activity implements OnClickListen
 			mIntent.putExtra("useTime", record.getUseTime());
 			mIntent.putExtra("record", gson.toJson(record));
 			mIntent.putExtra("isDone", gson.toJson(isDone));
-			mIntent.putExtra("userScore", record.getScore()); // ±¾´ÎµÃ·Ö
-			this.startActivity(mIntent);	//ÈÔÈ»ÊÇÒªÆô¶¯Õâ¸öActivity²»´ø½á¹û·µ»Ø
+			mIntent.putExtra("userScore", record.getScore()); // æœ¬æ¬¡å¾—åˆ†
+			this.startActivity(mIntent);	//ä»ç„¶æ˜¯è¦å¯åŠ¨è¿™ä¸ªActivityä¸å¸¦ç»“æœè¿”å›
 		}else {
 			if(questionList==null||questionList.size()==0)
 			{
-				Toast.makeText(this, "Ã»ÓĞÌâÄ¿Êı¾İÔİÊ±²»ÄÜÁ·Ï°", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "æ²¡æœ‰é¢˜ç›®æ•°æ®æš‚æ—¶ä¸èƒ½ç»ƒä¹ ", Toast.LENGTH_SHORT).show();
 				return;
 			}
 			MobclickAgent.onEvent(this,"Do_Exam_Paper");
@@ -225,7 +225,7 @@ public class QuestionPaperInfoActivity extends Activity implements OnClickListen
 			intent.putExtra("questionListJson", gson.toJson(questionList));
 			intent.putExtra("username", username);
 			this.startActivity(intent);
-			this.finish();	//½áÊøÉúÃü
+			this.finish();	//ç»“æŸç”Ÿå‘½
 		}
 	}
 	private void addAnswer(SparseBooleanArray isDone,List<ExamQuestion> list,String tempAnswer)
@@ -244,12 +244,12 @@ public class QuestionPaperInfoActivity extends Activity implements OnClickListen
 		for (int i = 0; i < listSize; i++) {
 			ExamQuestion q = list.get(i);
 			String str = q.getQid() + "-";
-			if ((!"ÎÊ´ğÌâ".equals(q.getQType()))
+			if ((!"é—®ç­”é¢˜".equals(q.getQType()))
 					&& choiceAnswer.indexOf(str) != -1) {
 				String temp = choiceAnswer.substring(choiceAnswer.indexOf(str));
 				q.setUserAnswer(temp.substring(str.length(), temp.indexOf("&")));
 				isDone.append(i, true);
-			} else if (textAnswer != null && "ÎÊ´ğÌâ".equals(q.getQType())
+			} else if (textAnswer != null && "é—®ç­”é¢˜".equals(q.getQType())
 					&& textAnswer.indexOf(str) != -1) {
 				String temp = textAnswer.substring(textAnswer.indexOf(str));
 				q.setUserAnswer(temp.substring(str.length(),
@@ -274,7 +274,7 @@ public class QuestionPaperInfoActivity extends Activity implements OnClickListen
 		intent.putExtra("questionListJson", gson.toJson(questionList));
 		intent.putExtra("username", username);
 		this.startActivity(intent);
-		this.finish();	//½áÊøÉúÃü
+		this.finish();	//ç»“æŸç”Ÿå‘½
 	}
 	private class GetQuestionListThread extends Thread
 	{
@@ -290,10 +290,10 @@ public class QuestionPaperInfoActivity extends Activity implements OnClickListen
 			}
 			try{
 				String result = HttpConnectUtil.httpGetRequest(QuestionPaperInfoActivity.this, Constant.DOMAIN_URL+"mobile/questionListofPaper?paperid="+paperid);
-				//½âÎöresult
+				//è§£æresult
 				if(result!=null&&!result.equals("null"))
             	{
-            		//½âÎöjson×Ö·û´®,ÅäÖÃexpandableListViewµÄadapter
+            		//è§£æjsonå­—ç¬¦ä¸²,é…ç½®expandableListViewçš„adapter
             		try
             		{
             			JSONArray json = new JSONArray(result);
@@ -353,12 +353,12 @@ public class QuestionPaperInfoActivity extends Activity implements OnClickListen
                 	break;
                 case -2:
                 	theActivity.dialog.dismiss();
-                	Toast.makeText(theActivity, "ÔİÊ±Ã»ÓĞÊı¾İ", Toast.LENGTH_SHORT).show();
+                	Toast.makeText(theActivity, "æš‚æ—¶æ²¡æœ‰æ•°æ®", Toast.LENGTH_SHORT).show();
                 	break;
                 case -1:
-                	//Á¬²»ÉÏ,
+                	//è¿ä¸ä¸Š,
                 	theActivity.dialog.dismiss();
-                	Toast.makeText(theActivity, "Á¬²»ÉÏ·şÎñÆ÷", Toast.LENGTH_SHORT).show();
+                	Toast.makeText(theActivity, "è¿ä¸ä¸ŠæœåŠ¡å™¨", Toast.LENGTH_SHORT).show();
                 	break;
                 }
         }

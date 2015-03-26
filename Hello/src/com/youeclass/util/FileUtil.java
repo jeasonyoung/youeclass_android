@@ -16,11 +16,11 @@ public class FileUtil {
 		if(fileSize>0)
 		{
 			StatFs statfs = new StatFs(pathFile.getPath());
-			//获得可供程序使用的Block数量
+			//鑾峰緱鍙緵绋嬪簭浣跨敤鐨凚lock鏁伴噺
 			long nAvailaBlock = statfs.getAvailableBlocks();
-			//获得SDCard上每个block的SIZE
+			//鑾峰緱SDCard涓婃瘡涓猙lock鐨凷IZE
 			long nBlocSize = statfs.getBlockSize();
-			//计算SDCard剩余大小 Byte
+			//璁＄畻SDCard鍓╀綑澶у皬 Byte
 			long nSDFreeSize = nAvailaBlock * nBlocSize;
 			return nSDFreeSize > fileSize;
 		}else

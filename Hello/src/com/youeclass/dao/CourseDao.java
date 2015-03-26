@@ -22,7 +22,7 @@ public class CourseDao {
 
 	public List<Course> findByClassId(String id,String username) {
 		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
-		Log.d(TAG, "findByClassId·½·¨´ò¿ªÁËÊı¾İ¿âÁ¬½Ó");
+		Log.d(TAG, "findByClassIdæ–¹æ³•æ‰“å¼€äº†æ•°æ®åº“è¿æ¥");
 		List<Course> list = new ArrayList<Course>();
 		String sql = "select courseid,coursename,classid,coursetype,coursemode,coursegroup,filesize,finishsize,filepath,fileurl,state from CourseTab where classid = ? and username = ?";
 		Cursor cursor = db.rawQuery(sql, new String[] { id,username });
@@ -36,24 +36,24 @@ public class CourseDao {
 		}
 		cursor.close();
 		dbhelper.closeDb();
-		Log.d(TAG, "findByClassId·½·¨¹Ø±ÕÁËÊı¾İ¿âÁ¬½Ó");
+		Log.d(TAG, "findByClassIdæ–¹æ³•å…³é—­äº†æ•°æ®åº“è¿æ¥");
 		return list;
 	}
 
 	public void save(List<Course> courses,String username) {
 		SQLiteDatabase db = dbhelper.getDatabase(1);
-		Log.d(TAG, "save·½·¨´ò¿ªÁËÊı¾İ¿âÁ¬½Ó");
+		Log.d(TAG, "saveæ–¹æ³•æ‰“å¼€äº†æ•°æ®åº“è¿æ¥");
 		db.beginTransaction();
 		try {
 			if (courses.size() == 0) {
 				return;
 			} else {
-				// Èç¹ûÒ»¿ªÊ¼Êı¾İ¿âÊı¾İÎª¿Õ,Ö±½Ó¼Ó
+				// å¦‚æœä¸€å¼€å§‹æ•°æ®åº“æ•°æ®ä¸ºç©º,ç›´æ¥åŠ 
 				String sql = "select classid from CourseTab where username = ?";
 				Cursor cursor = db.rawQuery(sql, new String[] {username});
 				if (cursor.getCount() == 0) {
 					cursor.close();
-					//Ñ­»·¼Ó
+					//å¾ªç¯åŠ 
 					for (Course c1 : courses) {
 						String sql1 = "insert into CourseTab(courseid,coursename,classid,coursetype,coursemode,coursegroup,filesize,finishsize,filepath,fileurl,state,username) values (?,?,?,?,?,?,?,?,?,?,?,?)";
 						Object[] values = new Object[] { c1.getCourseId(),
@@ -70,7 +70,7 @@ public class CourseDao {
 						String sqleach = "select classid from CourseTab where fileurl = ? and username=?";
 						Cursor cursoreach = db.rawQuery(sqleach,
 								new String[] { c.getFileUrl(),c.getUsername() });
-						if (cursoreach.getCount() > 0) {	//ÓĞ¼ÇÂ¼ÔòÌø¹ı²»ÔÙÔö¼Ó
+						if (cursoreach.getCount() > 0) {	//æœ‰è®°å½•åˆ™è·³è¿‡ä¸å†å¢åŠ 
 							cursoreach.close();
 							continue;
 						}
@@ -91,12 +91,12 @@ public class CourseDao {
 			db.endTransaction();
 		}
 		dbhelper.closeDb();
-		Log.d(TAG, "save·½·¨¹Ø±ÕÁËÊı¾İ¿âÁ¬½Ó");
+		Log.d(TAG, "saveæ–¹æ³•å…³é—­äº†æ•°æ®åº“è¿æ¥");
 	}
 
 	public void deleteAll(String classid,String username) {
 		SQLiteDatabase db = dbhelper.getDatabase(1);
-		Log.d(TAG, "deleteAll·½·¨´ò¿ªÁËÊı¾İ¿âÁ¬½Ó");
+		Log.d(TAG, "deleteAllæ–¹æ³•æ‰“å¼€äº†æ•°æ®åº“è¿æ¥");
 		db.beginTransaction();
 		try {
 			String sql = "delete from CourseTab where classid = ? and username = ?";
@@ -106,13 +106,13 @@ public class CourseDao {
 			db.endTransaction();
 		}
 		dbhelper.closeDb();
-		Log.d(TAG, "deleteAll·½·¨¹Ø±ÕÁËÊı¾İ¿âÁ¬½Ó");
+		Log.d(TAG, "deleteAllæ–¹æ³•å…³é—­äº†æ•°æ®åº“è¿æ¥");
 	}
 
 	public List<DowningCourse> findAll(String username) {
 		List<DowningCourse> list = new ArrayList<DowningCourse>();
 		SQLiteDatabase db = dbhelper.getDatabase(0);
-		Log.d(TAG, "findAll·½·¨´ò¿ªÁËÊı¾İ¿âÁ¬½Ó");
+		Log.d(TAG, "findAllæ–¹æ³•æ‰“å¼€äº†æ•°æ®åº“è¿æ¥");
 		String sql = "select coursename,filesize,finishsize,filepath,fileurl from CourseTab where username = ?";
 		Cursor cursor = db.rawQuery(sql, new String[]{username});
 		while (cursor.moveToNext()) {
@@ -123,7 +123,7 @@ public class CourseDao {
 		}
 		cursor.close();
 		dbhelper.closeDb();
-		Log.d(TAG, "findAll·½·¨¹Ø±ÕÁËÊı¾İ¿âÁ¬½Ó");
+		Log.d(TAG, "findAllæ–¹æ³•å…³é—­äº†æ•°æ®åº“è¿æ¥");
 		return list;
 	}
 
@@ -131,7 +131,7 @@ public class CourseDao {
 		// TODO Auto-generated method stub
 		List<DowningCourse> list = new ArrayList<DowningCourse>();
 		SQLiteDatabase db = dbhelper.getDatabase(0);
-		// ²éÕÒËùÓĞÕıÔÚÏÂÔØµÄ¿Î³Ì
+		// æŸ¥æ‰¾æ‰€æœ‰æ­£åœ¨ä¸‹è½½çš„è¯¾ç¨‹
 		String sql = "select coursename,filesize,finishsize,filepath,fileurl from CourseTab where state = 1 and username = ?";
 		Cursor cursor = db.rawQuery(sql, new String[] {username});
 		while (cursor.moveToNext()) {
@@ -148,7 +148,7 @@ public class CourseDao {
 	{
 		List<Course> list = new ArrayList<Course>();
 		SQLiteDatabase db = dbhelper.getDatabase(0);
-		// ²éÕÒËùÓĞÕıÔÚÏÂÔØµÄ¿Î³Ì
+		// æŸ¥æ‰¾æ‰€æœ‰æ­£åœ¨ä¸‹è½½çš„è¯¾ç¨‹
 		String sql = "select courseid,coursename,filepath,fileurl from CourseTab where state = 2 and username = ?";
 		Cursor cursor = db.rawQuery(sql, new String[] {username});
 		while (cursor.moveToNext()) {
@@ -165,7 +165,7 @@ public class CourseDao {
 		return list;
 	}
 	public void updateState(String url, int state , String username) {
-		System.out.println("¸üĞÂÎÄ¼şÏÂÔØ×´Ì¬:"+state);
+		System.out.println("æ›´æ–°æ–‡ä»¶ä¸‹è½½çŠ¶æ€:"+state);
 		SQLiteDatabase db = dbhelper.getDatabase(0);
 		db.beginTransaction();
 		try {

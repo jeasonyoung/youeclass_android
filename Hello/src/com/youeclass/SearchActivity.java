@@ -41,8 +41,8 @@ public class SearchActivity extends ListActivity {
 		this.title = (TextView) this.findViewById(R.id.TopTitle5);
 		Intent intent = this.getIntent();
 		this.keywords = intent.getStringExtra("keywords");
-		this.title.setText("ËÑË÷´Ê:"+this.keywords);
-		dialog = ProgressDialog.show(SearchActivity.this,null,"ËÑË÷ÖĞÇëÉÔºò",true,true);
+		this.title.setText("æœç´¢è¯:"+this.keywords);
+		dialog = ProgressDialog.show(SearchActivity.this,null,"æœç´¢ä¸­è¯·ç¨å€™",true,true);
 		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		try {
 			String words = URLEncoder.encode(URLEncoder.encode(keywords,"gbk"),"gbk");
@@ -72,7 +72,7 @@ public class SearchActivity extends ListActivity {
 				{
 					return null;
 				}
-				//½âÎöresult
+				//è§£æresult
 				try
 				{
 					JSONArray json = new JSONArray(result);

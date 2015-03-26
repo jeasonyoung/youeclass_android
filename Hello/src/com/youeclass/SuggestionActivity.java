@@ -67,7 +67,7 @@ public class SuggestionActivity extends Activity implements OnClickListener{
 			    String str = this.suggestionText.getText().toString();
 			    if (str.length() == 0)
 			    {
-			      Toast.makeText(this, "请输入内容！", Toast.LENGTH_LONG).show();
+			      Toast.makeText(this, "璇疯緭鍏ュ唴瀹癸紒", Toast.LENGTH_LONG).show();
 			      return;
 			    }
 			    new SuggestTask(str).execute(Constant.DOMAIN_URL+"mobile/addAdvice");
@@ -85,7 +85,7 @@ public class SuggestionActivity extends Activity implements OnClickListener{
 				HttpClient client = new DefaultHttpClient();
 				HttpPost request = new HttpPost();
 				request.setURI(new URI(sUrl[0]));
-				//设置参数 用URLEncodedFormEntity  NameValuePair
+				//璁剧疆鍙傛暟 鐢║RLEncodedFormEntity  NameValuePair
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
 				params.add(new BasicNameValuePair("appType","1"));
 				params.add(new BasicNameValuePair("username",username));
@@ -138,7 +138,7 @@ public class SuggestionActivity extends Activity implements OnClickListener{
 			}catch(Exception e)
 			{
 				e.printStackTrace();
-				Toast.makeText(SuggestionActivity.this, "提交失败,稍后再试", Toast.LENGTH_LONG).show();
+				Toast.makeText(SuggestionActivity.this, "鎻愪氦澶辫触,绋嶅悗鍐嶈瘯", Toast.LENGTH_LONG).show();
 			}
 			
 		}

@@ -17,7 +17,7 @@ public class PlayrecordDao {
 	public PlayrecordDao(Context context) {
 		dbhelper = new MyDBHelper(context);
 	}
-	//±£´æ²¥·Å¼ÇÂ¼
+	//ä¿å­˜æ’­æ”¾è®°å½•
 	public void save(Playrecord record)
 	{
 		SQLiteDatabase db =  dbhelper.getDatabase(MyDBHelper.WRITE);
@@ -31,7 +31,7 @@ public class PlayrecordDao {
 		}
 		dbhelper.closeDb();
 	}
-	//¸ù¾İÓÃ»§ÃûÈ¡³ö²¥·Å¼ÇÂ¼
+	//æ ¹æ®ç”¨æˆ·åå–å‡ºæ’­æ”¾è®°å½•
 	public List<Playrecord> getRecordList(String username)
 	{
 		List<Playrecord> list = new ArrayList<Playrecord>();
@@ -52,7 +52,7 @@ public class PlayrecordDao {
 		dbhelper.closeDb();
 		return list;
 	}
-	//¸üĞÂ
+	//æ›´æ–°
 	public void saveOrUpdate(Playrecord r)
 	{
 		SQLiteDatabase db =  dbhelper.getDatabase(MyDBHelper.WRITE);
@@ -70,8 +70,8 @@ public class PlayrecordDao {
 			}
 		}else
 		{
-			//¸üĞÂ
-			Log.d(TAG, "¸üĞÂ");
+			//æ›´æ–°
+			Log.d(TAG, "æ›´æ–°");
 			cursor.close();
 			db.beginTransaction();
 			try{
@@ -85,7 +85,7 @@ public class PlayrecordDao {
 		}
 		dbhelper.closeDb();
 	}
-	//²éÕÒ
+	//æŸ¥æ‰¾
 	public Playrecord findRecord(String courseid,String username)
 	{
 		Playrecord record = null;

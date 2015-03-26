@@ -35,7 +35,7 @@ public class TreatyActivity extends Activity{
 		this.setContentView(R.layout.activity_treaty);
 		content = (TextView) this.findViewById(R.id.treatyText);
 		returnBtn = (ImageButton) this.findViewById(R.id.returnbtn);
-		dialog = ProgressDialog.show(TreatyActivity.this,null,"Å¬Á¦¼ÓÔØÖĞÇëÉÔºò",true,false);
+		dialog = ProgressDialog.show(TreatyActivity.this,null,"åŠªåŠ›åŠ è½½ä¸­è¯·ç¨å€™",true,false);
 		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		returnBtn.setOnClickListener(new ReturnBtnClickListener(this));
 		new ShowTreatyThread().start();
@@ -110,11 +110,11 @@ public class TreatyActivity extends Activity{
                 	break;
                 case -1:
                 	theActivity.dialog.dismiss();
-                	Toast.makeText(theActivity, "ÎŞ·¨Á¬½Óµ½·şÎñÆ÷", Toast.LENGTH_SHORT).show();
+                	Toast.makeText(theActivity, "æ— æ³•è¿æ¥åˆ°æœåŠ¡å™¨", Toast.LENGTH_SHORT).show();
                 	break;
                 case -2:
                 	theActivity.dialog.dismiss();
-                	Toast.makeText(theActivity, "ÎŞ·¨Á¬½Óµ½µØÖ·", Toast.LENGTH_SHORT).show();
+                	Toast.makeText(theActivity, "æ— æ³•è¿æ¥åˆ°åœ°å€", Toast.LENGTH_SHORT).show();
                 	break;
                 }
         }

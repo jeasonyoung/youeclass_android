@@ -19,21 +19,21 @@ public class DownloadButton extends LinearLayout{
 	public DownloadButton(Context context, AttributeSet  attrs) {
 		// TODO Auto-generated constructor stub
 		 super(context, attrs); 
-	        // µ¼Èë²¼¾Ö 
+	        // å¯¼å…¥å¸ƒå±€ 
 	        LayoutInflater.from(context).inflate(R.layout.download_pause_continue_btn, this, true); 
 	        iv = (ImageView) findViewById(R.id.btnImg); 
 	        tv = (TextView) findViewById(R.id.btnTxt);  
 	       
 	}
 	 /**
-     * ÉèÖÃÍ¼Æ¬×ÊÔ´
+     * è®¾ç½®å›¾ç‰‡èµ„æº
      */ 
     public void setImageResource(int resId) { 
         iv.setImageResource(resId); 
     } 
  
     /**
-     * ÉèÖÃÏÔÊ¾µÄÎÄ×Ö
+     * è®¾ç½®æ˜¾ç¤ºçš„æ–‡å­—
      */ 
     public void setText(String text) { 
         tv.setText(text); 

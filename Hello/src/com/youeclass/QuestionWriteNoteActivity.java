@@ -63,13 +63,13 @@ public class QuestionWriteNoteActivity extends Activity implements OnClickListen
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				QuestionWriteNoteActivity.this.editSizeText.setText("ÒÑÊäÈë: "
+				QuestionWriteNoteActivity.this.editSizeText.setText("å·²è¾“å…¥: "
 						+ s.length() + "/" + maxLength);
 			}
 		});
-		//ÏŞÖÆ×ÖÊı
+		//é™åˆ¶å­—æ•°
 		this.editNoteEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
-		//ÉèÖÃ¼àÌı
+		//è®¾ç½®ç›‘å¬
 		this.returnbtn.setOnClickListener(this);
 		this.submitBtn.setOnClickListener(this);
 		this.submitBtn2.setOnClickListener(this);
@@ -95,13 +95,13 @@ public class QuestionWriteNoteActivity extends Activity implements OnClickListen
 		String content = this.editNoteEditText.getText().toString();
 		if(content.trim().length()==0)
 		{
-			Toast.makeText(this, "»¹Ã»ÓĞÊäÈëÄÚÈİ", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "è¿˜æ²¡æœ‰è¾“å…¥å†…å®¹", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		String addTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		note = new ExamNote(qid,addTime,content,username,paperId);
 		dao.insertNote(note);
-		Toast.makeText(this, "±Ê¼ÇÒÑÌí¼Ó", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "ç¬”è®°å·²æ·»åŠ ", Toast.LENGTH_SHORT).show();
 		this.finish();
 	}
 	@Override

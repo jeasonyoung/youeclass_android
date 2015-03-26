@@ -16,7 +16,7 @@
 package org.taptwo.android.widget;
 
 import org.taptwo.android.widget.viewflow.R;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -71,7 +71,7 @@ public class CircleFlowIndicator extends View implements FlowIndicator,
 	private FadeTimer timer;
 	public AnimationListener animationListener = this;
 	private Animation animation;
-	private boolean mCentered = false;
+	//private boolean mCentered = false;
 
 	/**
 	 * Default constructor
@@ -89,6 +89,7 @@ public class CircleFlowIndicator extends View implements FlowIndicator,
 	 * @param context
 	 * @param attrs
 	 */
+	@SuppressLint("Recycle")
 	public CircleFlowIndicator(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		// Retrieve styles attributs
@@ -125,7 +126,7 @@ public class CircleFlowIndicator extends View implements FlowIndicator,
 		// Retrieve the fade out time
 		fadeOutTime = a.getInt(R.styleable.CircleFlowIndicator_fadeOut, 0);
 		
-		mCentered = a.getBoolean(R.styleable.CircleFlowIndicator_centered, false);
+		//mCentered = a.getBoolean(R.styleable.CircleFlowIndicator_centered, false);
 		
 		initColors(activeColor, inactiveColor, activeType, inactiveType);
 	}

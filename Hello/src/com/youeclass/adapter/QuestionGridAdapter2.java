@@ -65,7 +65,7 @@ public class QuestionGridAdapter2 extends BaseAdapter{
 			{
 				if(q.getAnswer().equals(q.getUserAnswer()))
 				{
-				//´ð¶ÔÁË
+				//ç­”å¯¹äº†
 					v.setBackgroundColor(context.getResources().getColor(R.color.green));
 				}else
 				{

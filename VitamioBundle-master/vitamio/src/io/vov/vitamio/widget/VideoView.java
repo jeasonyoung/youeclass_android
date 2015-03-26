@@ -17,6 +17,7 @@
 
 package io.vov.vitamio.widget;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -34,7 +35,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-
 import io.vov.vitamio.MediaFormat;
 import io.vov.vitamio.MediaPlayer;
 import io.vov.vitamio.MediaPlayer.OnBufferingUpdateListener;
@@ -49,7 +49,6 @@ import io.vov.vitamio.MediaPlayer.TrackInfo;
 import io.vov.vitamio.R;
 import io.vov.vitamio.Vitamio;
 import io.vov.vitamio.utils.Log;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -145,7 +144,8 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
       }
     }
 
-    public void surfaceCreated(SurfaceHolder holder) {
+    @SuppressWarnings("deprecation")
+	public void surfaceCreated(SurfaceHolder holder) {
       mSurfaceHolder = holder;
       // Dont forgot this value before Android 2.3
       mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -490,7 +490,8 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
     }
   }
 
-  @Override
+  @SuppressLint("ClickableViewAccessibility")
+@Override
   public boolean onTouchEvent(MotionEvent ev) {
     if (isInPlaybackState() && mMediaController != null)
       toggleMediaControlsVisiblity();

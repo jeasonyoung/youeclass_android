@@ -10,7 +10,12 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Toast;
-
+/**
+ * 下载类。
+ * @author jeasonyoung
+ *
+ */
+@SuppressWarnings("deprecation")
 public class DownloadActivity extends ActivityGroup implements OnClickListener {
 	private ImageButton returnBtn;
 	private RadioButton downingBtn,finishBtn;
@@ -18,9 +23,12 @@ public class DownloadActivity extends ActivityGroup implements OnClickListener {
 	private int flag;
 	private String username;
 	private Button delBtn;
+	/*
+	 * 重载创建。
+	 * @see android.app.ActivityGroup#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_down);
 		Intent intent = getIntent();
@@ -61,7 +69,6 @@ public class DownloadActivity extends ActivityGroup implements OnClickListener {
 	}
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch(v.getId())
 		{
 		case R.id.returnbtn:
@@ -87,7 +94,6 @@ public class DownloadActivity extends ActivityGroup implements OnClickListener {
 		}
 	}
 	private void turnToDowningActivity() {
-		// TODO Auto-generated method stub
 		container.removeAllViews();
 		Intent mIntent = new Intent(DownloadActivity.this, DowningActivity.class);
 		mIntent.putExtra("username", username);
@@ -97,7 +103,6 @@ public class DownloadActivity extends ActivityGroup implements OnClickListener {
                 .getDecorView());
 	}
 	private void turnToDownFinishActivity() {
-		// TODO Auto-generated method stub
 		container.removeAllViews();
 		Intent mIntent = new Intent(DownloadActivity.this, DownFinishActivity.class);
 		mIntent.putExtra("username", username);

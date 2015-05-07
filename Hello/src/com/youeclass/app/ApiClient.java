@@ -1,12 +1,9 @@
 package com.youeclass.app;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
@@ -17,7 +14,6 @@ import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
@@ -43,11 +39,11 @@ public class ApiClient {
 	private final static int TIMEOUT_SOCKET = 20000;
 	private final static int RETRY_TIME = 3;
 
-	private static String appCookie;
-	private static String appUserAgent;
+	//private static String appCookie;
+	//private static String appUserAgent;
 
 	public static void cleanCookie() {
-		appCookie = "";
+		//appCookie = "";
 	}
 	
 //	private static String getCookie(Context appContext) {
@@ -64,7 +60,7 @@ public class ApiClient {
 //			ua.append("/Android");//手机系统平台
 //			ua.append("/"+android.os.Build.VERSION.RELEASE);//手机系统版本
 //			ua.append("/"+android.os.Build.MODEL); //手机型号
-//			ua.append("/"+appContext.getAppId());//客户端唯�?���?
+//			ua.append("/"+appContext.getAppId());//客户端唯�?���?
 //			appUserAgent = ua.toString();
 //		}
 //		return appUserAgent;
@@ -74,13 +70,13 @@ public class ApiClient {
         HttpClient httpClient = new HttpClient();
 		// 设置 HttpClient 接收 Cookie,用与浏览器一样的策略
 		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
-        // 设置 默认的超时重试处理策�?
+        // 设置 默认的超时重试处理策�?
 		httpClient.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler());
 		// 设置 连接超时时间
 		httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(TIMEOUT_CONNECTION);
-		// 设置 读数据超时时�?
+		// 设置 读数据超时时�?
 		httpClient.getHttpConnectionManager().getParams().setSoTimeout(TIMEOUT_SOCKET);
-		// 设置 字符�?
+		// 设置 字符�?
 		httpClient.getParams().setContentCharset(UTF_8);
 		return httpClient;
 	}	
@@ -107,79 +103,79 @@ public class ApiClient {
 		return httpPost;
 	}
 	
-	private static String _MakeURL(String p_url, Map<String, Object> params) {
-		StringBuilder url = new StringBuilder(p_url);
-		if(url.indexOf("?")<0)
-			url.append('?');
-
-		for(String name : params.keySet()){
-			url.append('&');
-			url.append(name);
-			url.append('=');
-			url.append(String.valueOf(params.get(name)));
-			//不做URLEncoder处理
-			//url.append(URLEncoder.encode(String.valueOf(params.get(name)), UTF_8));
-		}
-
-		return url.toString().replace("?&", "?");
-	}
+//	private static String _MakeURL(String p_url, Map<String, Object> params) {
+//		StringBuilder url = new StringBuilder(p_url);
+//		if(url.indexOf("?")<0)
+//			url.append('?');
+//
+//		for(String name : params.keySet()){
+//			url.append('&');
+//			url.append(name);
+//			url.append('=');
+//			url.append(String.valueOf(params.get(name)));
+//			//不做URLEncoder处理
+//			//url.append(URLEncoder.encode(String.valueOf(params.get(name)), UTF_8));
+//		}
+//
+//		return url.toString().replace("?&", "?");
+//	}
 	
-	/**
-	 * get请求URL
-	 * @param url
-	 * @throws AppException 
-	 */
-	private static InputStream http_get(String url) throws AppException {	
-		System.out.println("get_url==> "+url);
-		HttpClient httpClient = null;
-		GetMethod httpGet = null;
-
-		String responseBody = "";
-		int time = 0;
-		do{
-			try 
-			{
-				httpClient = getHttpClient();
-				httpGet = getHttpGet(url, null, null);			
-				int statusCode = httpClient.executeMethod(httpGet);
-				if (statusCode != HttpStatus.SC_OK) {
-					throw AppException.http(statusCode);
-				}
-				responseBody = httpGet.getResponseBodyAsString();
-				System.out.println("XMLDATA=====>"+responseBody);
-				break;				
-			} catch (HttpException e) {
-				time++;
-				if(time < RETRY_TIME) {
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e1) {} 
-					continue;
-				}
-				// 发生致命的异常，可能是协议不对或者返回的内容有问�?
-				e.printStackTrace();
-				throw AppException.http(e);
-			} catch (IOException e) {
-				time++;
-				if(time < RETRY_TIME) {
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e1) {} 
-					continue;
-				}
-				// 发生网络异常
-				e.printStackTrace();
-				throw AppException.network(e);
-			} finally {
-				// 释放连接
-				httpGet.releaseConnection();
-				httpClient = null;
-			}
-		}while(time < RETRY_TIME);
-		
-		responseBody = responseBody.replaceAll("\\p{Cntrl}", "");
-		return new ByteArrayInputStream(responseBody.getBytes());
-	}
+//	/**
+//	 * get请求URL
+//	 * @param url
+//	 * @throws AppException 
+//	 */
+//	private static InputStream http_get(String url) throws AppException {	
+//		System.out.println("get_url==> "+url);
+//		HttpClient httpClient = null;
+//		GetMethod httpGet = null;
+//
+//		String responseBody = "";
+//		int time = 0;
+//		do{
+//			try 
+//			{
+//				httpClient = getHttpClient();
+//				httpGet = getHttpGet(url, null, null);			
+//				int statusCode = httpClient.executeMethod(httpGet);
+//				if (statusCode != HttpStatus.SC_OK) {
+//					throw AppException.http(statusCode);
+//				}
+//				responseBody = httpGet.getResponseBodyAsString();
+//				System.out.println("XMLDATA=====>"+responseBody);
+//				break;				
+//			} catch (HttpException e) {
+//				time++;
+//				if(time < RETRY_TIME) {
+//					try {
+//						Thread.sleep(1000);
+//					} catch (InterruptedException e1) {} 
+//					continue;
+//				}
+//				// 发生致命的异常，可能是协议不对或者返回的内容有问�?
+//				e.printStackTrace();
+//				throw AppException.http(e);
+//			} catch (IOException e) {
+//				time++;
+//				if(time < RETRY_TIME) {
+//					try {
+//						Thread.sleep(1000);
+//					} catch (InterruptedException e1) {} 
+//					continue;
+//				}
+//				// 发生网络异常
+//				e.printStackTrace();
+//				throw AppException.network(e);
+//			} finally {
+//				// 释放连接
+//				httpGet.releaseConnection();
+//				httpClient = null;
+//			}
+//		}while(time < RETRY_TIME);
+//		
+//		responseBody = responseBody.replaceAll("\\p{Cntrl}", "");
+//		return new ByteArrayInputStream(responseBody.getBytes());
+//	}
 	
 	/**
 	 * 公用post方法
@@ -214,7 +210,7 @@ public class ApiClient {
 //        }
 		Part[] parts = new Part[2];
 		parts[0] = new StringPart("name","testparts");
-		parts[1] = new FilePart("FileName",new File("/mnt/sdcard/examresult.jpg"));
+		//parts[1] = new FilePart("FileName",new File("/mnt/sdcard/examresult.jpg"));
 		String responseBody = "";
 		int time = 0;
 		do{
@@ -257,7 +253,7 @@ public class ApiClient {
 					} catch (InterruptedException e1) {} 
 					continue;
 				}
-				// 发生致命的异常，可能是协议不对或者返回的内容有问�?
+				// 发生致命的异常，可能是协议不对或者返回的内容有问�?
 				e.printStackTrace();
 				throw AppException.http(e);
 			} catch (IOException e) {
@@ -308,7 +304,7 @@ public class ApiClient {
 		System.out.println("post_url==> "+url);
 		HttpClient httpClient = null;
 		PostMethod httpPost = null;
-		List<NameValuePair> para = new ArrayList<NameValuePair>();
+		//List<NameValuePair> para = new ArrayList<NameValuePair>();
 //		para.add(new BasicNameValuePair("name","hahahahaha"));
 		NameValuePair[] parametersBody = new NameValuePair[]{new NameValuePair("name","dulalalala")};
 //		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(para);
@@ -351,7 +347,7 @@ public class ApiClient {
 					} catch (InterruptedException e1) {} 
 					continue;
 				}
-				// 发生致命的异常，可能是协议不对或者返回的内容有问�?
+				// 发生致命的异常，可能是协议不对或者返回的内容有问�?
 				e.printStackTrace();
 				throw AppException.http(e);
 			} catch (IOException e) {
@@ -411,7 +407,7 @@ public class ApiClient {
 					} catch (InterruptedException e1) {} 
 					continue;
 				}
-				// 发生致命的异常，可能是协议不对或者返回的内容有问�?
+				// 发生致命的异常，可能是协议不对或者返回的内容有问�?
 				e.printStackTrace();
 				throw AppException.http(e);
 			} catch (IOException e) {
@@ -460,7 +456,7 @@ public class ApiClient {
 					} catch (InterruptedException e1) {} 
 					continue;
 				}
-				// 发生致命的异常，可能是协议不对或者返回的内容有问�?
+				// 发生致命的异常，可能是协议不对或者返回的内容有问�?
 				e.printStackTrace();
 				throw AppException.http(e);
 			} catch (IOException e) {

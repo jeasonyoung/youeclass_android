@@ -28,9 +28,14 @@ import com.youeclass.entity.ExamQuestion;
 import com.youeclass.entity.ExamRecord;
 import com.youeclass.entity.ExamRule;
 
+/**
+ * 问题选择类。
+ * @author jeasonyoung
+ *
+ */
 public class QuestionChooseActivity extends Activity implements OnClickListener{
 	private ImageButton returnbtn,scoreFlexImg;
-	private LinearLayout scoreLayout,loadingLayout,examDirectoryLayout,nodataLayout,lookBtn,doAgainBtn;
+	private LinearLayout scoreLayout,loadingLayout/*,examDirectoryLayout*/,nodataLayout,lookBtn,doAgainBtn;
 	private GridView scoreGridView;
 	private ListView questionListView;
 	private List<ExamRule> ruleList;
@@ -43,20 +48,27 @@ public class QuestionChooseActivity extends Activity implements OnClickListener{
 	private PaperDao dao;
 	private ExamRecord r;
 	private Gson gson ;
+	/*
+	 * 重载创建。
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_question_exam_directory);
-		findView();
-		initData();
+		this.findView();
+		this.initData();
 	}
+	/*
+	 * 重载开始。
+	 * @see android.app.Activity#onStart()
+	 */
 	@Override
 	protected void onStart() {
-		// TODO Auto-generated method stub
-		initView();
+		this.initView();
 		super.onStart();
 	}
+	//
 	private void findView()
 	{
 		this.returnbtn = (ImageButton) this.findViewById(R.id.returnbtn);
@@ -64,7 +76,7 @@ public class QuestionChooseActivity extends Activity implements OnClickListener{
 		this.scoreLayout = (LinearLayout) this.findViewById(R.id.exam_scoreLayout);
 		this.loadingLayout = (LinearLayout) this.findViewById(R.id.loadingLayout);
 		this.nodataLayout = (LinearLayout) this.findViewById(R.id.nodataLayout);
-		this.examDirectoryLayout = (LinearLayout) this.findViewById(R.id.examDirectoryLayout);
+		//this.examDirectoryLayout = (LinearLayout) this.findViewById(R.id.examDirectoryLayout);
 		this.scoreGridView = (GridView) this.findViewById(R.id.scoreGridView);
 		this.questionListView = (ListView) this.findViewById(R.id.question_directoryListView);
 		this.lookBtn = (LinearLayout) this.findViewById(R.id.question_directory_lookBtn_Layout);
@@ -74,6 +86,7 @@ public class QuestionChooseActivity extends Activity implements OnClickListener{
 		this.lookBtn.setOnClickListener(this);
 		this.doAgainBtn.setOnClickListener(this);
 	}
+	//
 	private void initData()
 	{
 		intent = this.getIntent();
@@ -156,7 +169,6 @@ public class QuestionChooseActivity extends Activity implements OnClickListener{
 	}
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch(v.getId())
 		{
 		case R.id.returnbtn:
@@ -291,9 +303,7 @@ public class QuestionChooseActivity extends Activity implements OnClickListener{
 	};
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		MobclickAgent.onResume(this);
-		
 	}
 }

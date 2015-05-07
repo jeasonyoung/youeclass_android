@@ -13,7 +13,7 @@ import com.youeclass.R;
 public class OptionLayout extends LinearLayout {
 	public ImageView button_line;
 	public CheckBox check_option;
-	private Context context;
+	//private Context context;
 	public ImageTextView image_text_view;
 	public boolean isclick = true;
 	private View view;
@@ -53,19 +53,15 @@ public class OptionLayout extends LinearLayout {
 
 	public OptionLayout(Context paramContext, AttributeSet paramAttributeSet) {
 		super(paramContext, paramAttributeSet);
-		this.context = paramContext;
-		this.view = LayoutInflater.from(paramContext).inflate(R.layout.options,
-				this, false);
+		//this.context = paramContext;
+		this.view = LayoutInflater.from(paramContext).inflate(R.layout.options, this, false);
 		init();
 	}
 
 	private void init() {
-		this.check_option = ((CheckBox) this.view
-				.findViewById(R.id.check_option));
-		this.image_text_view = (ImageTextView) this.view
-				.findViewById(R.id.image_textview);
-		this.button_line = ((ImageView) this.view
-				.findViewById(R.id.button_line));
+		this.check_option = ((CheckBox) this.view.findViewById(R.id.check_option));
+		this.image_text_view = (ImageTextView) this.view.findViewById(R.id.image_textview);
+		this.button_line = ((ImageView) this.view.findViewById(R.id.button_line));
 		this.check_option.setChecked(false);
 		this.check_option.setFocusable(false);
 		this.check_option.setClickable(false);
@@ -90,8 +86,7 @@ public class OptionLayout extends LinearLayout {
 	}
 
 	public void resetColor() {
-		this.image_text_view.setTextColor(getResources()
-				.getColor(R.color.black));
+		this.image_text_view.setTextColor(getResources().getColor(R.color.black));
 	}
 
 	public void setButtonClickable(boolean paramBoolean) {
@@ -109,21 +104,19 @@ public class OptionLayout extends LinearLayout {
 
 	public boolean setCheckBoxClicked() {
 		if (this.check_option.isChecked()) {
-			if (this.isclick)
-				this.check_option.setChecked(false);
+			if (this.isclick) this.check_option.setChecked(false);
 			return false;
 		}
-		if (this.isclick)
-			this.check_option.setChecked(true);
+		if (this.isclick) this.check_option.setChecked(true);
 		return true;
 	}
 
 	public void setCheckBoxIsClicked(int paramInt) {
 		if (this.isclick) {
-			if (this.check_option.isChecked())
-				this.check_option.setChecked(false);
-		} else
+			if (this.check_option.isChecked()) this.check_option.setChecked(false);
+		} else {
 			return;
+		}
 		this.check_option.setChecked(true);
 	}
 

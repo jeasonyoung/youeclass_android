@@ -44,10 +44,10 @@ public class QuestionAdapter extends BaseAdapter{
 	private Context context;
 	private QuestionDoExamActivity2 activity;
 	private ArrayList<ExamQuestion> questionList;
-	private ArrayList<ExamRule> ruleList;
-	private TextView examTypeTextView;
+	//private ArrayList<ExamRule> ruleList;
+	//private TextView examTypeTextView;
 	private String action;
-	private ImageButton favoriteBtn;
+	//private ImageButton favoriteBtn;
 	private ViewHolder holder;
 	// 图片保存目录
 	private String imageSavePath;
@@ -56,46 +56,40 @@ public class QuestionAdapter extends BaseAdapter{
 	{
 		this.context = context;
 		this.questionList = questionList;
-		this.ruleList= rules;
+		//this.ruleList= rules;
 		// /mnt/sdcard/eschool/hahaha/image/1001
 		this.imageSavePath = Environment.getExternalStorageDirectory().getPath()
 						+ File.separator + "eschool" + File.separator + username
 						+ File.separator + "image" + File.separator + paperid;
 		this.action = action;
-		this.examTypeTextView = examTypeTextView;
-		this.favoriteBtn = favoriteBtn;
+		//this.examTypeTextView = examTypeTextView;
+		//this.favoriteBtn = favoriteBtn;
 		this.activity = activity;
 	}
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
-		if(questionList!=null)
-		return questionList.size();
+		if(questionList != null) return questionList.size();
 		return 0;
 	}
 	@Override
 	public Object getItem(int position) {
-		// TODO Auto-generated method stub
-		if(questionList!=null)
-			return questionList.get(position);
+		if(questionList != null) return questionList.get(position);
 		return null;
 	}
 	@Override
 	public long getItemId(int position) {
-		// TODO Auto-generated method stub
 		return position;
 	}
 	@Override
 	public View getView(int position, View v, ViewGroup parent) {
-		// TODO Auto-generated method stub
-		if(v==null)
+		if(v == null)
 		{
 			v = LayoutInflater.from(context).inflate(com.youeclass.R.layout.single_question, null);
 			holder = new ViewHolder();
-			holder.modeLayout1=(LinearLayout) v.findViewById(R.id.doexam_mode1layout);
-			holder.modeLayout2=(LinearLayout) v.findViewById(R.id.doexam_mode2layout);
-			holder.modeLayout3=(LinearLayout) v.findViewById(R.id.doexam_mode3layout);
-			holder.modeLayout4=(LinearLayout) v.findViewById(R.id.doexam_mode4layout);
+			holder.modeLayout1 = (LinearLayout) v.findViewById(R.id.doexam_mode1layout);
+			holder.modeLayout2 = (LinearLayout) v.findViewById(R.id.doexam_mode2layout);
+			holder.modeLayout3 = (LinearLayout) v.findViewById(R.id.doexam_mode3layout);
+			holder.modeLayout4 = (LinearLayout) v.findViewById(R.id.doexam_mode4layout);
 			holder.examContent1 = ((TextView) v.findViewById(R.id.exam_Content)); // exam_Content1
 			holder.examImages1 = (LinearLayout) v.findViewById(R.id.examImages1);
 			holder.examOption1 = ((RadioGroup) v.findViewById(R.id.examOption)); // examOption1
@@ -126,17 +120,14 @@ public class QuestionAdapter extends BaseAdapter{
 			holder.modeLayout2.setVisibility(8);
 			holder.modeLayout3.setVisibility(8);
 			holder.modeLayout4.setVisibility(8);
-			String[] arr = currentQuestion.getContent().replaceAll("\n", "")
-					.replaceAll("[A-Z][.．、)]", "@@@").split("@@@");
+			String[] arr = currentQuestion.getContent().replaceAll("\n", "").replaceAll("[A-Z][.．、)]", "@@@").split("@@@");
 			String title = arr[0];
 			//显示图片
-			String zuheName = currentQuestion.getRuleId() + "-"
-					+ currentQuestion.getQid();;
+			String zuheName = currentQuestion.getRuleId() + "-" + currentQuestion.getQid();;
 			showPics(position,title,imageSavePath,zuheName,holder.examImages1,holder.examContent1);
 			// this.examOption1.clearCheck();
 			if (holder.examOption1.getChildCount() > arr.length - 1) {
-				for (int j = arr.length - 1; j < holder.examOption1
-						.getChildCount(); j++) {
+				for (int j = arr.length - 1; j < holder.examOption1.getChildCount(); j++) {
 					holder.examOption1.removeViewAt(j);
 				}
 			}
@@ -152,39 +143,31 @@ public class QuestionAdapter extends BaseAdapter{
 				}
 				rb = (RadioButton) holder.examOption1.getChildAt(i - 1);
 				rb.setText((char) (64 + i) + "．" + arr[i]);
-				if (answer != null
-						&& answer.indexOf(String.valueOf((char) (64 + i))) != -1) {
+				if (answer != null && answer.indexOf(String.valueOf((char) (64 + i))) != -1) {
 					rb.setChecked(true);
 				}
 			}
-			holder.examOption1
-					.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-						@Override
-						public void onCheckedChanged(RadioGroup group,
-								int checkedId) {
-							// TODO Auto-generated method stub
-							int id = checkedId;
-							if (id == -1)
-								return;
-							activity.saveChoiceAnswer(((char) (64 + id)) + "");
-						}
-					});
+			holder.examOption1.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(RadioGroup group, int checkedId) {
+						int id = checkedId;
+						if (id == -1) return;
+						activity.saveChoiceAnswer(((char) (64 + id)) + "");
+					}
+			});
 		} else if ("多选题".equals(type)) {
 			holder.modeLayout1.setVisibility(8);
 			holder.modeLayout2.setVisibility(0);
 			holder.modeLayout3.setVisibility(8);
 			holder.modeLayout4.setVisibility(8);
-			String[] arr = currentQuestion.getContent().replaceAll("\n", "")
-					.replaceAll("[A-Z][.．、)]", "@@@").split("@@@");
+			String[] arr = currentQuestion.getContent().replaceAll("\n", "").replaceAll("[A-Z][.．、)]", "@@@").split("@@@");
 			String title = arr[0];
 			//显示图片
-			String zuheName = currentQuestion.getRuleId() + "-"
-					+ currentQuestion.getQid();;
+			String zuheName = currentQuestion.getRuleId() + "-" + currentQuestion.getQid();;
 			showPics(position,title,imageSavePath,zuheName,holder.examImages2,holder.examContent2);
 			//显示选项
 			if (holder.examOption2.getChildCount() > arr.length - 1) {
-				for (int j = arr.length - 1; j < holder.examOption2
-						.getChildCount(); j++) {
+				for (int j = arr.length - 1; j < holder.examOption2.getChildCount(); j++) {
 					holder.examOption2.removeViewAt(j);
 				}
 			}
@@ -201,15 +184,12 @@ public class QuestionAdapter extends BaseAdapter{
 				}
 				cb = (MyCheckBox) holder.examOption2.getChildAt(i - 1);
 				cb.setText((char) (64 + i) + "．" + arr[i]);
-				if (answer != null
-						&& answer.indexOf(String.valueOf((char) (64 + i))) != -1) {
+				if (answer != null && answer.indexOf(String.valueOf((char) (64 + i))) != -1) {
 					cb.setChecked(true);
 				}
 				cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 					@Override
-					public void onCheckedChanged(CompoundButton buttonView,
-							boolean isChecked) {
-						// TODO Auto-generated method stub
+					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 						MyCheckBox mcb = (MyCheckBox) buttonView;
 						if (mcb.getFlag() == -1) {
 							mcb.setFlag(0);
@@ -230,8 +210,7 @@ public class QuestionAdapter extends BaseAdapter{
 			// 加载图片
 			String title = currentQuestion.getContent();
 			//显示图片
-			String zuheName = currentQuestion.getRuleId() + "-"
-					+ currentQuestion.getQid();;
+			String zuheName = currentQuestion.getRuleId() + "-" + currentQuestion.getQid();;
 			showPics(position,title,imageSavePath,zuheName,holder.examImages1,holder.examContent1);
 			//
 			RadioButton rb_t, rb_f;
@@ -277,20 +256,16 @@ public class QuestionAdapter extends BaseAdapter{
 					rb_f.setChecked(false);
 				}
 			}
-			holder.examOption1
-					.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-						@Override
-						public void onCheckedChanged(RadioGroup group,
-								int checkedId) {
-							// TODO Auto-generated method stub
-							if (checkedId == -1)
-								return;
-							if (checkedId == 1)
-								activity.saveChoiceAnswer("T");
-							else
-								activity.saveChoiceAnswer("F");
-						}
-					});
+			holder.examOption1.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				@Override
+				public void onCheckedChanged(RadioGroup group, int checkedId) {		
+					if (checkedId == -1) return;
+					if (checkedId == 1)
+						activity.saveChoiceAnswer("T");		
+					else		
+						activity.saveChoiceAnswer("F");
+					}	
+			});
 		} else if ("问答题".equals(type)) {
 			holder.modeLayout1.setVisibility(8);
 			holder.modeLayout2.setVisibility(8);
@@ -298,8 +273,7 @@ public class QuestionAdapter extends BaseAdapter{
 			holder.modeLayout4.setVisibility(8);
 			String title = currentQuestion.getContent();
 			//显示图片
-			String zuheName = currentQuestion.getRuleId() + "-"
-					+ currentQuestion.getQid();;
+			String zuheName = currentQuestion.getRuleId() + "-" + currentQuestion.getQid();;
 			showPics(position,title,imageSavePath,zuheName,holder.examImages3,holder.examContent3);
 			if (answer != null) {
 				holder.answerEditText.setText(answer);
@@ -308,7 +282,6 @@ public class QuestionAdapter extends BaseAdapter{
 			holder.submitExamBtn.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
 					String txtAnswer = holder.answerEditText.getText().toString();
 					activity.saveTextAnswer(txtAnswer);
 				}
@@ -319,22 +292,17 @@ public class QuestionAdapter extends BaseAdapter{
 			holder.myAnswerTextView.setText(answer);
 			holder.sysAnswerTextView.setText(trueAnswer);
 			holder.analysisTextView.setText(currentQuestion.getAnalysis());
-			if("问答题".equals(type))
-			{
+			if("问答题".equals(type)){
 				holder.answerResultImg.setVisibility(View.GONE);
-			}else
-			{
+			}else {
 				holder.answerResultImg.setVisibility(View.VISIBLE);
-			if(trueAnswer.equals(answer))
-			{
-				holder.answerResultImg.setImageResource(R.drawable.correct_answer_pto);
-			}else if(answer!=null&&!"".equals(answer)&&isContain(trueAnswer,answer))
-			{
-				holder.answerResultImg.setImageResource(R.drawable.halfcorrect_pto);
-			}else
-			{
-				holder.answerResultImg.setImageResource(R.drawable.wrong_answer_pto);
-			}
+				if(trueAnswer.equals(answer)) {
+					holder.answerResultImg.setImageResource(R.drawable.correct_answer_pto);
+				}else if(answer!=null&&!"".equals(answer)&&isContain(trueAnswer,answer)) {
+					holder.answerResultImg.setImageResource(R.drawable.halfcorrect_pto);
+				}else {
+					holder.answerResultImg.setImageResource(R.drawable.wrong_answer_pto);
+				}
 			}
 		}
 		return v;
@@ -366,39 +334,37 @@ public class QuestionAdapter extends BaseAdapter{
 		return flag;
 	}
 	
-	
 	// 显示题目中的图片
-		private void showPics(int questionCursor,String title, String imageSavePath, String zuheName,
-				LinearLayout examImages, TextView examContent) {
-			if (title.contains("<IMG ")) // 包含图片
-			{
-				// String s = currentRule.getRuleId()+"-"+currentQuestion.getQid();
-				// 先去sd中找,找到就显示,找不到先下载再显示
-				File dir = new File(imageSavePath);
-				if (dir.exists()) {
-					// dir.mkdirs();
-					File[] files = dir.listFiles();
-					int count = files.length;
-					for (File f : files) {
-						if (f.getName().contains(zuheName)) {
-							ImageView img = new ImageView(context);
-							img.setImageURI(Uri.parse(f.getPath()));
-							examImages.addView(img);
-							count--;
-						}
+	private void showPics(int questionCursor,String title, String imageSavePath, String zuheName, LinearLayout examImages, TextView examContent) {
+		if (title.contains("<IMG ")) // 包含图片
+		{
+			// String s = currentRule.getRuleId()+"-"+currentQuestion.getQid();
+			// 先去sd中找,找到就显示,找不到先下载再显示
+			File dir = new File(imageSavePath);
+			if (dir.exists()) {
+				// dir.mkdirs();
+				File[] files = dir.listFiles();
+				int count = files.length;
+				for (File f : files) {
+					if (f.getName().contains(zuheName)) {
+						ImageView img = new ImageView(context);
+						img.setImageURI(Uri.parse(f.getPath()));
+						examImages.addView(img);
+						count--;
 					}
-					if (count == files.length) // 没有图片,没考虑多图片没有加载完全的情况
-					{
-						String[] imageUrls = parseAddress(title);
-						for (int i = 0; i < imageUrls.length; i++) {
-							String url = imageUrls[i];
-							if ("".equals(url) || url == null) {
-								continue;
-							}
-							new GetImageTask(zuheName + "-" + i,examImages).execute(url);
+				}
+				if (count == files.length) // 没有图片,没考虑多图片没有加载完全的情况
+				{
+					String[] imageUrls = parseAddress(title);
+					for (int i = 0; i < imageUrls.length; i++) {
+						String url = imageUrls[i];
+						if ("".equals(url) || url == null) {
+							continue;
 						}
+						new GetImageTask(zuheName + "-" + i,examImages).execute(url);
 					}
-				} else {
+				}	
+			} else {
 					dir.mkdirs();
 					String[] imageUrls = parseAddress(title);
 					for (int i = 0; i < imageUrls.length; i++) {
@@ -409,10 +375,10 @@ public class QuestionAdapter extends BaseAdapter{
 						new GetImageTask(zuheName + "-" + i,examImages).execute(url);
 					}
 				}
-				examContent.setText(questionCursor + 1 + "、"
-						+ title.replaceAll("<IMG[\\S\\s]+>", ""));
-			} else
+				examContent.setText(questionCursor + 1 + "、" + title.replaceAll("<IMG[\\S\\s]+>", ""));
+			} else{
 				examContent.setText(questionCursor + 1 + "、" + title);
+			}
 		}
 		// 解析图片下载地址
 		private String[] parseAddress(String address) {
@@ -438,20 +404,18 @@ public class QuestionAdapter extends BaseAdapter{
 		private class GetImageTask extends AsyncTask<String, Void, Bitmap> {
 			private String fileName;
 			private LinearLayout examImages1;
+			
 			public GetImageTask(String fileName,LinearLayout examImages1) {
-				// TODO Auto-generated constructor stub
 				this.fileName = fileName;
 				this.examImages1 = examImages1;
 			}
 
 			@Override
 			protected Bitmap doInBackground(String... params) {
-				// TODO Auto-generated method stub
 				URL url;
-				byte[] b = null;
+				//byte[] b = null;
 				try {
-					fileName = fileName
-							+ params[0].substring(params[0].lastIndexOf("."));
+					fileName = fileName + params[0].substring(params[0].lastIndexOf("."));
 					url = new URL(params[0]); // 设置URL
 					HttpURLConnection con;
 					con = (HttpURLConnection) url.openConnection(); // 打开连接
@@ -468,8 +432,7 @@ public class QuestionAdapter extends BaseAdapter{
 					byte[] data = out.toByteArray();
 					out.close(); // 关闭内存输出流
 					// 二进制数据生成位图
-					Bitmap bit = BitmapFactory
-							.decodeByteArray(data, 0, data.length);
+					Bitmap bit = BitmapFactory.decodeByteArray(data, 0, data.length);
 					return bit;
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -479,17 +442,13 @@ public class QuestionAdapter extends BaseAdapter{
 
 			@Override
 			protected void onPostExecute(Bitmap result) {
-				// TODO Auto-generated method stub
-				if (result == null) {
-					return;
-				}
+				if (result == null)  return;
 				ImageView img = new ImageView(context);
 				img.setScaleType(ImageView.ScaleType.FIT_START);
 				examImages1.addView(img);
 				try {
 					img.setImageURI(Uri.parse(saveFile(result, fileName)));
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				super.onPostExecute(result);
@@ -498,8 +457,7 @@ public class QuestionAdapter extends BaseAdapter{
 			public String saveFile(Bitmap bm, String fileName) throws IOException {
 				String filePath = imageSavePath + File.separator + fileName;
 				File myCaptureFile = new File(filePath);
-				BufferedOutputStream bos = new BufferedOutputStream(
-						new FileOutputStream(myCaptureFile));
+				BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(myCaptureFile));
 				bm.compress(Bitmap.CompressFormat.JPEG, 80, bos);
 				bm.recycle();
 				bos.flush();
@@ -509,11 +467,9 @@ public class QuestionAdapter extends BaseAdapter{
 		}
 		public void showAnswer()
 		{
-			if(holder.examAnswerLayout.getVisibility()==View.GONE)
-			{
+			if(holder.examAnswerLayout.getVisibility()==View.GONE) {
 				holder.examAnswerLayout.setVisibility(View.VISIBLE);
-			}else
-			{
+			}else {
 				holder.examAnswerLayout.setVisibility(View.GONE);
 			}
 		}

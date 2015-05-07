@@ -23,8 +23,6 @@ import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Handler;
-import android.os.Message;
 import android.telephony.TelephonyManager;
 
 import com.youeclass.entity.User;
@@ -87,15 +85,15 @@ public class AppContext extends Application {
 
 	private String saveImagePath;// 保存图片路径
 
-	private Handler unLoginHandler = new Handler() {
-		public void handleMessage(Message msg) {
-//			if (msg.what == 1) {
-//				UIHelper.ToastMessage(AppContext.this,
-//						getString(R.string.msg_login_error));
-//				UIHelper.showLoginDialog(AppContext.this);
-//			}
-		}
-	};
+//	private Handler unLoginHandler = new Handler() {
+//		public void handleMessage(Message msg) {
+////			if (msg.what == 1) {
+////				UIHelper.ToastMessage(AppContext.this,
+////						getString(R.string.msg_login_error));
+////				UIHelper.showLoginDialog(AppContext.this);
+////			}
+//		}
+//	};
 	
 	@Override
 	public void onCreate() {
@@ -113,8 +111,7 @@ public class AppContext extends Application {
 		// 设置保存图片的路径
 		saveImagePath = getProperty(AppConfig.SAVE_IMAGE_PATH);
 		if (StringUtils.isEmpty(saveImagePath)) {
-			setProperty(AppConfig.SAVE_IMAGE_PATH,
-					AppConfig.DEFAULT_SAVE_IMAGE_PATH);
+			setProperty(AppConfig.SAVE_IMAGE_PATH, AppConfig.DEFAULT_SAVE_IMAGE_PATH);
 			saveImagePath = AppConfig.DEFAULT_SAVE_IMAGE_PATH;
 		}
 	}
@@ -175,7 +172,7 @@ public class AppContext extends Application {
 		if (nType == ConnectivityManager.TYPE_MOBILE) {
 			String extraInfo = networkInfo.getExtraInfo();
 			if (!StringUtils.isEmpty(extraInfo)) {
-				if (extraInfo.toLowerCase().equals("cmnet")) {
+				if (extraInfo.equalsIgnoreCase("cmnet")) {
 					netType = NETTYPE_CMNET;
 				} else {
 					netType = NETTYPE_CMWAP;
@@ -287,12 +284,12 @@ public class AppContext extends Application {
 		this.username = this.nickname = null;
 	}
 
-	/**
-	 * 未登录或修改密码后的处理
-	 */
-	public Handler getUnLoginHandler() {
-		return this.unLoginHandler;
-	}
+//	/**
+//	 * 未登录或修改密码后的处理
+//	 */
+//	public Handler getUnLoginHandler() {
+//		return this.unLoginHandler;
+//	}
 
 	//
 	// /**
@@ -332,14 +329,14 @@ public class AppContext extends Application {
 		this.loginState = LOGINED;
 		this.username = user.getUsername();
 		setProperties(new Properties() {
+			private static final long serialVersionUID = 1L;
 			{
 				setProperty("user.uid", String.valueOf(user.getUid()));
 				// setProperty("user.name", user.getNickname());
 				// setProperty("user.face",
 				// FileUtils.getFileName(user.getFace()));// 用户头像-文件名
 				setProperty("user.account", user.getUsername());
-				setProperty("user.pwd",
-						CyptoUtils.encode("youeclass", user.getPassword()));
+				setProperty("user.pwd", CyptoUtils.encode("youeclass", user.getPassword()));
 				// setProperty("user.location", user.getLocation());
 				// setProperty("user.deviceid", user.getDeviceId());
 				// setProperty("user.isRememberMe",
@@ -515,15 +512,15 @@ public class AppContext extends Application {
 		removeProperty(AppConfig.CONF_COOKIE);
 	}
 
-	/**
-	 * 判断缓存数据是否可读
-	 * 
-	 * @param cachefile
-	 * @return
-	 */
-	private boolean isReadDataCache(String cachefile) {
-		return readObject(cachefile) != null;
-	}
+//	/**
+//	 * 判断缓存数据是否可读
+//	 * 
+//	 * @param cachefile
+//	 * @return
+//	 */
+//	private boolean isReadDataCache(String cachefile) {
+//		return readObject(cachefile) != null;
+//	}
 
 	/**
 	 * 判断缓存是否存在
@@ -534,8 +531,7 @@ public class AppContext extends Application {
 	private boolean isExistDataCache(String cachefile) {
 		boolean exist = false;
 		File data = getFileStreamPath(cachefile);
-		if (data.exists())
-			exist = true;
+		if (data.exists()) exist = true;
 		return exist;
 	}
 
@@ -548,8 +544,7 @@ public class AppContext extends Application {
 	public boolean isCacheDataFailure(String cachefile) {
 		boolean failure = false;
 		File data = getFileStreamPath(cachefile);
-		if (data.exists()
-				&& (System.currentTimeMillis() - data.lastModified()) > CACHE_TIME)
+		if (data.exists() && (System.currentTimeMillis() - data.lastModified()) > CACHE_TIME)
 			failure = true;
 		else if (!data.exists())
 			failure = true;

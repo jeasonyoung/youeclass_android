@@ -4,7 +4,7 @@
     android:versionCode="2"
     android:versionName="1.1.1" >
 
-    <uses-sdk android:minSdkVersion="8" />
+    <uses-sdk android:minSdkVersion="13"  android:targetSdkVersion="22"/>
 
     <uses-permission android:name="android.permission.INTERNET" >
     </uses-permission>
@@ -110,18 +110,19 @@
             android:name="com.youeclass.MyCourseDetailActivity"
             android:screenOrientation="portrait" >
         </activity>
-        <activity
+        <activity android:name="com.youeclass.VideoPlayActivity" android:screenOrientation="landscape"/>
+        <!-- <activity
             android:name="com.youeclass.VideoActivity"
             android:screenOrientation="landscape" >
-        </activity>
-        <activity
+        </activity> -->
+       <!--  <activity
             android:name="com.youeclass.VideoActivity2"
             android:screenOrientation="landscape" >
-        </activity>
-        <activity
+        </activity> -->
+        <!-- <activity
             android:name="com.youeclass.VideoActivity3"
             android:screenOrientation="landscape" >
-        </activity>
+        </activity> -->
         <activity
             android:name="com.youeclass.DownloadActivity"
             android:screenOrientation="portrait" >

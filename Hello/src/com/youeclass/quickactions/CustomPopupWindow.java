@@ -1,5 +1,6 @@
 package com.youeclass.quickactions;
 
+import android.annotation.SuppressLint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -18,6 +19,7 @@ public class CustomPopupWindow
   protected final PopupWindow window;
   protected final WindowManager windowManager;
 
+  @SuppressLint("ClickableViewAccessibility") 
   public CustomPopupWindow(View paramView)
   {
     this.anchor = paramView;
@@ -51,24 +53,22 @@ public class CustomPopupWindow
   {
   }
 
-  protected void preShow()
-  {
-    if (this.root == null)
-      throw new IllegalStateException("setContentView was not called with a view to display.");
-    onShow();
-    if (this.background == null)
-      this.window.setBackgroundDrawable(new BitmapDrawable());
-    while (true)
-    {
-      this.window.setWidth(-2);
-      this.window.setHeight(-2);
-      this.window.setTouchable(true);
-      this.window.setFocusable(true);
-      this.window.setOutsideTouchable(true);
-      this.window.setContentView(this.root);
-      return;
-//      this.window.setBackgroundDrawable(this.background);
-    }
+  @SuppressWarnings("deprecation")
+  protected void preShow(){
+	    if (this.root == null) throw new IllegalStateException("setContentView was not called with a view to display.");
+	    onShow();
+	    if (this.background == null) this.window.setBackgroundDrawable(new BitmapDrawable());
+	    while (true)
+	    {
+	      this.window.setWidth(-2);
+	      this.window.setHeight(-2);
+	      this.window.setTouchable(true);
+	      this.window.setFocusable(true);
+	      this.window.setOutsideTouchable(true);
+	      this.window.setContentView(this.root);
+	      return;
+	//      this.window.setBackgroundDrawable(this.background);
+	    }  
   }
 
   public void setBackgroundDrawable(Drawable paramDrawable)
@@ -109,6 +109,7 @@ public class CustomPopupWindow
     showLikeQuickAction(0, 0);
   }
 
+  @SuppressWarnings("deprecation")
   public void showLikeQuickAction(int paramInt1, int paramInt2)
   {
     preShow();

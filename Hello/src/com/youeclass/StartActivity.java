@@ -49,9 +49,9 @@ public class StartActivity extends Activity{
 	private SharedPreferences settingfile;
 	private Handler handler;
 	private AppContext appContext;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		com.umeng.common.Log.LOG = true;
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_start);
@@ -75,7 +75,6 @@ public class StartActivity extends Activity{
 						int oldVersion = getVersionCode();	//获取旧的版本号
 						checkup.execute(Constant.DOMAIN_URL+"mobile/checkup?appType=1&oldVersion="+oldVersion);
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 						handler.sendEmptyMessage(-1);
 					}
@@ -94,11 +93,7 @@ public class StartActivity extends Activity{
 		}
 	}
 	private void initSetting() {
-		// TODO Auto-generated method stub
-		if(this.settingfile.contains("IsFirst"))
-		{
-			return;
-		}
+		if(this.settingfile.contains("IsFirst")) return;
 		SharedPreferences.Editor editor = this.settingfile.edit();
 		editor.putString("IsFirst", "No");
 		editor.putBoolean("setDownIsUse3G", true);
@@ -111,42 +106,34 @@ public class StartActivity extends Activity{
 		editor.commit();
 	}
 	//获取当前应用的版本号
-	private int getVersionCode() throws Exception
-	   {
-	           // 获取packagemanager的实例
-	           PackageManager packageManager = getPackageManager();
-	           // getPackageName()是你当前类的包名，0代表是获取版本信息
-	           PackageInfo packInfo = packageManager.getPackageInfo(getPackageName(),0);
-	           int versionCode = packInfo.versionCode;
-	           return versionCode;
-	   }
+	private int getVersionCode() throws Exception {
+           // 获取packagemanager的实例
+           PackageManager packageManager = getPackageManager();
+           // getPackageName()是你当前类的包名，0代表是获取版本信息
+           PackageInfo packInfo = packageManager.getPackageInfo(getPackageName(),0);
+           int versionCode = packInfo.versionCode;
+           return versionCode;
+	}
 	//判断是否需要进行更新
 	private boolean isNeedCheck()
 	{
 		int checkMode = settingfile.getInt("setCheckUpdateMode", 0);
 		long lastTime = settingfile.getLong("lastCheckUpdateTime", 0);
 		long now = System.currentTimeMillis();
-		if(checkMode==0)
-		{
+		if(checkMode==0) {
 			return true;
-		}else if(checkMode==1)
-		{
-			if(now - lastTime >(24*60*60*1000))
-			{
+		}else if(checkMode==1) {
+			if(now - lastTime >(24*60*60*1000)) {
 				return true;
 			}
 			return false;
-		}else if(checkMode==2)
-		{
-			if(now - lastTime >(7*24*60*60*1000))
-			{
+		}else if(checkMode==2) {
+			if(now - lastTime >(7*24*60*60*1000)) {
 				return true;
 			}
 			return false;
-		}else if(checkMode==3)
-		{
-			if(now - lastTime >(30*24*60*60*1000))
-			{
+		}else if(checkMode==3) {
+			if(now - lastTime >(30*24*60*60*1000)) {
 				return true;
 			}
 			return false;
@@ -157,7 +144,6 @@ public class StartActivity extends Activity{
 	{
 		@Override
 		protected void onPreExecute() {
-			// TODO Auto-generated method stub
 			SharedPreferences.Editor editor = settingfile.edit();
 			editor.remove("lastCheckUpdateTime");
 			editor.putLong("lastCheckUpdateTime", System.currentTimeMillis());
@@ -167,14 +153,12 @@ public class StartActivity extends Activity{
 		//检查，返回值就是结束时的结果参数
 		@Override
 		protected String doInBackground(String... params) {
-			// TODO Auto-generated method stub
 			String result = null;
 			HttpURLConnection conn = null;
 			try{
 				Thread.sleep(1000);
 				result = HttpConnectUtil.httpGetRequest(StartActivity.this, params[0]);
-			}catch(Exception e)
-			{
+			}catch(Exception e) {
 				//各种错误
 //				e.printStackTrace();
 				return null;
@@ -190,7 +174,6 @@ public class StartActivity extends Activity{
 		//结束检查
 		@Override
 		protected void onPostExecute(String result) {
-			// TODO Auto-generated method stub
 			super.onPostExecute(result);
 			if(result==null||"".equals(result))
 			{
@@ -214,9 +197,9 @@ public class StartActivity extends Activity{
 					.setTitle("更新检测")
 					.setMessage("检测到最新版本：" + version + "\n" + "更新内容：" + "\n" + content)
 					.setPositiveButton("更新", new OnClickListener() {
+						@SuppressWarnings("deprecation")
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							// TODO Auto-generated method stub
 							dialog.cancel();
 							//开启下载服务，以及进度对话框，进行下载
 							//to do something 
@@ -234,7 +217,6 @@ public class StartActivity extends Activity{
 						    progressDialog.setButton("取消", new OnClickListener() {	//取消下载
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
-									// TODO Auto-generated method stub
 									//取消
 									dialog.cancel();
 									isCanceled =true;
@@ -250,11 +232,7 @@ public class StartActivity extends Activity{
 						    progressDialog.setOnKeyListener(new OnKeyListener() {
 								@Override
 								public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-									// TODO Auto-generated method stub
-									if(event.getKeyCode()==4)
-									{
-										return true;
-									}
+									if(event.getKeyCode()==4)return true; 
 									return false;
 								}
 							});
@@ -263,7 +241,6 @@ public class StartActivity extends Activity{
 					.setNegativeButton("取消", new OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							// TODO Auto-generated method stub
 							dialog.dismiss();
 						    Intent localIntent = new Intent(StartActivity.this, LoginActivity.class);
 						    StartActivity.this.startActivity(localIntent);
@@ -274,13 +251,9 @@ public class StartActivity extends Activity{
 			        //监听按键事件,如果按取消什么都不做,相当于对这个对话框禁用了返回键
 			        alertDialog.setOnKeyListener(new OnKeyListener() {
 						@Override
-						public boolean onKey(DialogInterface dialog,
-								int keyCode, KeyEvent event) {
-							// TODO Auto-generated method stub
-							if(event.getKeyCode()==KeyEvent.KEYCODE_BACK&&event.getRepeatCount()==0)
-							{
-								return true;
-							}
+						public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+							if(event.getKeyCode()==KeyEvent.KEYCODE_BACK&&event.getRepeatCount()==0) 
+								return true; 
 							return false;
 						}
 					});
@@ -289,7 +262,6 @@ public class StartActivity extends Activity{
 					gotoLogin();
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();	//解析出错
 				gotoLogin();
 			}
@@ -363,15 +335,12 @@ public class StartActivity extends Activity{
 	    }
 	    @Override
 	    protected void onCancelled() {
-	    	// TODO Auto-generated method stub
 	    	super.onCancelled();
-	    	
 	    }
 	}
 	//检查网络
 	private boolean checkNetWork() {
-		ConnectivityManager manager = (ConnectivityManager) this
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager manager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo info = manager.getActiveNetworkInfo();
 		if (info == null || !info.isConnected()) {
 			Toast.makeText(this,"请检查网络", Toast.LENGTH_SHORT).show();
@@ -381,31 +350,26 @@ public class StartActivity extends Activity{
 	}
 	public static void createFile(String paramString)
 	  {
-		File a = null;
-		File b = null;
+		File a = null, b = null;
 	    if ("mounted".equals(Environment.getExternalStorageState()))
 	    {
 	      a = new File(Environment.getExternalStorageDirectory() + "/" + "Eschool/");
-	      if (!a.exists())
-		        a.mkdirs();
+	      if (!a.exists()) a.mkdirs();
 	      b = new File(Environment.getExternalStorageDirectory() + "/Eschool/" + paramString + ".apk");
 	      if (!b.exists())
 	      {
-	    	  try
-	  	    {
-	  	      b.createNewFile();
-	  	      return;
-	  	    }
-	  	    catch (IOException localIOException)
-	  	    {
-	  	      localIOException.printStackTrace();
-	  	    }
+	    	  try{
+	    		  b.createNewFile();
+	    		  return;
+	    	  }catch (IOException localIOException){
+	    		  localIOException.printStackTrace();
+	    	  }
 	      }
 	    }
-	  }
+	 }
+	
 	@Override
 	protected void onRestart() {
-		// TODO Auto-generated method stub
 		super.onRestart();
 		gotoLogin();
 	}
@@ -425,16 +389,9 @@ public class StartActivity extends Activity{
 	}
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
-		if(alertDialog!=null)
-		{
-			alertDialog.dismiss();
-		}
-		if(progressDialog!=null)
-		{
-			progressDialog.dismiss();
-		}
+		if(alertDialog!=null) alertDialog.dismiss(); 
+		if(progressDialog!=null) progressDialog.dismiss();
 	}
 	@Override
 	protected void onPause() {
@@ -443,10 +400,8 @@ public class StartActivity extends Activity{
 	};
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		MobclickAgent.onResume(this);
-		
 	}
 	static class MyHandler extends Handler
 	{
@@ -459,15 +414,15 @@ public class StartActivity extends Activity{
 			StartActivity login = mActivity.get();
 			switch(msg.what)
 			{
-			case 1:
-				login.gotoLogin();
-				break;
-			case -1:
-				login.gotoLogin();
-				break;
-			case 2:
-				login.gotoGuide();
-				break;
+				case 1:
+					login.gotoLogin();
+					break;
+				case -1:
+					login.gotoLogin();
+					break;
+				case 2:
+					login.gotoGuide();
+					break;
 			}
 		}
 	}

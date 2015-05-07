@@ -2,6 +2,7 @@ package com.youeclass;
 
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
@@ -30,7 +31,7 @@ public class QuickActionPopupWindow extends PopupWindow {
 
 	private ImageView mArrowUp;
 	private HorizontalScrollView scroll;
-	private ImageView mArrowDown;
+	//private ImageView mArrowDown;
 
 	private Animation mTrackAnim;
 
@@ -63,7 +64,6 @@ public class QuickActionPopupWindow extends PopupWindow {
 	 * @param context
 	 */
 	public QuickActionPopupWindow(Context context) {
-		// TODO Auto-generated constructor stub
 		super(context);
 		this.window = new PopupWindow(context);
 		/**
@@ -71,7 +71,7 @@ public class QuickActionPopupWindow extends PopupWindow {
 		 */
 		window.setTouchInterceptor(new OnTouchListener() {
 
-			@Override
+			@SuppressLint("ClickableViewAccessibility") @Override
 			public boolean onTouch(View view, MotionEvent event) {
 
 				if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
@@ -86,23 +86,16 @@ public class QuickActionPopupWindow extends PopupWindow {
 			}
 		});
 		this.context = context;
-		windowManager = (WindowManager) context
-				.getSystemService(Context.WINDOW_SERVICE);
-
+		windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 		actionItems = new ArrayList<ActionItem>();
-
-		inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
+		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		root = (ViewGroup) inflater.inflate(R.layout.quickbar, null);
-
 		// 上下两个箭头
-		mArrowDown = (ImageView) root.findViewById(R.id.arrow_down);
+		//mArrowDown = (ImageView) root.findViewById(R.id.arrow_down);
 		mArrowUp = (ImageView) root.findViewById(R.id.arrow_up);
 		scroll = (HorizontalScrollView) root.findViewById(R.id.scroll);
 		setContentView(root);
 		mTrackAnim = AnimationUtils.loadAnimation(context, R.anim.rail);
-
 		/**
 		 * 设置加速效果
 		 */
@@ -114,72 +107,47 @@ public class QuickActionPopupWindow extends PopupWindow {
 				return 1.2f - inner * inner;
 			}
 		});
-
 		// 这个是弹出窗口内的水平布局
 		mTrack = (ViewGroup) root.findViewById(R.id.tracks);
-
 		animStyle = ANIM_AUTO;// 设置动画风格
-
 		animateTrack = true;
 	}
 	
-	
-	
-	
 	public QuickActionPopupWindow(View anchor) {
-
 		super(anchor);
-
 		this.anchor = anchor;
-
 		this.window = new PopupWindow(anchor.getContext());
-
 		/**
 		 * 在popwindow外点击即关闭该window
 		 */
 		window.setTouchInterceptor(new OnTouchListener() {
-
+			@SuppressLint("ClickableViewAccessibility")
 			@Override
 			public boolean onTouch(View view, MotionEvent event) {
-
 				if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-
 					// 让其消失
 					QuickActionPopupWindow.this.window.dismiss();
-
 					return true;
-
 				}
-
 				return false;
 			}
 		});
-
 		context = anchor.getContext();
-
-		windowManager = (WindowManager) context
-				.getSystemService(Context.WINDOW_SERVICE);
-
+		windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 		actionItems = new ArrayList<ActionItem>();
-
-		inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
+		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		root = (ViewGroup) inflater.inflate(R.layout.quickbar, null);
-
 		// 上下两个箭头
-		mArrowDown = (ImageView) root.findViewById(R.id.arrow_down);
+		//mArrowDown = (ImageView) root.findViewById(R.id.arrow_down);
 		mArrowUp = (ImageView) root.findViewById(R.id.arrow_up);
-
+		
 		setContentView(root);
 
 		mTrackAnim = AnimationUtils.loadAnimation(context, R.anim.rail);
-
 		/**
 		 * 设置加速效果
 		 */
 		mTrackAnim.setInterpolator(new Interpolator() {
-
 			@Override
 			public float getInterpolation(float t) {
 				final float inner = (t * 1.55f) - 1.1f;
@@ -189,11 +157,8 @@ public class QuickActionPopupWindow extends PopupWindow {
 
 		// 这个是弹出窗口内的水平布局
 		mTrack = (ViewGroup) root.findViewById(R.id.tracks);
-
 		animStyle = ANIM_AUTO;// 设置动画风格
-
 		animateTrack = true;
-
 	}
 
 	/**
@@ -226,21 +191,17 @@ public class QuickActionPopupWindow extends PopupWindow {
 	/**
 	 * 弹出窗体
 	 */
+	@SuppressWarnings("deprecation")
 	public void show() {
-
 		preShow();
-
 		int[] location = new int[2];
-
 		// 得到anchor的位置
 		anchor.getLocationOnScreen(location);
 
 		// 以anchor的位置构造一个矩形
-		Rect anchorRect = new Rect(location[0], location[1], location[0]
-				+ anchor.getWidth(), location[1] + anchor.getHeight());
+		Rect anchorRect = new Rect(location[0], location[1], location[0] + anchor.getWidth(), location[1] + anchor.getHeight());
 
-		root.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT));
+		root.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		root.measure(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
 		int rootWidth = root.getMeasuredWidth();
@@ -277,6 +238,7 @@ public class QuickActionPopupWindow extends PopupWindow {
 		}
 
 	}
+	@SuppressWarnings("deprecation")
 	public void show(View v) {
 
 		preShow();
@@ -285,8 +247,7 @@ public class QuickActionPopupWindow extends PopupWindow {
 		v.getLocationOnScreen(location);
 
 		// 以anchor的位置构造一个矩形
-		Rect anchorRect = new Rect(location[0], location[1], location[0]
-				+ v.getWidth(), location[1] + v.getHeight());
+		Rect anchorRect = new Rect(location[0], location[1], location[0] + v.getWidth(), location[1] + v.getHeight());
 
 		root.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT));
@@ -329,13 +290,12 @@ public class QuickActionPopupWindow extends PopupWindow {
 		if (animateTrack) {
 			mTrack.startAnimation(mTrackAnim);
 		}
-
 	}
 	/**
 	 * 预处理窗口
 	 */
+	@SuppressWarnings("deprecation")
 	protected void preShow() {
-
 		if (root == null) {
 			throw new IllegalStateException("需要为弹窗设置布局");
 		}
@@ -357,9 +317,7 @@ public class QuickActionPopupWindow extends PopupWindow {
 
 		// 指定布局
 		window.setContentView(root);
-
 	}
-
 	/**
 	 * 设置动画风格
 	 * 
@@ -367,63 +325,40 @@ public class QuickActionPopupWindow extends PopupWindow {
 	 * @param requestedX
 	 * @param onTop
 	 */
-	private void setAnimationStyle(int screenWidth, int requestedX,
-			boolean onTop) {
-
+	private void setAnimationStyle(int screenWidth, int requestedX, boolean onTop) {
 		int arrowPos = requestedX - mArrowUp.getMeasuredWidth() / 2;
 		switch (animStyle) {
-		case ANIM_GROW_FROM_LEFT:
-
-			window.setAnimationStyle((onTop) ? R.style.Animations_PopDownMenu_Left
-					: R.style.Animations_PopDownMenu_Left);
-
-			break;
-
-		case ANIM_GROW_FROM_RIGHT:
-
-			window.setAnimationStyle((onTop) ? R.style.Animations_PopDownMenu_Right
-					: R.style.Animations_PopDownMenu_Right);
-
-			break;
-
-		case ANIM_GROW_FROM_CENTER:
-			window.setAnimationStyle((onTop) ? R.style.Animations_PopDownMenu_Center
-					: R.style.Animations_PopDownMenu_Center);
-
-			break;
-
-		case ANIM_AUTO:
-
-			if (arrowPos < screenWidth / 4) {
-				window.setAnimationStyle((onTop) ? R.style.Animations_PopDownMenu_Left
-						: R.style.Animations_PopDownMenu_Left);
-
-			} else if (arrowPos > screenWidth / 4
-					&& arrowPos < 3 * (screenWidth / 4)) {
-				window.setAnimationStyle((onTop) ? R.style.Animations_PopDownMenu_Center
-						: R.style.Animations_PopDownMenu_Center);
-			} else {
-				window.setAnimationStyle((onTop) ? R.style.Animations_PopDownMenu_Right
-						: R.style.Animations_PopDownMenu_Right);
-			}
-
-			break;
-
+			case ANIM_GROW_FROM_LEFT:
+				window.setAnimationStyle((onTop) ? R.style.Animations_PopDownMenu_Left : R.style.Animations_PopDownMenu_Left);
+				break;
+	
+			case ANIM_GROW_FROM_RIGHT:
+				window.setAnimationStyle((onTop) ? R.style.Animations_PopDownMenu_Right : R.style.Animations_PopDownMenu_Right);
+				break;
+	
+			case ANIM_GROW_FROM_CENTER:
+				window.setAnimationStyle((onTop) ? R.style.Animations_PopDownMenu_Center : R.style.Animations_PopDownMenu_Center);
+				break;
+	
+			case ANIM_AUTO:
+				if (arrowPos < screenWidth / 4) {
+					window.setAnimationStyle((onTop) ? R.style.Animations_PopDownMenu_Left : R.style.Animations_PopDownMenu_Left);
+				} else if (arrowPos > screenWidth / 4 && arrowPos < 3 * (screenWidth / 4)) {
+					window.setAnimationStyle((onTop) ? R.style.Animations_PopDownMenu_Center : R.style.Animations_PopDownMenu_Center);
+				} else {
+					window.setAnimationStyle((onTop) ? R.style.Animations_PopDownMenu_Right : R.style.Animations_PopDownMenu_Right);
+				}
+				break;
 		}
-
 	}
 
 	/**
 	 * 创建Action List
 	 */
 	private void createActionList() {
-
 		View view;
-
 		String title;
-
 		Drawable icon;
-
 		OnClickListener clickListener;
 
 		int index = 1;
@@ -455,25 +390,16 @@ public class QuickActionPopupWindow extends PopupWindow {
 	 * @param listener
 	 * @return
 	 */
-	private View getActionItem(String title, Drawable icon,
-			OnClickListener listener) {
-
+	private View getActionItem(String title, Drawable icon, OnClickListener listener) {
 		// 装载Action布局
-
-		LinearLayout linearLayout = (LinearLayout) inflater.inflate(
-				R.layout.action_item, null);
-
+		LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.action_item, null);
 		ImageView img_icon = (ImageView) linearLayout.findViewById(R.id.icon);
-
 		TextView tv_title = (TextView) linearLayout.findViewById(R.id.title);
-
 		if (icon != null) {
 			img_icon.setImageDrawable(icon);
-
 		} else {
 			img_icon.setVisibility(View.GONE);
 		}
-
 		if (tv_title != null) {
 			tv_title.setText(title);
 		} 
@@ -481,37 +407,34 @@ public class QuickActionPopupWindow extends PopupWindow {
 		{
 			linearLayout.setOnClickListener(listener);
 		}
-
 		return linearLayout;
-
 	}
 
-	 /**
-	 * 显示箭头
-	 *
-	 * @param whichArrow箭头资源id
-	 * @param requestedX
-	 * 距离屏幕左边的距离
-	 */
-	 private void showArrow(int whichArrow, int requestedX) {
-	
-	 final View showArrow = (whichArrow == R.id.arrow_up) ? mArrowUp
-	 : mArrowDown;
-	 final View hideArrow = (whichArrow == R.id.arrow_up) ? mArrowDown
-	 : mArrowUp;
-	 final int arrowWidth = mArrowUp.getMeasuredWidth();
-	 showArrow.setVisibility(View.VISIBLE);
-	 ViewGroup.MarginLayoutParams param = (ViewGroup.MarginLayoutParams)
-	 showArrow
-	 .getLayoutParams();
-	 // 以此设置距离左边的距离
-	 param.leftMargin = requestedX - arrowWidth / 2;
-	 hideArrow.setVisibility(View.INVISIBLE);
-	
-	 }
+//	 /**
+//	 * 显示箭头
+//	 *
+//	 * @param whichArrow箭头资源id
+//	 * @param requestedX
+//	 * 距离屏幕左边的距离
+//	 */
+//	 private void showArrow(int whichArrow, int requestedX) {
+//	
+//	 final View showArrow = (whichArrow == R.id.arrow_up) ? mArrowUp
+//	 : mArrowDown;
+//	 final View hideArrow = (whichArrow == R.id.arrow_up) ? mArrowDown
+//	 : mArrowUp;
+//	 final int arrowWidth = mArrowUp.getMeasuredWidth();
+//	 showArrow.setVisibility(View.VISIBLE);
+//	 ViewGroup.MarginLayoutParams param = (ViewGroup.MarginLayoutParams)
+//	 showArrow
+//	 .getLayoutParams();
+//	 // 以此设置距离左边的距离
+//	 param.leftMargin = requestedX - arrowWidth / 2;
+//	 hideArrow.setVisibility(View.INVISIBLE);
+//	
+//	 }
 	 public void dismiss()
 	 {
 		 this.window.dismiss();
 	 }
 }
-

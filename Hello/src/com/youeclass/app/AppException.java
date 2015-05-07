@@ -24,7 +24,7 @@ import com.youeclass.R;
  * @created 2012-3-21
  */
 public class AppException extends Exception{// implements UncaughtExceptionHandler{
-
+	private static final long serialVersionUID = 1L;
 	private final static boolean Debug = false;//是否保存错误日志
 	
 	/** 定义异常类型 */
@@ -40,10 +40,10 @@ public class AppException extends Exception{// implements UncaughtExceptionHandl
 	private int code;
 	
 	/** 系统默认的UncaughtException处理�?*/
-	private Thread.UncaughtExceptionHandler mDefaultHandler;
+	//private Thread.UncaughtExceptionHandler mDefaultHandler;
 	
 	private AppException(){
-		this.mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
+		//this.mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
 	}
 	
 	private AppException(byte type, int code, Exception excp) {
@@ -96,6 +96,7 @@ public class AppException extends Exception{// implements UncaughtExceptionHandl
 	 * 保存异常日志
 	 * @param excp
 	 */
+	@SuppressWarnings("deprecation")
 	public void saveErrorLog(Exception excp) {
 		String errorlog = "errorlog.txt";
 		String savePath = "";

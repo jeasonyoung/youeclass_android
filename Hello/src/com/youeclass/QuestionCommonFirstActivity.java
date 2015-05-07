@@ -20,6 +20,11 @@ import com.youeclass.dao.PaperDao;
 import com.youeclass.entity.ExamQuestion;
 import com.youeclass.entity.QuestionAdapterData;
 
+/**
+ * 问题类。
+ * @author jeasonyoung
+ *
+ */
 public class QuestionCommonFirstActivity extends Activity{
 	private ImageButton returnbtn;
 	private TextView title;
@@ -29,13 +34,16 @@ public class QuestionCommonFirstActivity extends Activity{
 	private LinearLayout nodataLayout;
 	private ArrayList<QuestionAdapterData> data;
 	private String actionName,username;
-	private Class c;
+	private Class<?> c;
 	private int stringResId;
 	private Gson gson;
 	private PaperDao dao;
+	/*
+	 * 重载创建。
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_question_doproblem_record);
 		Intent mIntent = this.getIntent();
@@ -51,10 +59,13 @@ public class QuestionCommonFirstActivity extends Activity{
 		dao = new PaperDao(this);
 		initView();
 	}
+	/*
+	 * 重载开始。
+	 * @see android.app.Activity#onStart()
+	 */
 	@Override
 	protected void onStart() {
-		// TODO Auto-generated method stub
-		initData();
+		this.initData();
 		this.loadingLayout.setVisibility(View.GONE);
 		if(data==null||data.size()==0)
 		{
@@ -65,9 +76,7 @@ public class QuestionCommonFirstActivity extends Activity{
 			this.notebookListView.setAdapter(new QuestionCommonAdapter(this, data));
 			this.notebookListView.setOnItemClickListener(new OnItemClickListener() {
 				@Override
-				public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-						long arg3) {
-					// TODO Auto-generated method stub
+				public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 					QuestionAdapterData qad = data.get(arg2);
 					Intent mIntent = new Intent(QuestionCommonFirstActivity.this,c);//!!!修改class
 					//绑数据
@@ -77,7 +86,6 @@ public class QuestionCommonFirstActivity extends Activity{
 					mIntent.putExtra("action",actionName);
 					mIntent.putExtra("questionListJson", getQuestionListJson(qad.getPaperId(), username, actionName));
 					QuestionCommonFirstActivity.this.startActivity(mIntent);
-					
 				}
 			});
 		}
@@ -86,12 +94,10 @@ public class QuestionCommonFirstActivity extends Activity{
 	private String getQuestionListJson(String paperid,String username,String actionName)
 	{
 		String json = null;
-		if("myErrors".equals(actionName))
-		{
+		if("myErrors".equals(actionName)){
 			ArrayList<ExamQuestion> list = (ArrayList<ExamQuestion>) dao.findQuestionFromErrors(username, paperid);
 			json = gson.toJson(list);
-		}else if("myFavors".equals(actionName))
-		{
+		}else if("myFavors".equals(actionName)){
 			ArrayList<ExamQuestion> list = (ArrayList<ExamQuestion>) dao.findQuestionFromFavors(username, paperid);
 			json = gson.toJson(list);
 		}
@@ -112,16 +118,22 @@ public class QuestionCommonFirstActivity extends Activity{
 		this.returnbtn.setOnClickListener(new ReturnBtnClickListener(this));
 		this.title.setText(stringResId);
 	}
+	/*
+	 * 重载暂停。
+	 * @see android.app.Activity#onPause()
+	 */
 	@Override
 	protected void onPause() {
 		super.onPause();
 		MobclickAgent.onPause(this);
 	};
+	/*
+	 * 重载恢复。
+	 * @see android.app.Activity#onResume()
+	 */
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		MobclickAgent.onResume(this);
-		
 	}
 }

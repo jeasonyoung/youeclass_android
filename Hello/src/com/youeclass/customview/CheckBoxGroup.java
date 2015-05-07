@@ -12,25 +12,24 @@ public class CheckBoxGroup extends LinearLayout{
 	private List<MyCheckBox> checkboxList = new ArrayList<MyCheckBox>();
 	private StringBuffer buf = new StringBuffer();
 	public CheckBoxGroup(Context context) {
-		// TODO Auto-generated constructor stub
 		super(context);
 	}
 	public CheckBoxGroup(Context context, AttributeSet attrs)
 	{
 		super(context,attrs);
 	}
+	@SuppressWarnings("deprecation")
 	@Override
 	public void addView(View child, int index) {
-		// TODO Auto-generated method stub
 		LinearLayout.LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);
 		lp.setMargins(0, 0, 0, 10);
 		child.setLayoutParams(lp);
 		super.addView(child, index);
 		checkboxList.add((MyCheckBox) child);
 	}
+	@SuppressWarnings("deprecation")
 	@Override
 	public void addView(View child) {
-		// TODO Auto-generated method stub
 		LinearLayout.LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1);
 		lp.setMargins(0, 0, 0, 10);
 		child.setLayoutParams(lp);
@@ -54,18 +53,15 @@ public class CheckBoxGroup extends LinearLayout{
 	}
 	@Override
 	public void removeAllViews() {
-		// TODO Auto-generated method stub
 		super.removeAllViews();
 		checkboxList.removeAll(checkboxList);
 	}
 	@Override
 	public void removeViewAt(int index) {
-		// TODO Auto-generated method stub
 		super.removeViewAt(index);
 		checkboxList.remove(index);
 	}
 	public void clearCheck() {
-		// TODO Auto-generated method stub
 		for(MyCheckBox cb: checkboxList)
 		{
 			if(cb.isChecked())

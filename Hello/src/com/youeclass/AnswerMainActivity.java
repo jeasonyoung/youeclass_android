@@ -1,10 +1,9 @@
 package com.youeclass;
 
 import java.util.LinkedList;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
+import android.annotation.SuppressLint;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -20,14 +19,17 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
 import com.umeng.analytics.MobclickAgent;
 import com.youeclass.adapter.ProblemListAdapter;
 import com.youeclass.entity.Problem;
 import com.youeclass.util.Constant;
 import com.youeclass.util.HttpConnectUtil;
- 
+/**
+ * 答案主界面
+ * @author jeasonyoung
+ *
+ */
 public class AnswerMainActivity extends ListActivity implements OnClickListener{   
 	private ImageButton returnbtn,refreshbtn;
 	private LinearLayout progressLayout,contentLayout;
@@ -187,6 +189,7 @@ public class AnswerMainActivity extends ListActivity implements OnClickListener{
     		return;
     	}
     }
+    @SuppressLint("HandlerLeak") 
     private void footerClick()
 	{
 		//已加载全部
@@ -197,6 +200,7 @@ public class AnswerMainActivity extends ListActivity implements OnClickListener{
 		lvNews_foot_more.setText("玩命加载中");
 		lvNews_foot_progress.setVisibility(View.VISIBLE);
 		final Handler handler = new Handler(){
+			@SuppressWarnings("unchecked")
 			@Override
 			public void handleMessage(Message msg) {
 				// TODO Auto-generated method stub

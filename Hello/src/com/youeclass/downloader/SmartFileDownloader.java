@@ -273,9 +273,10 @@ public class SmartFileDownloader {
 						}
 					}
 				}
-				if (listener != null)
+				if (listener != null){
 					System.out.println(this.downloadSize);
 					listener.onDownloadSize(this.downloadSize);
+				}
 			}
 			if(!notFinish)	//已经下载完
 			{

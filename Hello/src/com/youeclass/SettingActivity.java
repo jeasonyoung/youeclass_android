@@ -59,9 +59,9 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 	private boolean isCanceled=false;
 	private AsyncTask<String,Integer,String> downloader = null;
 	private static String[] data = new String[]{"每次启动","一天一次","一星期一次","一个月一次"};
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_setting);
 		this.returnBtn = (ImageButton) this.findViewById(R.id.returnbtn);
@@ -105,8 +105,8 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 		this.isUse3GDown.setOnCheckedChangeListener(this);
 		this.isUse3GPlay.setOnCheckedChangeListener(this);
 	}
+	
 	private void initCheckBox() {
-		// TODO Auto-generated method stub
 		this.isUse3GDown.setChecked(this.setting.getBoolean("setDownIsUse3G", true));
 		this.isUse3GPlay.setChecked(this.setting.getBoolean("setPlayIsUse3G", true));
 		if(!this.setting.contains("IsFirst"))
@@ -123,8 +123,8 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 			editor.commit();
 		}
 	}
+	
 	private void initAvailableSpaceTextView() {
-		// TODO Auto-generated method stub
 		//判断SD卡是否可用,计算SD卡的可用空间
 		if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
 		{
@@ -147,44 +147,41 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 	}
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		// TODO Auto-generated method stub
 		int id = buttonView.getId();
 		SharedPreferences.Editor editor = this.setting.edit();
 		switch(id)
 		{
-		case R.id.set_IsUser3G_check:
-			editor.remove("setDownIsUse3G");
-			editor.putBoolean("setDownIsUse3G", this.isUse3GDown.isChecked());
-			editor.commit();
-		case R.id.set_IsUser3G_check2:
-			editor.remove("setPlayIsUse3G");
-			editor.putBoolean("setPlayIsUse3G", this.isUse3GPlay.isChecked());
-			editor.commit();
+			case R.id.set_IsUser3G_check:
+				editor.remove("setDownIsUse3G");
+				editor.putBoolean("setDownIsUse3G", this.isUse3GDown.isChecked());
+				editor.commit();
+			case R.id.set_IsUser3G_check2:
+				editor.remove("setPlayIsUse3G");
+				editor.putBoolean("setPlayIsUse3G", this.isUse3GPlay.isChecked());
+				editor.commit();
 		}
 	}
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch(v.getId())
 		{
-		case R.id.set_clearPicBtn:
-			Toast.makeText(this, "清除成功", Toast.LENGTH_SHORT).show();
-			break;
-		case R.id.returnbtn:
-			this.finish();
-			break;
-		case R.id.aboutus:
-			startActivity(new Intent(this,AboutusActivity.class));
-			break;
-		case R.id.check:
-			check();
-			break;
+			case R.id.set_clearPicBtn:
+				Toast.makeText(this, "清除成功", Toast.LENGTH_SHORT).show();
+				break;
+			case R.id.returnbtn:
+				this.finish();
+				break;
+			case R.id.aboutus:
+				startActivity(new Intent(this,AboutusActivity.class));
+				break;
+			case R.id.check:
+				check();
+				break;
 		}
 	}
 	private void check()
 	{
-		o = ProgressDialog.show(SettingActivity.this, null, "检测中请稍候",
-				true, false);
+		o = ProgressDialog.show(SettingActivity.this, null, "检测中请稍候", true, false);
 		o.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		CheckUpdateTask checkup = new CheckUpdateTask();
 		try {
@@ -192,25 +189,24 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 			System.out.println(oldVersion);
 			checkup.execute(Constant.DOMAIN_URL+"mobile/checkup?appType=1&oldVersion="+oldVersion);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	//获取当前应用的版本号
-		private String getVersionName() throws Exception
-		   {
-		           // 获取packagemanager的实例
-		           PackageManager packageManager = getPackageManager();
-		           // getPackageName()是你当前类的包名，0代表是获取版本信息
-		           PackageInfo packInfo = packageManager.getPackageInfo(getPackageName(),0);
-		           String version = packInfo.versionName;
-		           return version;
-		   }
+	private String getVersionName() throws Exception
+	 {
+           // 获取packagemanager的实例
+           PackageManager packageManager = getPackageManager();
+           // getPackageName()是你当前类的包名，0代表是获取版本信息
+           PackageInfo packInfo = packageManager.getPackageInfo(getPackageName(),0);
+           String version = packInfo.versionName;
+           return version;
+	}
+	
 	private class CheckUpdateTask extends AsyncTask<String,Integer,String>
 	{
 		@Override
 		protected void onPreExecute() {
-			// TODO Auto-generated method stub
 			o.show();
 			SharedPreferences.Editor editor = setting.edit();
 			editor.remove("lastCheckUpdateTime");
@@ -221,7 +217,6 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 		//检查，返回值就是结束时的结果参数
 		@Override
 		protected String doInBackground(String... params) {
-			// TODO Auto-generated method stub
 			String result = null;
 			HttpURLConnection conn = null;
 			try{
@@ -231,8 +226,7 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 				conn.setRequestMethod("GET");//请求方式
 				conn.connect();// 连接
 				if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-					Log.d(this.toString(),
-							"getResponseCode() not HttpURLConnection.HTTP_OK");
+					Log.d(this.toString(), "getResponseCode() not HttpURLConnection.HTTP_OK");
 					return null;
 				}
 				InputStream in = conn.getInputStream();
@@ -243,14 +237,11 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 				//将字节转换成字符串
 				result = new String(buffer);
 				System.out.println(result);
-			}catch(Exception e)
-			{
+			}catch(Exception e) {
 				//各种错误
-				Log.d(this.toString(),
-						e.getMessage());
+				Log.d(this.toString(), e.getMessage());
 				return null;
-			}finally
-			{
+			}finally {
 				if(conn!=null)
 				{
 					conn.disconnect();
@@ -261,10 +252,8 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 		//结束检查
 		@Override
 		protected void onPostExecute(String result) {
-			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-			if(o!=null)
-				o.dismiss();
+			if(o!=null) o.dismiss();
 			if(result==null)
 			{
 				//跳转到登录界面
@@ -285,9 +274,9 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 					.setMessage("检测到最新版本：" + version + "\n" + "更新内容：" + "\n" + content)
 					.setPositiveButton("更新", new DialogInterface.OnClickListener() {
 						
+						@SuppressWarnings("deprecation")
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							// TODO Auto-generated method stub
 							dialog.cancel();
 							//开启下载服务，以及进度对话框，进行下载
 							//to do something 
@@ -305,7 +294,6 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 						    progressDialog.setButton("取消", new DialogInterface.OnClickListener() {	//取消下载
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
-									// TODO Auto-generated method stub
 									//取消
 									dialog.cancel();
 									isCanceled =true;
@@ -318,7 +306,6 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 						    progressDialog.setOnKeyListener(new OnKeyListener() {
 								@Override
 								public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-									// TODO Auto-generated method stub
 									if(event.getKeyCode()==4)
 									{
 										return true;
@@ -331,7 +318,6 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 					.setNegativeButton("取消", new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							// TODO Auto-generated method stub
 							dialog.dismiss();
 						}
 					})
@@ -339,9 +325,7 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 			        //监听按键事件,如果按取消什么都不做,相当于对这个对话框禁用了返回键
 			        alertDialog.setOnKeyListener(new OnKeyListener() {
 						@Override
-						public boolean onKey(DialogInterface dialog,
-								int keyCode, KeyEvent event) {
-							// TODO Auto-generated method stub
+						public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
 							if(event.getKeyCode()==KeyEvent.KEYCODE_BACK&&event.getRepeatCount()==0)
 							{
 								return true;
@@ -353,7 +337,6 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 					Toast.makeText(SettingActivity.this, "已经是最新版本", Toast.LENGTH_SHORT).show();
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -379,12 +362,11 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 	            int count;
 	            while ((count = input.read(data)) != -1) {
 	            	if(!isCanceled&&!this.isCancelled()){
-	                total += count;
-	                // publishing the progress....
-	                publishProgress((int) (total * 100 / fileLength));
-	                output.write(data, 0, count);
-	            	}else
-	            	{
+		                total += count;
+		                // publishing the progress....
+		                publishProgress((int) (total * 100 / fileLength));
+		                output.write(data, 0, count);
+	            	}else {
 	            		break;
 	            	}
 	            }
@@ -413,7 +395,6 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 	    }
 	    @Override
 	    protected void onPostExecute(String result) {
-	    	// TODO Auto-generated method stub
 	    	super.onPostExecute(result);
 	    	if(!isCanceled&&!this.isCancelled()){
 	    		progressDialog.dismiss();
@@ -424,37 +405,30 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 	        	SettingActivity.this.startActivity(localIntent);
 	    	}
 	    }
-	    @Override
-	    protected void onCancelled() {
-	    	// TODO Auto-generated method stub
-	    	super.onCancelled();
-	    	
-	    }
+//	    @Override
+//	    protected void onCancelled() {
+//	    	super.onCancelled();
+//	    }
 	}
-	public static void createFile(String paramString)
-	  {
-		File a = null;
-		File b = null;
+	public static void createFile(String paramString){
+		File a = null, b = null;
 	    if ("mounted".equals(Environment.getExternalStorageState()))
 	    {
 	      a = new File(Environment.getExternalStorageDirectory() + "/" + "eschool/");
-	      if (!a.exists())
-		        a.mkdirs();
+	      if (!a.exists()) a.mkdirs();
 	      b = new File(Environment.getExternalStorageDirectory() + "/eschool/" + paramString + ".apk");
 	      if (!b.exists())
 	      {
-	    	  try
-	  	    {
-	  	      b.createNewFile();
-	  	      return;
-	  	    }
-	  	    catch (IOException localIOException)
-	  	    {
-	  	      localIOException.printStackTrace();
-	  	    }
+	    	  try {
+	    		  b.createNewFile();
+	    		  return;
+	  	    	}
+	  	    	catch (IOException localIOException) {
+	  	    		localIOException.printStackTrace();
+	  	    	}
 	      }
 	    }
-	  }
+	}
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -462,9 +436,7 @@ public class SettingActivity extends Activity implements OnCheckedChangeListener
 	};
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		MobclickAgent.onResume(this);
-		
 	}
 }

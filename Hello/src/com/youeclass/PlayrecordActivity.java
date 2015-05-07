@@ -1,7 +1,7 @@
 package com.youeclass;
 
 import java.util.ArrayList;
-
+import android.annotation.SuppressLint;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,11 +13,14 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.umeng.analytics.MobclickAgent;
 import com.youeclass.dao.PlayrecordDao;
 import com.youeclass.entity.Playrecord;
-
+/**
+ * 播放记录类
+ * @author jeasonyoung
+ *
+ */
 public class PlayrecordActivity extends ListActivity{
 	private ImageButton returnBtn;
 	private ArrayList<Playrecord> recordList;
@@ -25,9 +28,12 @@ public class PlayrecordActivity extends ListActivity{
 	private String loginType;
 	private PlayrecordDao dao = new PlayrecordDao(this);
 	private RecordListAdapter mAdapter;
+	/*
+	 * 重载创建。
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_playrecord);
 		Intent intent = this.getIntent();
@@ -35,32 +41,33 @@ public class PlayrecordActivity extends ListActivity{
 		this.loginType = intent.getStringExtra("loginType");
 		this.returnBtn = (ImageButton) this.findViewById(R.id.returnbtn);
 		this.returnBtn.setOnClickListener(new ReturnBtnClickListener(this));
-		
 	}
+	/*
+	 * 重载开始。
+	 * @see android.app.Activity#onStart()
+	 */
 	@Override
 	protected void onStart() {
-		// TODO Auto-generated method stub
-		if(recordList==null)
-		{
+		if(recordList==null){
 			this.recordList = (ArrayList<Playrecord>) this.dao.getRecordList(username);
-		}else
-		{
+		}else{
 			this.recordList.clear();
 			this.recordList.addAll(this.dao.getRecordList(username));
 		}
-		if(mAdapter==null)
-		{
-			mAdapter = new RecordListAdapter();
+		if(this.mAdapter==null){
+			this.mAdapter = new RecordListAdapter();
 			this.setListAdapter(mAdapter);
-		}else
-		{
-			mAdapter.notifyDataSetChanged();
+		}else{
+			this.mAdapter.notifyDataSetChanged();
 		}
 		super.onStart();
 	}
+	/*
+	 * 重载点击事件。
+	 * @see android.app.ListActivity#onListItemClick(android.widget.ListView, android.view.View, int, long)
+	 */
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		// TODO Auto-generated method stub
 		Playrecord r = this.recordList.get(position);
 		if("local".equals(loginType))
 		{
@@ -73,7 +80,7 @@ public class PlayrecordActivity extends ListActivity{
 		//
 		MobclickAgent.onEvent(this,"record_listen");
 		//
-		Intent intent = new Intent(this,VideoActivity3.class);
+		Intent intent = new Intent(this,VideoPlayActivity.class);
 		intent.putExtra("username", username);
 		intent.putExtra("name", r.getCourseName());
 		intent.putExtra("url", r.getCourseFilePath()==null?r.getCourseUrl():r.getCourseFilePath());
@@ -82,36 +89,51 @@ public class PlayrecordActivity extends ListActivity{
 		intent.putExtra("courseid", r.getCourseId());
 		this.startActivity(intent);	
 	}
+	/**
+	 * 
+	 * @author jeasonyoung
+	 *
+	 */
 	private class RecordListAdapter extends BaseAdapter
 	{
+		/*
+		 * (non-Javadoc)
+		 * @see android.widget.Adapter#getCount()
+		 */
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
 			try{
 				return recordList.size();
-			}catch(Exception e)
-			{
+			}catch(Exception e) {
 				return 0;
 			}
 		}
+		/*
+		 * (non-Javadoc)
+		 * @see android.widget.Adapter#getItem(int)
+		 */
 		@Override
 		public Object getItem(int position) {
-			// TODO Auto-generated method stub
 			try{
 				return recordList.get(position);
-			}catch(Exception e)
-			{
+			}catch(Exception e){
 				return null;
 			}
 		}
+		/*
+		 * (non-Javadoc)
+		 * @see android.widget.Adapter#getItemId(int)
+		 */
 		@Override
 		public long getItemId(int position) {
-			// TODO Auto-generated method stub
 			return position;
 		}
-		@Override
+		/*
+		 * (non-Javadoc)
+		 * @see android.widget.Adapter#getView(int, android.view.View, android.view.ViewGroup)
+		 */
+		@SuppressLint("ViewHolder") @Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
 			LayoutInflater mInflater = LayoutInflater.from(PlayrecordActivity.this);
 			Playrecord  r = recordList.get(position);
 			convertView = mInflater.inflate(R.layout.list_playrecord, null);
@@ -124,16 +146,22 @@ public class PlayrecordActivity extends ListActivity{
 			return convertView;
 		}
 	}
+	/*
+	 * (non-Javadoc)
+	 * @see android.app.Activity#onPause()
+	 */
 	@Override
 	protected void onPause() {
 		super.onPause();
 		MobclickAgent.onPause(this);
 	};
+	/*
+	 * (non-Javadoc)
+	 * @see android.app.Activity#onResume()
+	 */
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		MobclickAgent.onResume(this);
-		
 	}
 }

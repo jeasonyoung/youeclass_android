@@ -37,9 +37,9 @@ public class SuggestionActivity extends Activity implements OnClickListener{
 	private Button submitSugBtn;
 	private String username;
 	private int uid;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_suggestion);
 		this.returnbtn = (ImageButton) this.findViewById(R.id.returnbtn);
@@ -51,9 +51,9 @@ public class SuggestionActivity extends Activity implements OnClickListener{
 		this.username = intent.getStringExtra("username");
 		this.uid = intent.getIntExtra("uid", 0);
 	}
+	
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch(v.getId())
 		{
 			default:return;
@@ -79,7 +79,6 @@ public class SuggestionActivity extends Activity implements OnClickListener{
 		private String text;
 		@Override
 		protected String doInBackground(String... sUrl) {
-			// TODO Auto-generated method stub
 			BufferedReader reader = null;
 			try {
 				HttpClient client = new DefaultHttpClient();
@@ -94,9 +93,7 @@ public class SuggestionActivity extends Activity implements OnClickListener{
 				UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params);
 				request.setEntity(entity);
 				HttpResponse response = client.execute(request); 
-				reader = new BufferedReader(new InputStreamReader(response
-						.getEntity().getContent()));
-
+				reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 				StringBuffer strBuffer = new StringBuffer("");
 				String line = null;
 				while ((line = reader.readLine()) != null) {
@@ -118,13 +115,12 @@ public class SuggestionActivity extends Activity implements OnClickListener{
 				}
 			}
 		}
+		@SuppressWarnings("deprecation")
 		public SuggestTask(String t) {
-			// TODO Auto-generated constructor stub
 			this.text = URLEncoder.encode(t);
 		}
 		@Override
 		protected void onPostExecute(String result) {
-			// TODO Auto-generated method stub
 			try
 			{
 				JSONObject json = new JSONObject(result);
@@ -140,7 +136,6 @@ public class SuggestionActivity extends Activity implements OnClickListener{
 				e.printStackTrace();
 				Toast.makeText(SuggestionActivity.this, "提交失败,稍后再试", Toast.LENGTH_LONG).show();
 			}
-			
 		}
 	}
 	@Override
@@ -150,9 +145,7 @@ public class SuggestionActivity extends Activity implements OnClickListener{
 	};
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		MobclickAgent.onResume(this);
-		
 	}
 }

@@ -1,5 +1,6 @@
 package com.youeclass;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -14,20 +15,26 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.umeng.analytics.MobclickAgent;
 
 public class QuestionMainActivity extends Activity{
 	private GridView g;
 	private ImageButton returnBtn;
 	private String username;
-	private Class[] classes = new Class[]{QuestionFromCourseActivity.class,QuestionCommonFirstActivity.class,
-			QuestionRecordActivity.class,QuestionCommonFirstActivity.class,QuestionCommonFirstActivity.class};
+	
+	private Class<?>[] classes = new Class[]{
+																		QuestionFromCourseActivity.class,
+																		QuestionCommonFirstActivity.class,
+																		QuestionRecordActivity.class,
+																		QuestionCommonFirstActivity.class,
+																		QuestionCommonFirstActivity.class
+																	};
+	
 	private String[] actions = new String[]{null,"myErrors","myRecord","myFavors","myNotes"};
 	private String loginType;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_question_main);
 		this.returnBtn = (ImageButton) this.findViewById(R.id.returnbtn);
@@ -42,9 +49,7 @@ public class QuestionMainActivity extends Activity{
 		}
 		this.g.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				// TODO Auto-generated method stub
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				//Toast.makeText(QuestionMainActivity.this, "点击了Item", Toast.LENGTH_LONG).show();
 				Intent mIntent = new Intent(QuestionMainActivity.this,classes[arg2]);
 				mIntent.putExtra("username", username);
@@ -57,30 +62,36 @@ public class QuestionMainActivity extends Activity{
 	private class QuestionMainAdapter extends BaseAdapter
 	{
 		private LayoutInflater mInflater;
-		private int[] imgs = new int[]{R.drawable.cccc,R.drawable.question_error_img,R.drawable.question_doproblemrecord_img,R.drawable.question_myfavorite_img,R.drawable.question_mynotebook_img};
-		private int[] txts = new int[]{R.string.question_bank,R.string.errorQuesitionStr,R.string.doProblem_recordStr,R.string.my_favoriteStr,R.string.my_notebookStr};
-		public QuestionMainAdapter(Context context) {
-			// TODO Auto-generated constructor stub
+		
+		private int[] imgs = new int[]{	R.drawable.cccc,
+															R.drawable.question_error_img,
+															R.drawable.question_doproblemrecord_img,
+															R.drawable.question_myfavorite_img,
+															R.drawable.question_mynotebook_img };
+		
+		private int[] txts = new int[]{	R.string.question_bank,
+														R.string.errorQuesitionStr,
+														R.string.doProblem_recordStr,
+														R.string.my_favoriteStr,
+														R.string.my_notebookStr };
+		
+		public QuestionMainAdapter(Context context) { 
 			mInflater = LayoutInflater.from(context);
 		}
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
 			return imgs.length;
 		}
 		@Override
 		public Object getItem(int position) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 		@Override
 		public long getItemId(int position) {
-			// TODO Auto-generated method stub
 			return position;
 		}
-		@Override
+		@SuppressLint("ViewHolder") @Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
 			View v = mInflater.inflate(R.layout.grid_question_main, null);
 			ImageView iv = (ImageView) v.findViewById(R.id.question_grid_img);
 			TextView tv = (TextView) v.findViewById(R.id.question_grid_text);
@@ -96,9 +107,7 @@ public class QuestionMainActivity extends Activity{
 	};
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		MobclickAgent.onResume(this);
-		
 	}
 }

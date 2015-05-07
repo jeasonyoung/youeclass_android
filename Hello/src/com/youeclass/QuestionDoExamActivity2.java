@@ -5,6 +5,7 @@ import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 import org.taptwo.android.widget.ViewFlow;
 import org.taptwo.android.widget.ViewFlow.ViewSwitchListener;
@@ -61,11 +62,9 @@ import com.youeclass.util.StringUtils;
  * @author Administrator
  * 
  */
-public class QuestionDoExamActivity2 extends Activity implements
-		OnClickListener {
+public class QuestionDoExamActivity2 extends Activity implements OnClickListener {
 	// 组件
-	private ImageButton exitExamImgBtn, nextBtn, preBtn, removeBtn, answerBtn,
-			favoriteBtn;
+	private ImageButton exitExamImgBtn, nextBtn, preBtn, removeBtn, answerBtn,favoriteBtn;
 	private TextView timeCountDown, examTitle, examTypeTextView;
 	private Button chooseQuestionBtn;
 	private LinearLayout nodataLayout, loadingLayout, ruleTypeLayout;
@@ -107,7 +106,6 @@ public class QuestionDoExamActivity2 extends Activity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.ui_question_doexam2);
 		System.out.println("do exam activity 2 执行 onCreate 方法");
@@ -126,27 +124,21 @@ public class QuestionDoExamActivity2 extends Activity implements
 
 	// 取得主界面的组件,只取得不操作
 	private void initView() {
-		this.exitExamImgBtn = (ImageButton) this
-				.findViewById(R.id.exitExamImgBtn);// 退出考试
+		this.exitExamImgBtn = (ImageButton) this.findViewById(R.id.exitExamImgBtn);// 退出考试
 		this.preBtn = (ImageButton) this.findViewById(R.id.previousBtn); // 上一题
 		this.nextBtn = (ImageButton) this.findViewById(R.id.nextBtn); // 下一题
 		this.favoriteBtn = (ImageButton) this.findViewById(R.id.favoriteBtn);
 		this.removeBtn = (ImageButton) this.findViewById(R.id.removeBtn);
-		this.timeCountDown = (TextView) this
-				.findViewById(R.id.timecount_down_TextView);// 倒计时
+		this.timeCountDown = (TextView) this.findViewById(R.id.timecount_down_TextView);// 倒计时
 		this.examTitle = (TextView) this.findViewById(R.id.examTitle_TextView);// 考试标题
-		this.chooseQuestionBtn = (Button) this
-				.findViewById(R.id.selectTopicId_ImgBtn);// 选题
-		this.examTypeTextView = (TextView) this
-				.findViewById(R.id.examTypeTextView);// 大题标题
-		this.ruleTypeLayout = (LinearLayout) this
-				.findViewById(R.id.ruleTypeLayout);
+		this.chooseQuestionBtn = (Button) this.findViewById(R.id.selectTopicId_ImgBtn);// 选题
+		this.examTypeTextView = (TextView) this.findViewById(R.id.examTypeTextView);// 大题标题
+		this.ruleTypeLayout = (LinearLayout) this.findViewById(R.id.ruleTypeLayout);
 		this.answerBtn = (ImageButton) this.findViewById(R.id.answerBtn);// 交卷或者查看答案
 		this.viewFlow = (ViewFlow) this.findViewById(R.id.viewflow); // 题目加载组件
 		this.nodataLayout = (LinearLayout) this.findViewById(R.id.nodataLayout);// 没有数据
 		this.nodataLayout.setVisibility(View.GONE);
-		this.loadingLayout = (LinearLayout) this
-				.findViewById(R.id.loadingLayout); // 正在加载中
+		this.loadingLayout = (LinearLayout) this.findViewById(R.id.loadingLayout); // 正在加载中
 		this.loadingLayout.setVisibility(View.VISIBLE);
 		// 绑定事件
 		this.preBtn.setOnClickListener(this);
@@ -159,7 +151,6 @@ public class QuestionDoExamActivity2 extends Activity implements
 		viewFlow.setOnViewSwitchListener(new ViewSwitchListener() {
 			@Override
 			public void onSwitched(View view, int position) {
-				// TODO Auto-generated method stub
 				System.out.println("question的位置是: = " + position);
 				questionCursor = position;
 				currentQuestion = questionList.get(position);
@@ -167,8 +158,7 @@ public class QuestionDoExamActivity2 extends Activity implements
 					ExamRule currentRule = getRule(ruleList, currentQuestion);
 					examTypeTextView.setText(currentRule.getRuleTitle());
 				}
-				if (favorQids != null
-						&& favorQids.indexOf(currentQuestion.getQid()) != -1) {
+				if (favorQids != null && favorQids.indexOf(currentQuestion.getQid()) != -1) {
 					favoriteBtn.setImageResource(R.drawable.exam_favorited_img);
 				} else {
 					favoriteBtn.setImageResource(R.drawable.exam_favorite_img);
@@ -177,15 +167,11 @@ public class QuestionDoExamActivity2 extends Activity implements
 				if ("myErrors".equals(action)) {
 					// 有答案了,禁止选择,没答案继续选择
 					if (currentQuestion.getUserAnswer() != null) {
-						((QuestionAdapter2.ContentViewHolder) view
-								.getTag(R.id.tag_first)).examOption
-								.forbidden(false);
+						((QuestionAdapter2.ContentViewHolder) view.getTag(R.id.tag_first)).examOption.forbidden(false);
 						// questionAdapter.setRadioEnable(((QuestionAdapter.ContentViewHolder)view.getTag(R.id.tag_first)).examOption,
 						// false);
 					} else {
-						((QuestionAdapter2.ContentViewHolder) view
-								.getTag(R.id.tag_first)).examOption
-								.forbidden(true);
+						((QuestionAdapter2.ContentViewHolder) view.getTag(R.id.tag_first)).examOption.forbidden(true);
 						// questionAdapter.setRadioEnable(((QuestionAdapter.ContentViewHolder)view.getTag(R.id.tag_first)).examOption,
 						// true);
 					}
@@ -240,21 +226,14 @@ public class QuestionDoExamActivity2 extends Activity implements
 				}.getType();
 				Type ruleType = new TypeToken<ArrayList<ExamRule>>() {
 				}.getType();
-				questionList = gson
-						.fromJson(intent.getStringExtra("questionListJson"),
-								questionType);
+				questionList = gson.fromJson(intent.getStringExtra("questionListJson"), questionType);
 				ruleList = gson.fromJson(ruleListJson, ruleType);
-				if (dao == null)
-					dao = new PaperDao(QuestionDoExamActivity2.this);
-				if (favor == null)
-					favor = new ExamFavor(username, paperid);
+				if (dao == null) dao = new PaperDao(QuestionDoExamActivity2.this);
+				if (favor == null) favor = new ExamFavor(username, paperid);
 				favorQids = dao.findFavorQids(username, paperid);
 				if ("DoExam".equals(action)) {
-					record = dao.insertRecord(
-							new ExamRecord(paperid, username));
-					isDone = StringUtils.isEmpty(record.getIsDone())? new SparseBooleanArray()
-							: gson.fromJson(record.getIsDone(),
-									SparseBooleanArray.class);
+					record = dao.insertRecord(new ExamRecord(paperid, username));
+					isDone = StringUtils.isEmpty(record.getIsDone())? new SparseBooleanArray() : gson.fromJson(record.getIsDone(), SparseBooleanArray.class);
 					String tempAnswer = record.getTempAnswer();
 					if (tempAnswer == null) {
 						answerBuf = new StringBuffer();
@@ -263,10 +242,8 @@ public class QuestionDoExamActivity2 extends Activity implements
 						answerBuf = new StringBuffer(tempAnswer);
 						txtAnswerBuf = new StringBuffer();
 					} else {
-						answerBuf = new StringBuffer(tempAnswer.substring(0,
-								tempAnswer.indexOf("   ")));
-						txtAnswerBuf = new StringBuffer(
-								tempAnswer.substring(tempAnswer.indexOf("   ") + 3));
+						answerBuf = new StringBuffer(tempAnswer.substring(0, tempAnswer.indexOf("   ")));
+						txtAnswerBuf = new StringBuffer(tempAnswer.substring(tempAnswer.indexOf("   ") + 3));
 					}
 					initQuestionAnswer(tempAnswer);
 				}
@@ -277,49 +254,48 @@ public class QuestionDoExamActivity2 extends Activity implements
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		case R.id.previousBtn:
-			preQuestion();
-			break;
-		case R.id.nextBtn:
-			nextQuestion();
-			break;
-		case R.id.favoriteBtn:
-			favorQuestion();
-			break;
-		case R.id.exitExamImgBtn:
-			if ("DoExam".equals(action)) {
-				showDialog();
-			} else {
-				this.finish();
-			}
-			break;
-		case R.id.exitExamBtn:
-			exitExam();
-			break;
-		case R.id.exitCancelExamBtn:
-			this.exitDialog.dismiss();
-			break;
-		case R.id.exitSubmitExamBtn:
-			submitExam();
-		case R.id.ruleTypeLayout:
-			if (ruleList != null && ruleList.size() > 0) {
-				showWindow(v);
-			}
-			break;
-		case R.id.notebook_ImgBtn:
-			showNoteBookActivity();
-			break;
-		case R.id.selectTopicId_ImgBtn:
-			gotoChooseActivity();
-			break;
-		case R.id.answerBtn:
-			submitOrSeeAnswer();
-			break;
-		case R.id.removeBtn:
-			removeFromErrors();
-			break;
+			case R.id.previousBtn:
+				preQuestion();
+				break;
+			case R.id.nextBtn:
+				nextQuestion();
+				break;
+			case R.id.favoriteBtn:
+				favorQuestion();
+				break;
+			case R.id.exitExamImgBtn:
+				if ("DoExam".equals(action)) {
+					showDialog();
+				} else {
+					this.finish();
+				}
+				break;
+			case R.id.exitExamBtn:
+				exitExam();
+				break;
+			case R.id.exitCancelExamBtn:
+				this.exitDialog.dismiss();
+				break;
+			case R.id.exitSubmitExamBtn:
+				submitExam();
+			case R.id.ruleTypeLayout:
+				if (ruleList != null && ruleList.size() > 0) {
+					showWindow(v);
+				}
+				break;
+			case R.id.notebook_ImgBtn:
+				showNoteBookActivity();
+				break;
+			case R.id.selectTopicId_ImgBtn:
+				gotoChooseActivity();
+				break;
+			case R.id.answerBtn:
+				submitOrSeeAnswer();
+				break;
+			case R.id.removeBtn:
+				removeFromErrors();
+				break;
 		}
 	}
 
@@ -341,8 +317,7 @@ public class QuestionDoExamActivity2 extends Activity implements
 			}
 			this.favoriteBtn.setImageResource(R.drawable.exam_favorite_img);
 			dao.deleteFavor(favor);
-			favorQids.replace(favorQids.indexOf(qid), favorQids.indexOf(qid)
-					+ qid.length() + 1, "");
+			favorQids.replace(favorQids.indexOf(qid), favorQids.indexOf(qid) + qid.length() + 1, "");
 			Toast.makeText(this, "取消成功,下次不再显示", Toast.LENGTH_SHORT).show();
 			return;
 		}
@@ -371,30 +346,22 @@ public class QuestionDoExamActivity2 extends Activity implements
 			// holder.examAnswerLayout.setVisibility(View.GONE);
 			// else
 			// holder.examAnswerLayout.setVisibility(View.VISIBLE);
-			QuestionAdapter2.AnswerViewHolder holder = (AnswerViewHolder) viewFlow
-					.getSelectedView().getTag(R.id.tag_second);
+			QuestionAdapter2.AnswerViewHolder holder = (AnswerViewHolder) viewFlow.getSelectedView().getTag(R.id.tag_second);
 			if ("myErrors".equals(action))// &&("2".equals(currentQuestion.getQType())||"3".equals(currentQuestion.getQType())))
 			{
-				QuestionAdapter2.ContentViewHolder contentHolder = (ContentViewHolder) viewFlow
-						.getSelectedView().getTag(R.id.tag_first);
-				if (!currentQuestion.getAnswer().equals(
-						currentQuestion.getUserAnswer())) {
-					ExamErrorQuestion error = new ExamErrorQuestion(
-							currentQuestion.getQid(), username, paperid);
+				QuestionAdapter2.ContentViewHolder contentHolder = (ContentViewHolder) viewFlow.getSelectedView().getTag(R.id.tag_first);
+				if (!currentQuestion.getAnswer().equals(currentQuestion.getUserAnswer())) {
+					ExamErrorQuestion error = new ExamErrorQuestion(currentQuestion.getQid(), username, paperid);
 					dao.insertError(error);
 				}
 				contentHolder.examOption.forbidden(false);
-				contentHolder.examOption.setFontColor(
-						getResources().getColor(R.color.green),
-						currentQuestion.getAnswer());
-				questionAdapter.showAnswer(holder, currentQuestion,
-						currentQuestion.getUserAnswer());
+				contentHolder.examOption.setFontColor(getResources().getColor(R.color.green),currentQuestion.getAnswer());
+				questionAdapter.showAnswer(holder, currentQuestion,currentQuestion.getUserAnswer());
 			}
 			if (holder.examAnswerLayout.getVisibility() == View.VISIBLE)
 				holder.examAnswerLayout.setVisibility(View.GONE);
 			else
 				holder.examAnswerLayout.setVisibility(View.VISIBLE);
-
 		}
 	}
 
@@ -430,7 +397,6 @@ public class QuestionDoExamActivity2 extends Activity implements
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		if (20 == resultCode) {
 			// 更换试题,当前试题
 			String ruleTitle = data.getStringExtra("ruleTitle");
@@ -496,22 +462,16 @@ public class QuestionDoExamActivity2 extends Activity implements
 			if ("myErrors".equals(action))// &&("4".equals(currentQuestion.getQType())||"1".equals(currentQuestion.getQType())))
 			{
 				// 显示答案
-				QuestionAdapter2.ContentViewHolder contentHolder = (ContentViewHolder) viewFlow
-						.getSelectedView().getTag(R.id.tag_first);
-				QuestionAdapter2.AnswerViewHolder answerHolder = (AnswerViewHolder) viewFlow
-						.getSelectedView().getTag(R.id.tag_second);
+				QuestionAdapter2.ContentViewHolder contentHolder = (ContentViewHolder) viewFlow.getSelectedView().getTag(R.id.tag_first);
+				QuestionAdapter2.AnswerViewHolder answerHolder = (AnswerViewHolder) viewFlow.getSelectedView().getTag(R.id.tag_second);
 				// questionAdapter.setRadioEnable(contentHolder.examOption,
 				// false);
 				contentHolder.examOption.forbidden(false);
-				contentHolder.examOption.setFontColor(
-						QuestionDoExamActivity2.this.getResources().getColor(
-								R.color.green), currentQuestion.getAnswer());
+				contentHolder.examOption.setFontColor(QuestionDoExamActivity2.this.getResources().getColor(R.color.green), currentQuestion.getAnswer());
 				questionAdapter.showAnswer(answerHolder, currentQuestion, abcd);
 				answerHolder.examAnswerLayout.setVisibility(View.VISIBLE);
-				if (!currentQuestion.getAnswer().equals(
-						currentQuestion.getUserAnswer())) {
-					ExamErrorQuestion error = new ExamErrorQuestion(
-							currentQuestion.getQid(), username, paperid);
+				if (!currentQuestion.getAnswer().equals(currentQuestion.getUserAnswer())) {
+					ExamErrorQuestion error = new ExamErrorQuestion(currentQuestion.getQid(), username, paperid);
 					dao.insertError(error);
 					// tOrF[questionCursor] = -1;
 				} else {
@@ -560,11 +520,9 @@ public class QuestionDoExamActivity2 extends Activity implements
 			handler.postDelayed(new Runnable(){
 				@Override
 				public void run() {
-					// TODO Auto-generated method stub
 					handler.sendEmptyMessage(33);
 				}
 			}, 500);
-			
 		}
 	}
 
@@ -579,19 +537,16 @@ public class QuestionDoExamActivity2 extends Activity implements
 			return;
 		}
 		if (txtAnswerBuf.indexOf(str) == -1) {
-			txtAnswerBuf.append(str + txtAnswer.replace("\\s", "")).append(
-					"   ");
+			txtAnswerBuf.append(str + txtAnswer.replace("\\s", "")).append("   ");
 		} else {
 			String left = txtAnswerBuf.substring(0, txtAnswerBuf.indexOf(str));
 			String temp = txtAnswerBuf.substring(txtAnswerBuf.indexOf(str));
 			String right = temp.substring(temp.indexOf("   ") + 3);
-			txtAnswerBuf.delete(0, txtAnswerBuf.length()).append(left)
-					.append(str).append(txtAnswer).append("   ").append(right);
+			txtAnswerBuf.delete(0, txtAnswerBuf.length()).append(left).append(str).append(txtAnswer).append("   ").append(right);
 		}
 		isDone.append(questionCursor, true);
 		currentQuestion.setUserAnswer(txtAnswer);
-		record.setTempAnswer(answerBuf.toString() + "   "
-				+ txtAnswerBuf.toString());
+		record.setTempAnswer(answerBuf.toString() + "   " + txtAnswerBuf.toString());
 		record.setIsDone(gson.toJson(isDone));
 		dao.updateTempAnswerForRecord(record);
 		Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT).show();
@@ -602,8 +557,7 @@ public class QuestionDoExamActivity2 extends Activity implements
 		/**
 		 * 
 		 */
-		if (record.getTempAnswer() == null
-				|| "".equals(record.getTempAnswer().trim())) {
+		if (record.getTempAnswer() == null || "".equals(record.getTempAnswer().trim())) {
 			Toast.makeText(this, "还没做交毛卷啊", Toast.LENGTH_SHORT).show();
 			return;
 		}
@@ -626,16 +580,13 @@ public class QuestionDoExamActivity2 extends Activity implements
 					double tempScore = 0;
 					if (q.getRuleId().equals(r.getRuleId())) // 属于该大题的题目，按该规则进行判分
 					{
-						System.out.println(q.getAnswer() + ", userAnswer:"
-								+ q.getUserAnswer());
-						if (fenRule.startsWith("0|")) // 答错不扣分，全对才得满分
-						{
+						System.out.println(q.getAnswer() + ", userAnswer:" + q.getUserAnswer());
+						if (fenRule.startsWith("0|")){ // 答错不扣分，全对才得满分
 							if (q.getAnswer().equals(q.getUserAnswer())) {
 								score = score + fen; // 得分
 								tempScore = fen;
 							}
-						} else if (fenRule.startsWith("1|"))// 答对一个选项得多少分
-						{
+						} else if (fenRule.startsWith("1|")){// 答对一个选项得多少分
 							String answer = q.getAnswer();
 							String userAnswer = q.getUserAnswer() == null ? "@"
 									: q.getUserAnswer();
@@ -645,28 +596,18 @@ public class QuestionDoExamActivity2 extends Activity implements
 									tempScore = fen;
 								} else {
 									String[] ua = userAnswer.split("[,]"); // 少选得分，是每个选项的得分还是只要是少选就得多少分
-									double fen1 = Double.parseDouble(fenRule
-											.split("[|]")[1]) * ua.length;
+									double fen1 = Double.parseDouble(fenRule.split("[|]")[1]) * ua.length;
 									score = score + fen1;
 									tempScore = fen1;
 								}
 							}
-						} else if (fenRule.startsWith("2|"))// 答错扣分
-						{
-							if (q.getAnswer().equals(q.getUserAnswer())) // 答对
-							{
-								score1 = score1
-										+ Double.parseDouble(fenRule
-												.split("[|]")[1]);
-								tempScore = Double.parseDouble(fenRule
-										.split("[|]")[1]);
-							} else // 答错
-							{
-								score1 = score1
-										- Double.parseDouble(fenRule
-												.split("[|]")[1]);
-								tempScore = 0 - Double.parseDouble(fenRule
-										.split("[|]")[1]);
+						} else if (fenRule.startsWith("2|")){// 答错扣分
+							if (q.getAnswer().equals(q.getUserAnswer())){ // 答对
+								score1 += Double.parseDouble(fenRule.split("[|]")[1]);
+								tempScore = Double.parseDouble(fenRule.split("[|]")[1]);
+							} else{ // 答错
+								score1 -= Double.parseDouble(fenRule.split("[|]")[1]);
+								tempScore = 0 - Double.parseDouble(fenRule.split("[|]")[1]);
 							}
 						}
 						scoreBuf.append(r.getRuleId()).append("-")
@@ -700,22 +641,17 @@ public class QuestionDoExamActivity2 extends Activity implements
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void showWindow(View parent) {
 		if (popupWindow == null) {
 			LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-			View view = layoutInflater.inflate(
-					R.layout.popupwindow_rule_layout, null);
-
+			View view = layoutInflater.inflate(R.layout.popupwindow_rule_layout, null);
 			lv_group = (ListView) view.findViewById(R.id.lvGroup);
 			// 加载数据
-
-			PopRuleListAdapter groupAdapter = new PopRuleListAdapter(this,
-					ruleList);
+			PopRuleListAdapter groupAdapter = new PopRuleListAdapter(this, ruleList);
 			lv_group.setAdapter(groupAdapter);
 			// 创建一个PopuWidow对象
-			WindowManager wm = (WindowManager) this
-					.getSystemService(Context.WINDOW_SERVICE);
+			WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
 
 			int width = (int) (wm.getDefaultDisplay().getWidth() / 2.4);
 //			int height = (int) (wm.getDefaultDisplay().getHeight() / 3.2);
@@ -731,8 +667,7 @@ public class QuestionDoExamActivity2 extends Activity implements
 		popupWindow.setBackgroundDrawable(new BitmapDrawable());
 		WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
 		// 显示的位置为:屏幕的宽度的一半-PopupWindow的高度的一半
-		int xPos = windowManager.getDefaultDisplay().getWidth() / 2
-				- popupWindow.getWidth() / 2;
+		int xPos = windowManager.getDefaultDisplay().getWidth() / 2 - popupWindow.getWidth() / 2;
 
 		// Log.i("coder", "windowManager.getDefaultDisplay().getWidth()/2:"
 		// + windowManager.getDefaultDisplay().getWidth() / 2);
@@ -745,19 +680,15 @@ public class QuestionDoExamActivity2 extends Activity implements
 		popupWindow.showAsDropDown(parent, xPos, -5);
 
 		lv_group.setOnItemClickListener(new OnItemClickListener() {
-
 			@Override
-			public void onItemClick(AdapterView<?> adapterView, View view,
-					int position, long id) {
+			public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 				// 切题,改变大题名称,切到该大题第一题
 				// 当前大题
-				ExamRule rule = QuestionDoExamActivity2.this.ruleList
-						.get(position);
+				ExamRule rule = QuestionDoExamActivity2.this.ruleList.get(position);
 				System.out.println("postion = "+position+" rule = "+rule.getRuleTitle());
 				int questionPosition = 0;
 				for (int i = position - 1; i >= 0; i--) {
-					questionPosition += QuestionDoExamActivity2.this.ruleList
-							.get(i).getQuestionNum();
+					questionPosition += QuestionDoExamActivity2.this.ruleList.get(i).getQuestionNum();
 				}
 				QuestionDoExamActivity2.this.examTypeTextView.setText(rule.getRuleTitle());
 				QuestionDoExamActivity2.this.questionAdapter.clearCheck();
@@ -774,8 +705,7 @@ public class QuestionDoExamActivity2 extends Activity implements
 	private void exitExam() {
 		// 更新一次record
 		timerFlag = false;
-		record.setLastTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-				.format(new Date()));
+		record.setLastTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.getDefault()).format(new Date()));
 		record.setTempTime(this.paperTime);
 		record.setIsDone(gson.toJson(isDone));
 		dao.saveOrUpdateRecord(record);
@@ -788,8 +718,7 @@ public class QuestionDoExamActivity2 extends Activity implements
 		if (this.exitDialog != null && this.exitDialog.isShowing()) {
 			this.exitDialog.dismiss();
 		}
-		if (record.getTempAnswer() == null
-				|| "".equals(record.getTempAnswer().trim())) {
+		if (record.getTempAnswer() == null || "".equals(record.getTempAnswer().trim())) {
 			Toast.makeText(this, "还没做交毛卷啊", Toast.LENGTH_SHORT).show();
 			return;
 		}
@@ -804,14 +733,12 @@ public class QuestionDoExamActivity2 extends Activity implements
 			public void run() {
 				submitPaper();// 交卷
 				// 更新记录,转到 选题界面
-				record.setLastTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-						.format(new Date()));
+				record.setLastTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.getDefault()).format(new Date()));
 				record.setAnswers(record.getTempAnswer());
 				record.setTempAnswer(null);
 				record.setIsDone(null);
 				record.setTempTime(0);
-				record.setUseTime((time - paperTime) < 60 ? 1
-						: (time - paperTime) / 60);
+				record.setUseTime((time - paperTime) < 60 ? 1 : (time - paperTime) / 60);
 				dao.saveOrUpdateRecord(record);
 				timeHandler.sendEmptyMessage(10);
 			};
@@ -820,8 +747,7 @@ public class QuestionDoExamActivity2 extends Activity implements
 
 	// 按返回键,提示
 	public boolean onKeyDown(int paramInt, KeyEvent paramKeyEvent) {
-		if ((paramKeyEvent.getKeyCode() == 4)
-				&& (paramKeyEvent.getRepeatCount() == 0)) {
+		if ((paramKeyEvent.getKeyCode() == 4) && (paramKeyEvent.getRepeatCount() == 0)) {
 			if ("DoExam".equals(action)) {
 				showDialog();
 				return true;
@@ -832,8 +758,7 @@ public class QuestionDoExamActivity2 extends Activity implements
 
 	private void showDialog() {
 		if (exitDialog == null) {
-			View v = LayoutInflater.from(this).inflate(R.layout.exit_layout,
-					null);
+			View v = LayoutInflater.from(this).inflate(R.layout.exit_layout, null);
 			Button exitBtn = (Button) v.findViewById(R.id.exitExamBtn);
 			Button submitBtn = (Button) v.findViewById(R.id.exitSubmitExamBtn);
 			Button cancelBtn = (Button) v.findViewById(R.id.exitCancelExamBtn);
@@ -849,7 +774,6 @@ public class QuestionDoExamActivity2 extends Activity implements
 
 	@Override
 	protected void onStart() {
-		// TODO Auto-generated method stub
 		if ("DoExam".equals(action)) {
 			// timerFlag = true;
 			// new TimerThread().start();
@@ -864,35 +788,34 @@ public class QuestionDoExamActivity2 extends Activity implements
 		}
 		super.onStart();
 	}
-	private void secondInit()
-	{
-		if ("DoExam".equals(action)) {
-			// timerFlag = true;
-			// new TimerThread().start();
-			this.answerBtn.setImageResource(R.drawable.exam_submit_img);
-			// this.examAnswerLayout.setVisibility(View.GONE);
-			if (ruleList != null && ruleList.size() > 0) {
-				currentRule = ruleList.get(0);
-				this.examTypeTextView.setText(currentRule.getRuleTitle()); // 大题名字
-				this.ruleTypeLayout.setOnClickListener(this);
-				viewFlow.setSelection(questionCursor);
-			} else {
-				this.nodataLayout.setVisibility(0);
-			}
-		} else if ("showQuestionWithAnswer".equals(action)) {
-			this.examTitle.setText(this.papername);
-			this.answerBtn.setImageResource(R.drawable.exam_answer_img);
-			// this.answerBtn.setVisibility(View.INVISIBLE); //仍然占据位置
-			this.ruleTypeLayout.setOnClickListener(this);
-			viewFlow.setSelection(questionCursor);
-		} else {
-			this.answerBtn.setImageResource(R.drawable.exam_answer_img);
-			viewFlow.setSelection(questionCursor);
-		}
-	}
+//	private void secondInit()
+//	{
+//		if ("DoExam".equals(action)) {
+//			// timerFlag = true;
+//			// new TimerThread().start();
+//			this.answerBtn.setImageResource(R.drawable.exam_submit_img);
+//			// this.examAnswerLayout.setVisibility(View.GONE);
+//			if (ruleList != null && ruleList.size() > 0) {
+//				currentRule = ruleList.get(0);
+//				this.examTypeTextView.setText(currentRule.getRuleTitle()); // 大题名字
+//				this.ruleTypeLayout.setOnClickListener(this);
+//				viewFlow.setSelection(questionCursor);
+//			} else {
+//				this.nodataLayout.setVisibility(0);
+//			}
+//		} else if ("showQuestionWithAnswer".equals(action)) {
+//			this.examTitle.setText(this.papername);
+//			this.answerBtn.setImageResource(R.drawable.exam_answer_img);
+//			// this.answerBtn.setVisibility(View.INVISIBLE); //仍然占据位置
+//			this.ruleTypeLayout.setOnClickListener(this);
+//			viewFlow.setSelection(questionCursor);
+//		} else {
+//			this.answerBtn.setImageResource(R.drawable.exam_answer_img);
+//			viewFlow.setSelection(questionCursor);
+//		}
+//	}
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		if ("DoExam".equals(action)) {
 			timerFlag = true;
 			new TimerThread().start();
@@ -903,7 +826,6 @@ public class QuestionDoExamActivity2 extends Activity implements
 
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
 		timerFlag = false;
 		super.onPause();
 		// MobclickAgent.onPause(this);
@@ -911,14 +833,12 @@ public class QuestionDoExamActivity2 extends Activity implements
 
 	@Override
 	protected void onStop() {
-		// TODO Auto-generated method stub
 		timerFlag = false;
 		super.onPause();
 	}
 
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		if (exitDialog != null) {
 			exitDialog.dismiss();
 		}
@@ -929,33 +849,31 @@ public class QuestionDoExamActivity2 extends Activity implements
 		private WeakReference<QuestionDoExamActivity2> weak;
 
 		public TimerHandler(QuestionDoExamActivity2 a) {
-			// TODO Auto-generated constructor stub
 			this.weak = new WeakReference<QuestionDoExamActivity2>(a);
 		}
 
 		@Override
 		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
 			QuestionDoExamActivity2 theActivity = weak.get();
 			switch (msg.what) {
-			case 1:
-				theActivity.paperTime--;
-				theActivity.timeCountDown
-						.setText(getTimeText(theActivity.paperTime));
-				if (theActivity.paperTime == 0) {
-					// 交卷
-					timerFlag = false;
-					Toast.makeText(theActivity, "Time Over", Toast.LENGTH_LONG)
-							.show();
-					theActivity.submitExam();
-				}
-				break;
-			case 10:
-				if (theActivity.proDialog != null) {
-					theActivity.proDialog.dismiss();
-				}
-				theActivity.gotoChooseActivity2();
-				break;
+				case 1:
+					theActivity.paperTime--;
+					theActivity.timeCountDown
+							.setText(getTimeText(theActivity.paperTime));
+					if (theActivity.paperTime == 0) {
+						// 交卷
+						timerFlag = false;
+						Toast.makeText(theActivity, "Time Over", Toast.LENGTH_LONG)
+								.show();
+						theActivity.submitExam();
+					}
+					break;
+				case 10:
+					if (theActivity.proDialog != null) {
+						theActivity.proDialog.dismiss();
+					}
+					theActivity.gotoChooseActivity2();
+					break;
 			}
 		}
 
@@ -971,13 +889,11 @@ public class QuestionDoExamActivity2 extends Activity implements
 	private class TimerThread extends Thread {
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
 			while (timerFlag) {
 				timeHandler.sendEmptyMessage(1);
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -999,15 +915,12 @@ public class QuestionDoExamActivity2 extends Activity implements
 		for (int i = 0; i < listSize; i++) {
 			ExamQuestion q = questionList.get(i);
 			String str = q.getQid() + "-";
-			if ((!"问答题".equals(q.getQType()))
-					&& choiceAnswer.indexOf(str) != -1) {
+			if ((!"问答题".equals(q.getQType())) && choiceAnswer.indexOf(str) != -1) {
 				String temp = choiceAnswer.substring(choiceAnswer.indexOf(str));
 				q.setUserAnswer(temp.substring(str.length(), temp.indexOf("&")));
-			} else if (textAnswer != null && "问答题".equals(q.getQType())
-					&& textAnswer.indexOf(str) != -1) {
+			} else if (textAnswer != null && "问答题".equals(q.getQType()) && textAnswer.indexOf(str) != -1) {
 				String temp = textAnswer.substring(textAnswer.indexOf(str));
-				q.setUserAnswer(temp.substring(str.length(),
-						temp.indexOf("   ")));
+				q.setUserAnswer(temp.substring(str.length(), temp.indexOf("   ")));
 			}
 		}
 	}
@@ -1018,13 +931,12 @@ public class QuestionDoExamActivity2 extends Activity implements
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void openPopupwin() {
 		guidefile = this.getSharedPreferences("guidefile", 0);
 		LayoutInflater mLayoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-		ViewGroup menuView = (ViewGroup) mLayoutInflater.inflate(
-				R.layout.pop_doexam_tips, null, true);
-		tipWindow = new PopupWindow(menuView, LayoutParams.FILL_PARENT,
-				LayoutParams.FILL_PARENT, true);
+		ViewGroup menuView = (ViewGroup) mLayoutInflater.inflate(R.layout.pop_doexam_tips, null, true);
+		tipWindow = new PopupWindow(menuView, LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, true);
 		tipWindow.setFocusable(true);
 		tipWindow.setBackgroundDrawable(new BitmapDrawable());
 		tipWindow.setAnimationStyle(R.style.AnimationFade);
@@ -1069,48 +981,44 @@ public class QuestionDoExamActivity2 extends Activity implements
 
 	static class MyHandler extends Handler {
 		WeakReference<QuestionDoExamActivity2> weak;
-
 		public MyHandler(QuestionDoExamActivity2 context) {
-			// TODO Auto-generated constructor stub
 			weak = new WeakReference<QuestionDoExamActivity2>(context);
 		}
 
 		@Override
 		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
 			QuestionDoExamActivity2 q2 = weak.get();
 			switch(msg.what)
 			{
-			case 1:
-				q2.questionAdapter = new QuestionAdapter2(q2, q2, q2.questionList,
-						q2.username, q2.paperid);
-				q2.viewFlow.setAdapter(q2.questionAdapter);
-				if("DoExam".equals(q2.action))
-				{
-					q2.examTitle.setText(q2.papername); // 试卷名字
-					q2.answerBtn.setImageResource(R.drawable.exam_submit_img);
-					// this.examAnswerLayout.setVisibility(View.GONE);
-					if (q2.ruleList != null && q2.ruleList.size() > 0) {
-						q2.currentRule = q2.ruleList.get(0);
-						q2.examTypeTextView.setText(q2.currentRule.getRuleTitle()); // 大题名字
-						q2.ruleTypeLayout.setOnClickListener(q2);
-						q2.viewFlow.setSelection(q2.questionCursor);
-					} else {
-						q2.nodataLayout.setVisibility(0);
+				case 1:
+					q2.questionAdapter = new QuestionAdapter2(q2, q2, q2.questionList,q2.username, q2.paperid);
+					q2.viewFlow.setAdapter(q2.questionAdapter);
+					if("DoExam".equals(q2.action))
+					{
+						q2.examTitle.setText(q2.papername); // 试卷名字
+						q2.answerBtn.setImageResource(R.drawable.exam_submit_img);
+						// this.examAnswerLayout.setVisibility(View.GONE);
+						if (q2.ruleList != null && q2.ruleList.size() > 0) {
+							q2.currentRule = q2.ruleList.get(0);
+							q2.examTypeTextView.setText(q2.currentRule.getRuleTitle()); // 大题名字
+							q2.ruleTypeLayout.setOnClickListener(q2);
+							q2.viewFlow.setSelection(q2.questionCursor);
+						} else {
+							q2.nodataLayout.setVisibility(0);
+						}
 					}
-				}
-				q2.loadingLayout.setVisibility(View.GONE);
-				int firstExam = q2.guidefile.getInt("isFirstExam", 0);
-				if (firstExam == 0) {
-					q2.openPopupwin();
-				}
-				break;
-			case 33:
-				if(q2.questionCursor < q2.questionList.size()-1)
-				{
-					q2.viewFlow.setSelection(++q2.questionCursor);
-				}
-				break;
+					q2.loadingLayout.setVisibility(View.GONE);
+					int firstExam = q2.guidefile.getInt("isFirstExam", 0);
+					if (firstExam == 0) {
+						q2.openPopupwin();
+					}
+					break;
+				case 33:
+					if(q2.questionCursor < q2.questionList.size()-1)
+					{
+						q2.viewFlow.setSelection(++q2.questionCursor);
+					}
+					break;
 			}
 		}
 	}

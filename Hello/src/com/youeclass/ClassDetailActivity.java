@@ -30,42 +30,54 @@ import com.youeclass.adapter.MyCourseListAdapter;
 import com.youeclass.util.Constant;
 import com.youeclass.util.HttpConnectUtil;
 
+/**
+ * 课程明细。
+ * @author jeasonyoung
+ *
+ */
 public class ClassDetailActivity extends Activity implements OnClickListener{
 	private ImageButton rbtn;
 	private TextView title;
 	private ListView list;
 	private LinearLayout courseCenter,myCourse,playrecord;
-	private List<String> adapterList = new ArrayList<String>();
-	private List<String> urls;
+	private List<String> urls,adapterList = new ArrayList<String>();
 	private ProgressDialog dialog;
 	private Handler handler;
-	private String gid;
+	private String gid,username;
 	private LinearLayout nodata;
-	private String username;
+	/*
+	 * 重载创建。
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_coursedetaillist);
-		rbtn = (ImageButton) this.findViewById(R.id.returnbtn);
-		title = (TextView) this.findViewById(R.id.TopTitle1);
-		list = (ListView) this.findViewById(R.id.courserList);
-		dialog = ProgressDialog.show(ClassDetailActivity.this,null,"努力加载中请稍候",true,true);
-		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		initLayoutBtn();
+		
+		this.rbtn = (ImageButton) this.findViewById(R.id.returnbtn);
+		this.title = (TextView) this.findViewById(R.id.TopTitle1);
+		this.list = (ListView) this.findViewById(R.id.courserList);
+		this.dialog = ProgressDialog.show(ClassDetailActivity.this,null,"努力加载中请稍候",true,true);
+		this.dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		
+		this.initLayoutBtn();
+		
 		Intent intent = this.getIntent();
-		title.setText(intent.getStringExtra("name"));
+		this.title.setText(intent.getStringExtra("name"));
 		this.gid = intent.getStringExtra("gid");
 		this.username = intent.getStringExtra("username");
-		list.setAdapter(new MyCourseListAdapter(this,adapterList,urls));
+		this.list.setAdapter(new MyCourseListAdapter(this,adapterList,urls));
 		//设置缓存颜色为透明
-		list.setCacheColorHint(Color.TRANSPARENT);
-		list.setAlwaysDrawnWithCacheEnabled(true); 
-		rbtn.setOnClickListener(this);
+		this.list.setCacheColorHint(Color.TRANSPARENT);
+		this.list.setAlwaysDrawnWithCacheEnabled(true); 
+		this.rbtn.setOnClickListener(this);
 		this.handler = new MyHandler(this);
+		
 		new GetMyLessonThread().start();
+		
 		this.list.setOnItemClickListener(new ItemClickListener());
 	}
+	//初始化按钮
 	private void initLayoutBtn()
 	{
 		this.nodata = (LinearLayout) this.findViewById(R.id.nodataLayout);
@@ -76,31 +88,34 @@ public class ClassDetailActivity extends Activity implements OnClickListener{
 		this.playrecord.setOnClickListener(this);
 		this.myCourse.setOnClickListener(this);
 	}
+	/*
+	 * 重载按钮事件。
+	 * @see android.view.View.OnClickListener#onClick(android.view.View)
+	 */
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch(v.getId())
 		{
-		case R.id.returnbtn:
-			this.finish();
-			break;
-		case R.id.CourseCenter_layout_btn://课程中心
-			break;
-		case R.id.MyCourse_layout_btn://我的课程
-			Intent intent = new Intent(this,MyCourseActivity.class);
-			intent.putExtra("username", username);
-			this.startActivity(intent);
-			break;
-		case R.id.LearningRecord_layout_btn://学习记录
-			Toast.makeText(this, "免费体验不提供该功能", Toast.LENGTH_SHORT).show();
-			break;
+			case R.id.returnbtn:
+				this.finish();
+				break;
+			case R.id.CourseCenter_layout_btn://课程中心
+				break;
+			case R.id.MyCourse_layout_btn://我的课程
+				Intent intent = new Intent(this,MyCourseActivity.class);
+				intent.putExtra("username", username);
+				this.startActivity(intent);
+				break;
+			case R.id.LearningRecord_layout_btn://学习记录
+				Toast.makeText(this, "免费体验不提供该功能", Toast.LENGTH_SHORT).show();
+				break;
 		}
 	}
+	//
 	private class GetMyLessonThread extends Thread
 	{
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
 			try{
 				String result = HttpConnectUtil.httpGetRequest(ClassDetailActivity.this, Constant.DOMAIN_URL+"mobile/findFreeClass?gid="+gid);
 				if(result!=null&&!result.equals("null"))
@@ -173,17 +188,25 @@ public class ClassDetailActivity extends Activity implements OnClickListener{
                 }
         }
 	}
+	/**
+	 * 选项点击。
+	 * @author jeasonyoung
+	 *
+	 */
 	private class ItemClickListener implements OnItemClickListener
 	{
-		public ItemClickListener() {
-			// TODO Auto-generated constructor stub
-		}
+		/**
+		 * 构造函数。
+		 */
+		public ItemClickListener() { }
+		/*
+		 * 重载点击事件。
+		 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
+		 */
 		@Override
-		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-				long arg3) {
-			// TODO Auto-generated method stub
+		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 			MobclickAgent.onEvent(ClassDetailActivity.this,"free_video_listen");
-			Intent intent = new Intent(ClassDetailActivity.this,VideoActivity3.class);
+			Intent intent = new Intent(ClassDetailActivity.this, VideoPlayActivity.class);
 			intent.putExtra("name", ((TextView)arg1.findViewById(R.id.text4)).getText().toString());
 			intent.putExtra("url",urls.get(arg2));
 			intent.putExtra("username",username);
@@ -193,7 +216,6 @@ public class ClassDetailActivity extends Activity implements OnClickListener{
 	}
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		if(dialog!=null)
 		{
 			dialog.dismiss();	
@@ -207,9 +229,7 @@ public class ClassDetailActivity extends Activity implements OnClickListener{
 	};
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		MobclickAgent.onResume(this);
-		
 	}
 }

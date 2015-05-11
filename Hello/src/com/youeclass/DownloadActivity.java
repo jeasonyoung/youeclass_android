@@ -45,7 +45,7 @@ public class DownloadActivity extends ActivityGroup implements OnClickListener {
 			flag=1;
 		}else
 		{
-		Intent mIntent = new Intent(DownloadActivity.this, DowningActivity.class);
+		Intent mIntent = new Intent(this, DowningActivity.class);
 		mIntent.putExtra("name", name);
 		mIntent.putExtra("url", url);
 		mIntent.putExtra("username", username);

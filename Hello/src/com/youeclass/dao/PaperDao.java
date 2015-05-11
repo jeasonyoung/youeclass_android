@@ -20,11 +20,14 @@ import com.youeclass.entity.Paper;
 import com.youeclass.entity.QuestionAdapterData;
 
 public class PaperDao {
-	private MyDBHelper dbhelper;
 	private static final String TAG = "PaperDao";
-
+	private MyDBHelper dbHelper;
+	/**
+	 *  构造函数。
+	 * @param context 上下文。
+	 */
 	public PaperDao(Context context) {
-		dbhelper = new MyDBHelper(context);
+		this.dbHelper = new MyDBHelper(context);
 	}
 	
 	/**
@@ -34,18 +37,17 @@ public class PaperDao {
 	 */
 	public void insertPaper(Paper paper,List<ExamRule> rules)
 	{
-		/*
-		 * 先看存不存在,不存在就加入
-		 */
+		//先看存不存在,不存在就加入
 		if(paper==null) return;
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		Log.d(TAG, "insertPaper方法打开了数据库连接");
 		Cursor cursor = db.rawQuery("select * from ExamPaperTab where paperid = ?",new String[]{paper.getPaperId()});
 		if(cursor.getCount()>0)
 		{
 			Log.d(TAG,"该试卷已经加过了");
 			cursor.close();
-			dbhelper.closeDb();
+			//dbhelper.closeDb();
+			db.close();
 			return;
 		}
 		cursor.close();
@@ -64,24 +66,24 @@ public class PaperDao {
 				}
 			}
 			db.setTransactionSuccessful();
-		}finally
-		{
+		}finally {
 			db.endTransaction();
+			db.close();
 		}
-		dbhelper.closeDb();
+		//dbhelper.closeDb();
 		Log.d(TAG, "insertPaper方法关闭了数据库连接");
 	}
 	public List<Paper> findPapers(String gid)
 	{
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		//String paperId, String paperName, int paperSorce, int paperTime,String courseId,String examId
 		String sql = "select paperid,papername,papersorce,papertime,courseid,examid from ExamPaperTab where gid = ?";
 		String[] params = new String[]{gid};
 		Cursor cursor = db.rawQuery(sql, params);
-		if(cursor.getCount() == 0)
-		{
+		if(cursor.getCount() == 0) {
 			cursor.close();
-			dbhelper.closeDb();
+			db.close();
+			//dbhelper.closeDb();
 			return null;
 		}
 		List<Paper> list = new ArrayList<Paper>();
@@ -91,13 +93,12 @@ public class PaperDao {
 			list.add(p);
 		}
 		cursor.close();
-		dbhelper.closeDb();
+		db.close();
 		return list;
-				
 	}
 	public List<Paper> findAllPapers(String username)
 	{
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		//String paperId, String paperName, int paperSorce, int paperTime,String courseId,String examId
 		String sql = "select paperid,papername,paperscore,papertime,courseid,examid from ExamPaperTab where courseid in ("+
 						"select courseid from CourseTab where username = ? )";
@@ -106,7 +107,8 @@ public class PaperDao {
 		if(cursor.getCount() == 0)
 		{
 			cursor.close();
-			dbhelper.closeDb();
+			//dbhelper.closeDb();
+			db.close();
 			return null;
 		}
 		List<Paper> list = new ArrayList<Paper>();
@@ -118,7 +120,8 @@ public class PaperDao {
 			list.add(p);
 		}
 		cursor.close();
-		dbhelper.closeDb();
+		//dbhelper.closeDb();
+		db.close();
 		return list;
 	}
 	/**
@@ -129,7 +132,7 @@ public class PaperDao {
 	{
 		if(rules!=null&&rules.size()>0)
 		{
-			SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.WRITE);
+			SQLiteDatabase db = this.dbHelper.getWritableDatabase();//dbhelper.getDatabase(MyDBHelper.WRITE);
 			db.beginTransaction();
 			try
 			{
@@ -141,14 +144,15 @@ public class PaperDao {
 			db.setTransactionSuccessful();
 			}finally{
 				db.endTransaction();
+				db.close();
 			}
-			dbhelper.closeDb();
+			//dbhelper.closeDb();
 		}
 	}
 	
 	public List<ExamRule> findRules(String paperid)
 	{
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		//String ruleId, String paperId, String ruleTitle,String ruleTitleInfo,String ruleType,String scoreSet, int questionNum, double scoreForEach, int orderInPaper
 		String sql = "select ruleid,paperid,ruletitle,ruletitleinfo,ruletype,scoreset,questionnum,scoreforeach,orderinpaper from ExamRuleTab where paperid = ? order by orderinpaper asc";
 		String[] params = new String[]{paperid};
@@ -156,7 +160,8 @@ public class PaperDao {
 		if(cursor.getCount() == 0)
 		{
 			cursor.close();
-			dbhelper.closeDb();
+			db.close();
+			//dbhelper.closeDb();
 			return null;
 		}
 		List<ExamRule> list = new ArrayList<ExamRule>();
@@ -166,20 +171,22 @@ public class PaperDao {
 			list.add(r);
 		}
 		cursor.close();
-		dbhelper.closeDb();
+		db.close();
+		//dbhelper.closeDb();
 		return list;
 	}
 	public void insertQuestions(List<ExamQuestion> questions)
 	{
 		if(questions!=null&&questions.size()>0)
 		{
-			SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+			SQLiteDatabase db = this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 			///////////
 			Cursor cursor = db.rawQuery("select qid from ExamQuestionTab where paperid = ?", new String[]{questions.get(0).getPaperId()});
 			if(cursor.getCount()> 0)
 			{
 				cursor.close();
-				dbhelper.closeDb();
+				db.close();
+				//dbhelper.closeDb();
 				return;
 			}
 			cursor.close();
@@ -196,13 +203,14 @@ public class PaperDao {
 			db.setTransactionSuccessful();
 			}finally{
 				db.endTransaction();
+				db.close();
 			}
-			dbhelper.closeDb();
+			//dbhelper.closeDb();
 		}
 	}
 	public List<ExamQuestion> findQuestionsByRuleId(String ruleId)
 	{
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		//String qid, String paperId, String content,
 		//String answer, String analysis, String linkQid,
 		//int qType, int optionNum, int orderId
@@ -212,7 +220,8 @@ public class PaperDao {
 		if(cursor.getCount() == 0)
 		{
 			cursor.close();
-			dbhelper.closeDb();
+			db.close();
+			//dbhelper.closeDb();
 			return null;
 		}
 		List<ExamQuestion> list = new ArrayList<ExamQuestion>();
@@ -222,12 +231,13 @@ public class PaperDao {
 			list.add(q);
 		}
 		cursor.close();
-		dbhelper.closeDb();
+		db.close();
+		//dbhelper.closeDb();
 		return list;
 	}
 	public List<ExamQuestion> findQuestionByPaperId(String paperId)
 	{
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		//String qid, String paperId, String content,
 		//String answer, String analysis, String linkQid,
 		//int qType, int optionNum, int orderId
@@ -237,7 +247,8 @@ public class PaperDao {
 		if(cursor.getCount() == 0)
 		{
 			cursor.close();
-			dbhelper.closeDb();
+			db.close();
+			//dbhelper.closeDb();
 			return null;
 		}
 		List<ExamQuestion> list = new ArrayList<ExamQuestion>();
@@ -247,12 +258,13 @@ public class PaperDao {
 			list.add(q);
 		}
 		cursor.close();
-		dbhelper.closeDb();
+		db.close();
+		//dbhelper.closeDb();
 		return list;
 	}
 	public List<ExamQuestion> findQuestionById(String qid)
 	{
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		//String qid, String paperId, String content,
 		//String answer, String analysis, String linkQid,
 		//int qType, int optionNum, int orderId
@@ -262,7 +274,8 @@ public class PaperDao {
 		if(cursor.getCount() == 0)
 		{
 			cursor.close();
-			dbhelper.closeDb();
+			db.close();
+			//dbhelper.closeDb();
 			return null;
 		}
 		List<ExamQuestion> list = new ArrayList<ExamQuestion>();
@@ -272,12 +285,13 @@ public class PaperDao {
 			list.add(q);
 		}
 		cursor.close();
-		dbhelper.closeDb();
+		db.close();
+		//dbhelper.closeDb();
 		return list;
 	}
 	public List<ExamQuestion> findQuestionFromErrors(String username,String paperid)
 	{
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		//String qid, String paperId, String content,
 		//String answer, String analysis, String linkQid,
 		//int qType, int optionNum, int orderId
@@ -287,7 +301,8 @@ public class PaperDao {
 		if(cursor.getCount() == 0)
 		{
 			cursor.close();
-			dbhelper.closeDb();
+			db.close();
+			//dbhelper.closeDb();
 			return null;
 		}
 		List<ExamQuestion> list = new ArrayList<ExamQuestion>();
@@ -297,14 +312,15 @@ public class PaperDao {
 			list.add(q);
 		}
 		cursor.close();
-		dbhelper.closeDb();
+		db.close();
+		//dbhelper.closeDb();
 		return list;
 	}
 	
 	public List<ExamQuestion> findQuestionFromFavors(String username,String paperid)
 	{
 		Log.i(TAG,"find QuestionfromFavors");
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db =  this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		//String qid, String paperId, String content,
 		//String answer, String analysis, String linkQid,
 		//int qType, int optionNum, int orderId
@@ -314,7 +330,8 @@ public class PaperDao {
 		if(cursor.getCount() == 0)
 		{
 			cursor.close();
-			dbhelper.closeDb();
+			db.close();
+			//dbhelper.closeDb();
 			return null;
 		}
 		List<ExamQuestion> list = new ArrayList<ExamQuestion>();
@@ -324,7 +341,8 @@ public class PaperDao {
 			list.add(q);
 		}
 		cursor.close();
-		dbhelper.closeDb();
+		db.close();
+		//dbhelper.closeDb();
 		return list;
 	}
 	/**
@@ -335,7 +353,7 @@ public class PaperDao {
 	public void saveOrUpdateRecord(ExamRecord r) //每人每套试卷只有一个记录
 	{
 		if(r==null) return;
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		Cursor cursor = db.rawQuery("select * from ExamRecordTab where paperid = ? and username = ?",new String[]{r.getPaperId(),r.getUsername()});
 		if(cursor.getCount()>0)
 		{
@@ -343,7 +361,8 @@ public class PaperDao {
 			String sql = "update ExamRecordTab set score = ?,usetime=?,temptime=?,answers=?,tempanswer=?,lasttime = datetime(?),isDone = ? where paperid = ? and username = ? ";
 			Object[] params = new Object[]{r.getScore(),r.getUseTime(),r.getTempTime(),r.getAnswers(),r.getTempAnswer(),r.getLastTime(),r.getIsDone(),r.getPaperId(),r.getUsername()};
 			db.execSQL(sql,params);
-			dbhelper.closeDb();
+			//dbhelper.closeDb();
+			db.close();
 			return;
 		}
 		cursor.close();
@@ -357,8 +376,9 @@ public class PaperDao {
 		}finally
 		{
 			db.endTransaction();
+			db.close();
 		}
-		dbhelper.closeDb();
+		//dbhelper.closeDb();
 	}
 	/*
 	 * 开始考试就要加记录
@@ -366,7 +386,7 @@ public class PaperDao {
 	public ExamRecord insertRecord(ExamRecord r)
 	{
 		if(r==null) return null;
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		/*
 		 * String paperId,
 			String username, String answers, String tempAnswer, double score,
@@ -377,7 +397,8 @@ public class PaperDao {
 		{
 			ExamRecord record = new ExamRecord(cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getDouble(4),cursor.getInt(5),cursor.getInt(6),cursor.getString(7),cursor.getString(8));
 			cursor.close();
-			dbhelper.closeDb();
+			db.close();
+			//dbhelper.closeDb();
 			return record;
 		}
 		cursor.close();
@@ -392,7 +413,8 @@ public class PaperDao {
 		}finally
 		{
 			db.endTransaction();
-			dbhelper.closeDb();
+			db.close();
+			//dbhelper.closeDb();
 		}
 	}
 	/**
@@ -401,25 +423,27 @@ public class PaperDao {
 	public ExamRecord findRecord(String username,String paperId)
 		{
 			ExamRecord r = null;
-			SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+			SQLiteDatabase db = this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 			Cursor cursor = db.rawQuery("select paperid,username,answers,tempanswer,score,usetime,temptime,lasttime,isDone from ExamRecordTab where paperid = ? and username = ?",new String[]{paperId,username});
 			if(cursor.moveToNext())
 			{
 				r = new ExamRecord(cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getDouble(4),cursor.getInt(5),cursor.getInt(6),cursor.getString(7),cursor.getString(8));
 			}
 			cursor.close();
-			dbhelper.closeDb();
+			db.close();
+			//dbhelper.closeDb();
 			return r;
 		}
 	public List<ExamRecord> findRecordsByUsername(String username)
 	{
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		String sql = "select r.paperid,r.username,r.answers,r.tempanswer,r.score,r.usetime,r.temptime,r.lasttime,r.isDone ,p.papername,p.papertime,p.paperscore from ExamRecordTab r,ExamPaperTab p where r.paperid = p.paperid and username = ?";
 		Cursor cursor = db.rawQuery(sql, new String[]{username});
 		if(cursor.getCount()==0)
 		{
 			cursor.close();
-			dbhelper.closeDb();
+			db.close();
+			///dbhelper.closeDb();
 			return null;
 		}
 		List<ExamRecord> list = new ArrayList<ExamRecord>();
@@ -432,12 +456,13 @@ public class PaperDao {
 			list.add(r);
 		}
 		cursor.close();
-		dbhelper.closeDb();
+		db.close();
+		//dbhelper.closeDb();
 		return list;
 	}
 	public void deleteRecord(ExamRecord r)
 	{
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.WRITE);
+		SQLiteDatabase db = this.dbHelper.getWritableDatabase();// dbhelper.getDatabase(MyDBHelper.WRITE);
 		db.beginTransaction();
 		try
 		{
@@ -446,8 +471,9 @@ public class PaperDao {
 		}finally
 		{
 			db.endTransaction();
+			db.close();
 		}
-		dbhelper.closeDb();
+		//dbhelper.closeDb();
 	}
 	/**
 	 * 更新临时的答案
@@ -456,7 +482,7 @@ public class PaperDao {
 	public void updateTempAnswerForRecord(ExamRecord r)
 	{
 		if(r==null) return;
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.WRITE);
+		SQLiteDatabase db = this.dbHelper.getWritableDatabase();//dbhelper.getDatabase(MyDBHelper.WRITE);
 		db.beginTransaction();
 		try
 		{
@@ -465,18 +491,20 @@ public class PaperDao {
 		}finally
 		{
 			db.endTransaction();
+			db.close();
 		}
-		dbhelper.closeDb();
+		//dbhelper.closeDb();
 	}
 	public void insertError(ExamErrorQuestion e)
 	{
 		if(e==null) return;
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		Cursor cursor = db.rawQuery("select * from ExamErrorQuestionTab where qid = ? and username = ?", new String[]{e.getQid(),e.getUsername()});
 		if(cursor.getCount()>0)
 		{
 			cursor.close();
-			dbhelper.closeDb();
+			db.close();
+			//dbhelper.closeDb();
 			return;
 		}
 		cursor.close();
@@ -490,13 +518,14 @@ public class PaperDao {
 		{
 			db.endTransaction();
 		}
-		dbhelper.closeDb();
+		db.close();
+		//dbhelper.closeDb();
 	}
 	public void insertFavor(ExamFavor f)
 	{
 		if(f==null) return;
 		Log.i(TAG,"inserFavor");
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.WRITE);
+		SQLiteDatabase db = this.dbHelper.getWritableDatabase();//dbhelper.getDatabase(MyDBHelper.WRITE);
 		db.beginTransaction();
 		try
 		{
@@ -506,14 +535,15 @@ public class PaperDao {
 		}finally
 		{
 			db.endTransaction();
+			db.close();
 		}
-		dbhelper.closeDb();
+		//dbhelper.closeDb();
 	}
 	public void insertNote(ExamNote n)
 	{
 		//QID TEXT,EXAMID TEXT,CONTENT TEXT,ADDTIME DATETIME DEFAULT (datetime('now','localtime')),USERNAME TEXT
 		if(n == null) return;
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		String[] params = new String[]{n.getQid(),n.getUsername()};
 		Cursor cursor = db.rawQuery("select * from ExamNoteTab where qid=? and username = ?", params);
 		if(cursor.getCount()>0)
@@ -527,8 +557,9 @@ public class PaperDao {
 			}finally
 			{
 				db.endTransaction();
+				db.close();
 			}
-			dbhelper.closeDb();
+			//dbhelper.closeDb();
 			return;
 		}
 		cursor.close();
@@ -540,72 +571,78 @@ public class PaperDao {
 		}finally
 		{
 			db.endTransaction();
+			db.close();
 		}
-		dbhelper.closeDb();
+		//dbhelper.closeDb();
 	}
 	public String findNoteContent(String qid,String username)
 	{
 		String content = null;
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		Cursor cursor = db.rawQuery("select content from ExamNoteTab where qid = ? and username = ?", new String[]{qid,username});
 		if(cursor.moveToNext())
 		{
 			content = cursor.getString(0);
 		}
 		cursor.close();
-		dbhelper.closeDb();
+		db.close();
+		//dbhelper.closeDb();
 		return content;
 	}
 	public void deleteFavor(ExamFavor f)
 	{
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.WRITE);
-		db.beginTransaction();
+		SQLiteDatabase db = this.dbHelper.getWritableDatabase();//dbhelper.getDatabase(MyDBHelper.WRITE);
 		try
 		{
+			db.beginTransaction();
 			db.execSQL("delete from ExamFavorTab where username = ? and qid = ?",new Object[]{f.getUsername(),f.getQid()});
 			db.setTransactionSuccessful();
 		}finally
 		{
 			db.endTransaction();
+			db.close();
 		}
-		dbhelper.closeDb();
+		//dbhelper.closeDb();
 	}
 	public void deleteError(String username,String qid)
 	{
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.WRITE);
-		db.beginTransaction();
+		SQLiteDatabase db = this.dbHelper.getWritableDatabase();//dbhelper.getDatabase(MyDBHelper.WRITE);
 		try
 		{
+			db.beginTransaction();
 			db.execSQL("delete from ExamErrorQuestionTab where username = ? and qid = ?",new Object[]{username,qid});
 			db.setTransactionSuccessful();
 		}finally
 		{
 			db.endTransaction();
+			db.close();
 		}
-		dbhelper.closeDb();
+		//dbhelper.closeDb();
 	}
 	public void deleteNote(ExamNote note)
 	{
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.WRITE);
-		db.beginTransaction();
+		SQLiteDatabase db = this.dbHelper.getWritableDatabase();//dbhelper.getDatabase(MyDBHelper.WRITE);
 		try
 		{
+			db.beginTransaction();
 			db.execSQL("delete from ExamNoteTab where username = ? and qid = ?",new Object[]{note.getUsername(),note.getQid()});
 			db.setTransactionSuccessful();
 		}finally
 		{
 			db.endTransaction();
+			db.close();
 		}
-		dbhelper.closeDb();
+		//dbhelper.closeDb();
 	}
 	public List<ExamNote> findNotes(String paperid,String username)
 	{
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();// dbhelper.getDatabase(MyDBHelper.READ);
 		Cursor cursor = db.rawQuery("select qid,addTime,content,paperid from ExamNoteTab where paperid =? and username = ?", new String[]{paperid,username});
 		if(cursor.getCount()==0)
 		{
 			cursor.close();
-			dbhelper.closeDb();
+			db.close();
+			//dbhelper.closeDb();
 			return null;
 		}
 		List<ExamNote> list = new ArrayList<ExamNote>();
@@ -615,17 +652,19 @@ public class PaperDao {
 			list.add(note);
 		}
 		cursor.close();
-		dbhelper.closeDb();
+		db.close();
+		//dbhelper.closeDb();
 		return list;
 	}
 	public List<ExamFavor> findFavors(String username)
 	{
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db =  this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		Cursor cursor = db.rawQuery("select qid,paperid from ExamFavorTab where username = ?", new String[]{username});
 		if(cursor.getCount()==0)
 		{
 			cursor.close();
-			dbhelper.closeDb();
+			db.close();
+			//dbhelper.closeDb();
 			return null;
 		}
 		List<ExamFavor> list = new ArrayList<ExamFavor>();
@@ -635,12 +674,13 @@ public class PaperDao {
 			list.add(favor);
 		}
 		cursor.close();
-		dbhelper.closeDb();
+		db.close();
+		//dbhelper.closeDb();
 		return list;
 	}
 	public List<QuestionAdapterData> findAdapterData(String actionName,String username)
 	{
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();// dbhelper.getDatabase(MyDBHelper.READ);
 		String sql = null;
 		String[] params = new String[]{username};
 		if("myNotes".equals(actionName))
@@ -660,7 +700,8 @@ public class PaperDao {
 		if(cursor.getCount()==0)
 		{
 			cursor.close();
-			dbhelper.closeDb();
+			db.close();
+			//dbhelper.closeDb();
 			return null;
 		}
 		List<QuestionAdapterData> list = new ArrayList<QuestionAdapterData>();
@@ -670,21 +711,22 @@ public class PaperDao {
 			list.add(data);
 		}
 		cursor.close();
-		dbhelper.closeDb();
+		db.close();
+		//dbhelper.closeDb();
 		return list;
 	}
 
 	public StringBuffer findFavorQids(String username,String paperId) {
-		// TODO Auto-generated method stub
 		StringBuffer buf = new StringBuffer();
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		Cursor cursor = db.rawQuery("select qid from ExamFavorTab where username = ? and paperId = ?", new String[]{username,paperId});
 		while(cursor.moveToNext())
 		{
 			buf.append(cursor.getString(0)).append(",");
 		}
 		cursor.close();
-		dbhelper.closeDb();
+		db.close();
+		//dbhelper.closeDb();
 		return buf;
 	}
 }

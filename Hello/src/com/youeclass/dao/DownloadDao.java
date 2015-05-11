@@ -1,136 +1,169 @@
 package com.youeclass.dao;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.youeclass.db.MyDBHelper;
-import com.youeclass.entity.DownloadItem;
 
+/**
+ * 下载进度数据操作类。
+ * @author jeasonyoung
+ *负责视频文件多线程下载的过程的记录，以便进行断点下载。
+ */
 public class DownloadDao {
-	private MyDBHelper openHelper;
-
+	private static final String TAG = "DownloadDao";
+	private MyDBHelper dbHelper;
+	/**
+	 * 构造函数。
+	 * @param context 上下文。
+	 */
 	public DownloadDao(Context context) {
-		openHelper = new MyDBHelper(context);
+		this.dbHelper = new MyDBHelper(context);
 	}
-	public List<DownloadItem> findByUrl(String url,String username)
-	{
-//		System.out.println(url+" "+username );
-		List<DownloadItem> list = new ArrayList<DownloadItem>();
-		SQLiteDatabase db = openHelper.getDatabase(MyDBHelper.READ);
-		Cursor cursor = db.rawQuery("select thread_id,start_pos,end_pos,complete_size,url from DownloadTab where url =? and username = ?", new String[]{url,username});
-		while(cursor.moveToNext())
-		{
-			DownloadItem loader = new DownloadItem(cursor.getInt(0),cursor.getInt(1),cursor.getInt(2),cursor.getInt(3),cursor.getString(4),username);
-			list.add(loader);
+	/**
+	 *  获取每条线程已经下载的文件长度。
+	 * @param url
+	 * @param userName
+	 * @return
+	 */
+	@SuppressLint("UseSparseArrays") 
+	public  Map<Integer, Long> loadAllData(String url, String userName){
+		Log.d(TAG, "获取每条线程已经下载的文件长度...");
+		final String query_sql = "select thread_id,complete_size from DownloadTab where url =? and username = ?";
+		Map<Integer, Long> map = new HashMap<Integer, Long>();
+ 		SQLiteDatabase db =  this.dbHelper.getReadableDatabase();
+		Cursor cursor = db.rawQuery(query_sql, new String[]{url,userName});
+		while(cursor.moveToNext()){
+			map.put(Integer.valueOf(cursor.getInt(0)), Long.valueOf(cursor.getLong(1)));
 		}
+		//关闭游标
 		cursor.close();
-		openHelper.closeDb();
-		System.out.println(list);
-		return list;
+		//关闭链接
+		db.close();
+		return map;
 	}
 	/**
 	 * 保存每条线程已经下载的文件长度
-	 * @param path
+	 * @param url
+	 * @param userName
 	 * @param map
 	 */
-	public void save(List<DownloadItem> loaders)
-	{
-		SQLiteDatabase db =  openHelper.getDatabase(MyDBHelper.WRITE);
-		db.beginTransaction();
-		try{
-			for(DownloadItem l:loaders)
-			{
-				db.execSQL("insert into DownloadTab(thread_id,start_pos,end_pos,complete_size,url,username)values(?,?,?,?,?,?)",
-						new Object[]{l.getThreadId(),l.getStartPos(),l.getEndPos(),l.getCompleteSize(),l.getUrl(),l.getUsername()});
-			}
-			db.setTransactionSuccessful();
-		}finally{
-			db.endTransaction();
-		}
-		openHelper.closeDb();
-	}
-	/**
-	 * 实时更新每条线程已经下载的文件长度
-	 * @param path
-	 * @param map
-	 */
-	public synchronized void update(DownloadItem l)
-	{
-		SQLiteDatabase db =  openHelper.getDatabase(MyDBHelper.WRITE);
-		db.beginTransaction();
-		try{
-			db.execSQL("update DownloadTab set complete_size=? where url=? and thread_id = ? and username =?",
-					new Object[]{l.getCompleteSize(),l.getUrl(),l.getThreadId(),l.getUsername()});
-			db.setTransactionSuccessful();
-		}finally{
-			db.endTransaction();
-		}
-		openHelper.closeDb();
-	}
-	/**
-	 * 当文件下载完成后，删除对应的下载记录,更新课程表记录
-	 * @param path
-	 */
-	public void deleteAll(String url,int size,String filePath,String username)
-	{
-		Log.i("Download","删除下载记录");
-		SQLiteDatabase db =  openHelper.getDatabase(MyDBHelper.WRITE);
-		db.beginTransaction();
-		try
-		{
-			//删除记录
-			db.execSQL("delete from DownloadTab where url=? and username = ?", new Object[]{url,username });
-			//更新记录
-			db.execSQL("update CourseTab set finishsize = ?,filepath = ? ,state = 2 where fileurl = ? and username = ?", new Object[]{size,filePath,url,username});
-			db.setTransactionSuccessful();
-		}finally
-		{
-			db.endTransaction();
-		}
-		openHelper.closeDb();
-	}
-	public void deleteAll(String url,String username)
-	{
-		SQLiteDatabase db =  openHelper.getDatabase(MyDBHelper.WRITE);
-		db.beginTransaction();
-		try
-		{
-			//删除记录
-			db.execSQL("delete from DownloadTab where url=? and username = ?", new Object[]{url,username});
-			db.setTransactionSuccessful();
-		}finally
-		{
-			db.endTransaction();
-		}
-		openHelper.closeDb();
-	}
-	public int getDownLength(String url,String username) {
-		// TODO Auto-generated method stub
-		List<DownloadItem> list = findByUrl(url,username);
-		int length = 0;
-		for(DownloadItem l:list)
-		{
-			length+=l.getCompleteSize();
-		}
-		return length;
-	}
-	public void updateCourse(String downloadUrl, int downloadSize,String filepath,String username) {
-		// TODO Auto-generated method stub
-			SQLiteDatabase db =  openHelper.getDatabase(MyDBHelper.WRITE);
+	public void save(String url,String userName,Map<Integer, Long> map){
+		Log.d(TAG, "开始保存每条线程已经下载的文件长度...");
+		final String insert_sql = "insert into DownloadTab(thread_id,complete_size,url,username)values(?,?,?,?)";
+		SQLiteDatabase db = this.dbHelper.getWritableDatabase();
+		try {
 			db.beginTransaction();
-			try
-			{
-				db.execSQL("update CourseTab set finishsize = ?,filepath = ? where fileurl = ? and username =? ", new Object[]{downloadSize,filepath,downloadUrl,username});
-				db.setTransactionSuccessful();
-			}finally
-			{
-				db.endTransaction();
+			for(Map.Entry<Integer, Long> entry : map.entrySet()){
+				db.execSQL(insert_sql, new Object[]{entry.getKey(),entry.getValue(),url, userName });
 			}
-			openHelper.closeDb();
+			db.setTransactionSuccessful();
+		} catch (Exception e) {
+			Log.e(TAG, "保存每条线程已经下载的文件长度时发生异常：" + e.getMessage(), e);
+		}finally{
+			db.endTransaction();
+			db.close();
 		}
+	}
+	/**
+	 * 实时更新每条线程已下载的文件长度。
+	 * @param url
+	 * @param userName
+	 * @param threadId
+	 * @param pos
+	 */
+	public synchronized void update(String url,String userName, int threadId, long pos){
+		Log.d(TAG, "开始实时更新每条线程已下载的文件长度...");
+		final String update_sql = "update DownloadTab set complete_size=?  where url=? and username=? and thread_id=?";
+		SQLiteDatabase db = this.dbHelper.getWritableDatabase();
+		db.execSQL(update_sql, new Object[]{pos,  url, userName, threadId });
+		db.close();
+	}
+	/**
+	 * 更新下载课程文件信息
+	 * @param url
+	 * @param userName
+	 * @param filePath
+	 * @param fileSize
+	 */
+	public synchronized void updateDowningCourseFile(String url,String userName,String filePath, long fileSize){
+		Log.d(TAG, "更新下载课程文件信息...");
+		final String update_sql = "update CourseTab set filesize=?,filepath=?,state = 1 where fileurl = ? and username = ? ";
+		SQLiteDatabase db = this.dbHelper.getWritableDatabase();
+		try {
+			db.beginTransaction();
+			db.execSQL(update_sql, new Object[]{ fileSize, filePath, url, userName });
+			db.setTransactionSuccessful();
+		} catch (Exception e) {
+			Log.d(TAG, "更新下载课程文件信息异常:" + e.getMessage(), e);
+		}finally{
+			db.endTransaction();
+			db.close();
+		}
+	}
+	/**
+	 * 删除下载记录
+	 * @param url
+	 * @param userName
+	 */
+	public void delete(String url,String userName){
+		Log.d(TAG, "开始删除下载记录...");
+		SQLiteDatabase db = this.dbHelper.getWritableDatabase();
+		try {
+			db.beginTransaction();
+			this.deleteAllRecord(db, url, userName);
+			db.setTransactionSuccessful();
+		} catch (Exception e) { 
+			Log.e(TAG, "删除下载记录发生异常：" + e.getMessage(), e);
+		}finally{
+			db.endTransaction();
+			db.close();
+		}
+	}
+	//删除全部下载记录。
+	private void deleteAllRecord(SQLiteDatabase db, String url,String userName){
+		final String delete_sql = "delete from DownloadTab where url=? and username=?";
+		if(db == null)return;
+		db.execSQL(delete_sql, new Object[]{url, userName});
+	}
+	/**
+	 * 完成文件下载后，删除对应的下载记录，更新课程信息。
+	 * @param url
+	 * @param userName
+	 * @param filePath
+	 */
+	public void finish(String url,String userName, String filePath){
+		Log.d(TAG, "完成文件下载操作...");
+		final String total_sql = "select sum(complete_size) from DownloadTab where url=? and username=? ";
+		final String update_sql = "update CourseTab set finishsize = ?,filepath = ? ,state = 2 where fileurl = ? and username = ?";
+		SQLiteDatabase db = this.dbHelper.getWritableDatabase();
+		try {
+			int total = 0;
+			//获取下载的总数据量
+			Cursor cursor = db.rawQuery(total_sql, new String[]{url, userName});
+			if(cursor.isFirst()){
+				total = cursor.getInt(0);
+			}
+			cursor.close();
+			//开始事务处理
+			db.beginTransaction();
+			//删除下载记录
+			this.deleteAllRecord(db, url, userName);
+			//更新数据
+			db.execSQL(update_sql, new Object[]{total, filePath, url, userName});
+			//提交事务
+			db.setTransactionSuccessful();
+		} catch (Exception e) {
+			Log.e(TAG, "完成下载后发生异常：" + e.getMessage(), e);
+		}finally{
+			db.endTransaction();
+			db.close();
+		}
+	}
 }

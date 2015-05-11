@@ -1,5 +1,6 @@
 package com.youeclass.dao;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -9,15 +10,19 @@ import com.youeclass.entity.User;
 
 public class UserDao {
 	private static final String TAG = "UserDao";
-	private MyDBHelper dbhelper;
-	public UserDao(MyDBHelper helper)
+	private MyDBHelper dbHelper;
+	/**
+	 * 构造函数。
+	 * @param context 上下文。
+	 */
+	public UserDao(Context context)
 	{
-		this.dbhelper = helper;
+		this.dbHelper = new MyDBHelper(context);
 	}
 	public long addUser(User user) throws IllegalArgumentException, IllegalAccessException
 	{
 		long i = 0;
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.WRITE);
+		SQLiteDatabase db = this.dbHelper.getWritableDatabase();//dbhelper.getDatabase(MyDBHelper.WRITE);
 		Log.d(TAG, "addUser方法打开了数据库连接");
 		db.beginTransaction();
 		try{
@@ -26,15 +31,16 @@ public class UserDao {
 		}finally
 		{
 			db.endTransaction();
+			db.close();
 		}
-		dbhelper.closeDb();
+		//dbhelper.closeDb();
 		Log.d(TAG, "addUser方法关闭了数据库连接");
 		return i;
 	}
 	public User findByUsername(String username)
 	{
 		User user = null;
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		Log.d(TAG, "findByUsername方法打开了数据库连接");
 		Cursor cursor= db.rawQuery("select uid,username,password from UserTab where username = ?", new String[]{username});
 		if(cursor.moveToNext())
@@ -45,16 +51,18 @@ public class UserDao {
 			user.setPassword(cursor.getString(2));
 		}
 		cursor.close();
-		dbhelper.closeDb();
+		db.close();
+		//dbhelper.closeDb();
 		Log.d(TAG, "findByUsername方法关闭了数据库连接");
 		return user;
 	}
 	public void update(User user) throws IllegalArgumentException, IllegalAccessException
 	{
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.WRITE);
+		SQLiteDatabase db = this.dbHelper.getWritableDatabase();//dbhelper.getDatabase(MyDBHelper.WRITE);
 		Log.d(TAG, "update方法打开了数据库连接");
 		db.update("UserTab", ContentValuesBuilder.getInstance().bulid(user), "username=?", new String[]{user.getUsername()});
-		dbhelper.closeDb();
+		db.close();
+		//dbhelper.closeDb();
 		Log.d(TAG, "update方法关闭了数据库连接");
 	}
 	public void saveOrUpdate(User user) throws IllegalArgumentException, IllegalAccessException
@@ -71,8 +79,8 @@ public class UserDao {
 			addUser(user);
 		}
 	}
-	public void closeDB()
-	{
-		dbhelper.closeDb();
-	}
+//	public void closeDB()
+//	{
+//		dbhelper.closeDb();
+//	}
 }

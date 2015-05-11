@@ -81,7 +81,7 @@ public class MyCourseListAdapter2 extends BaseAdapter{
 				Course c = courses.get(position);
 				Intent intent = new Intent(context, VideoPlayActivity.class);
 				intent.putExtra("name", c.getCourseName());
-				intent.putExtra("username", c.getUsername());
+				intent.putExtra("username", c.getUserName());
 				intent.putExtra("courseid", c.getCourseId());
 				//根据下载的状态 
 				if(c.getState()==2)

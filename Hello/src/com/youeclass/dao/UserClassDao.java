@@ -13,15 +13,19 @@ import com.youeclass.db.MyDBHelper;
 import com.youeclass.entity.UserClass;
 
 public class UserClassDao {
-	private MyDBHelper dbhelper;
 	private final static String TAG = "UserClassDao";
+	private MyDBHelper dbHelper;
+	/**
+	 * 构造函数。
+	 * @param context 上下文。
+	 */
 	public UserClassDao(Context context)
 	{
-		this.dbhelper = new MyDBHelper(context);
+		this.dbHelper = new MyDBHelper(context);
 	}
 	public void addClasses(List<UserClass> classes) throws IllegalArgumentException, IllegalAccessException
 	{
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getWritableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		Log.d(TAG, "addClasses方法打开了数据库连接");
 		db.beginTransaction();
 		try
@@ -34,14 +38,15 @@ public class UserClassDao {
 		}finally
 		{
 			db.endTransaction();
+			db.close();
 		}
-		dbhelper.closeDb();
+		//dbhelper.closeDb();
 		Log.d(TAG, "addClasses方法关闭了数据库连接");
 	}
 	public List<UserClass> findByUsername(String username)
 	{
 		List<UserClass> list = new ArrayList<UserClass>();
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		Log.d(TAG, "findByUsername方法打开了数据库连接");
 		String sql = "select classid,classname,username,fatherid,classtype from ClassTab where username = ?";
 		Cursor cursor = db.rawQuery(sql, new String[]{username});
@@ -52,21 +57,23 @@ public class UserClassDao {
 			list.add(uc);
 		}
 		cursor.close();
-		dbhelper.closeDb();
+		db.close();
+		//dbhelper.closeDb();
 		Log.d(TAG, "findByUsername方法关闭了数据库连接");
 		return list;
 	}
 	public String[] findBigClassName(String username)
 	{
 		String[] arr = null;
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();//.getDatabase(MyDBHelper.READ);
 		Log.d(TAG, "findByUsername方法打开了数据库连接");
 		String sql = "select classname from ClassTab where username=? and fatherclassid = 0 order by classtype desc,classid asc";
 		Cursor cursor = db.rawQuery(sql, new String[]{username});
 		if(cursor.getCount()==0)
 		{
 			cursor.close();
-			dbhelper.closeDb();
+			db.close();
+			//dbhelper.closeDb();
 			return arr;
 		}
 		arr = new String[cursor.getCount()];
@@ -77,20 +84,22 @@ public class UserClassDao {
 			i++;
 		}
 		cursor.close();
-		dbhelper.closeDb();
+		db.close();
+		//dbhelper.closeDb();
 		Log.d(TAG, "findByUsername方法关闭了数据库连接");
 		return arr;
 	}
 	public String[][] findChildrenClass(String username)
 	{
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		Log.d(TAG, "findByUsername方法打开了数据库连接");
 		String sql = "select classid from ClassTab where username=? and fatherclassid = 0 and classtype = 1 order by classtype desc,classid asc";
 		Cursor cursor = db.rawQuery(sql, new String[]{username});
 		if(cursor.getCount()==0)
 		{
 			cursor.close();
-			dbhelper.closeDb();
+			db.close();
+			//dbhelper.closeDb();
 			return null;
 		}
 		String[][] arr = new String[cursor.getCount()][];
@@ -110,21 +119,23 @@ public class UserClassDao {
 			i++;
 		}
 		cursor.close();
-		dbhelper.closeDb();
+		db.close();
+		//dbhelper.closeDb();
 		Log.d(TAG, "findByUsername方法关闭了数据库连接");
 		System.out.println(Arrays.toString(arr[0]));
 		return arr;
 	}
 	public String[][] findChildrenClassid(String username)
 	{
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		Log.d(TAG, "findByUsername方法打开了数据库连接");
 		String sql = "select classid,classtype from ClassTab where username=? and fatherclassid = 0 order by classtype desc,classid asc";
 		Cursor cursor = db.rawQuery(sql, new String[]{username});
 		if(cursor.getCount()==0)
 		{
 			cursor.close();
-			dbhelper.closeDb();
+			db.close();
+			//dbhelper.closeDb();
 			return null;
 		}
 		String[][] arr = new String[cursor.getCount()][];
@@ -151,13 +162,14 @@ public class UserClassDao {
 			i++;
 		}
 		cursor.close();
-		dbhelper.closeDb();
+		db.close();
+		//dbhelper.closeDb();
 		Log.d(TAG, "findByUsername方法关闭了数据库连接");
 		return arr;
 	}
 	public void deleteAll(String username)
 	{
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getWritableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		Log.d(TAG, "deleteAll方法打开了数据库连接");
 		db.beginTransaction();
 		try
@@ -168,13 +180,13 @@ public class UserClassDao {
 		}finally
 		{
 			db.endTransaction();
+			db.close();
 		}
-		dbhelper.closeDb();
+		//dbhelper.closeDb();
 		Log.d(TAG, "deleteAll方法关闭了数据库连接");
 	}
-	public void closeDB()
-	{
-		dbhelper.closeDb();
-	}
-	
+//	public void closeDB()
+//	{
+//		dbhelper.closeDb();
+//	}
 }

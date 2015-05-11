@@ -12,15 +12,19 @@ import com.youeclass.db.MyDBHelper;
 import com.youeclass.entity.Playrecord;
 
 public class PlayrecordDao {
-	private MyDBHelper dbhelper;
 	private static final String TAG = "PlayrecordDao";
+	private MyDBHelper dbHelper;
+	/**
+	 * 构造函数。
+	 * @param context 上下文。
+	 */
 	public PlayrecordDao(Context context) {
-		dbhelper = new MyDBHelper(context);
+		this.dbHelper = new MyDBHelper(context);
 	}
 	//保存播放记录
 	public void save(Playrecord record)
 	{
-		SQLiteDatabase db =  dbhelper.getDatabase(MyDBHelper.WRITE);
+		SQLiteDatabase db =  this.dbHelper.getWritableDatabase();//dbhelper.getDatabase(MyDBHelper.WRITE);
 		db.beginTransaction();
 		try{
 				db.execSQL("insert into PlayrecordTab(courseId,currenttime,username)values(?,?,?)",
@@ -28,14 +32,15 @@ public class PlayrecordDao {
 			db.setTransactionSuccessful();
 		}finally{
 			db.endTransaction();
+			db.close();
 		}
-		dbhelper.closeDb();
+		//dbhelper.closeDb();
 	}
 	//根据用户名取出播放记录
 	public List<Playrecord> getRecordList(String username)
 	{
 		List<Playrecord> list = new ArrayList<Playrecord>();
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		Cursor cursor = db.rawQuery("select c.courseid,c.coursename,c.fileurl,c.filepath,c.state,p.playtime,p.currenttime,p.username from PlayrecordTab p join CourseTab c on c.courseid = p.courseid where p.username =?", new String[]{username});
 		while(cursor.moveToNext())
 		{
@@ -49,13 +54,14 @@ public class PlayrecordDao {
 			list.add(loader);
 		}
 		cursor.close();
-		dbhelper.closeDb();
+		db.close();
+		//dbhelper.closeDb();
 		return list;
 	}
 	//更新
 	public void saveOrUpdate(Playrecord r)
 	{
-		SQLiteDatabase db =  dbhelper.getDatabase(MyDBHelper.WRITE);
+		SQLiteDatabase db =  this.dbHelper.getWritableDatabase();//dbhelper.getDatabase(MyDBHelper.WRITE);
 		Cursor cursor = db.rawQuery("select * from PlayrecordTab where courseid = ? and username=?", new String[]{r.getCourseId(),r.getUsername()});
 		if(cursor.getCount()==0)
 		{
@@ -83,20 +89,22 @@ public class PlayrecordDao {
 				db.endTransaction();
 			}
 		}
-		dbhelper.closeDb();
+		db.close();
+		//dbhelper.closeDb();
 	}
 	//查找
 	public Playrecord findRecord(String courseid,String username)
 	{
 		Playrecord record = null;
-		SQLiteDatabase db =  dbhelper.getDatabase(MyDBHelper.READ);
+		SQLiteDatabase db =  this.dbHelper.getReadableDatabase();//dbhelper.getDatabase(MyDBHelper.READ);
 		Cursor cursor = db.rawQuery("select courseid,playtime,currenttime,username from PlayrecordTab where courseid = ? and username = ?", new String[]{courseid,username});
 		if(cursor.moveToNext())
 		{
 			record = new Playrecord(cursor.getString(0),cursor.getString(1),cursor.getInt(2),cursor.getString(3));
 		}
 		cursor.close();
-		dbhelper.closeDb();
+		db.close();
+		//dbhelper.closeDb();
 		return record;
 	}
 }

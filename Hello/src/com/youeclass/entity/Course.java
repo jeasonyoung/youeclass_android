@@ -1,96 +1,170 @@
 package com.youeclass.entity;
 
-import com.youeclass.annotation.Column;
 import com.youeclass.util.Constant;
 import com.youeclass.util.StringUtils;
-
+/**
+ * 课程数据模型。
+ * @author jeasonyoung
+ *
+ */
 public class Course {
-	private long _id;
-	@Column(name="courseid")
-	private String courseId;
-	@Column(name="coursename")
-	private String courseName;
-	@Column(name="classid")
-	private String classid;
-	@Column(name="coursetype")
-	private String courseType;
-	@Column(name="coursemode")
-	private String courseMode;
-	@Column(name="coursegroup")
-	private String courseGroup;
-	@Column(name="filesize")
-	private int filesize;
-	@Column(name="finishsize")
-	private int finishsize;
-	@Column(name="filepath")
-	private String filePath;
-	@Column(name="fileurl")
-	private String fileUrl;
-	@Column(name="state")
+	private long id,fileSize,finishSize;
+	private String courseId,courseName,classId,courseType,courseMode,courseGroup,filePath,fileUrl,userName;
 	private int state;
-	@Column(name="username")
-	private String username;
-	
-	public long get_id() {
-		return _id;
+	/**
+	 * 获取课程标示(_id)。
+	 * @return 课程标示。
+	 */
+	public long getId() {
+		return id;
 	}
-	public void set_id(long _id) {
-		this._id = _id;
+	/**
+	 * 设置课程标示(_id)。
+	 * @param id
+	 * 课程标示。
+	 */
+	public void setId(long id) {
+		this.id = id;
 	}
+	/**
+	 *  获取课程ID(courseid)。
+	 * @return 课程ID。
+	 */
 	public String getCourseId() {
 		return courseId;
 	}
+	/**
+	 * 设置课程ID(courseid)。
+	 * @param courseId
+	 * 课程ID。
+	 */
 	public void setCourseId(String courseId) {
 		this.courseId = courseId;
 	}
+	/**
+	 * 获取课程名称(coursename)。
+	 * @return 课程名称。
+	 */
 	public String getCourseName() {
 		return courseName;
 	}
+	/**
+	 * 设置课程名称(coursename)。
+	 * @param courseName
+	 * 课程名称。
+	 */
 	public void setCourseName(String courseName) {
 		this.courseName = courseName;
 	}
-	public String getClassid() {
-		return classid;
+	/**
+	 * 获取班级ID(classid)。
+	 * @return 班级ID。
+	 */
+	public String getClassId() {
+		return classId;
 	}
-	public void setClassid(String classid) {
-		this.classid = classid;
+	/**
+	 * 设置班级ID(classid)。
+	 * @param classid
+	 *  班级ID。
+	 */
+	public void setClassId(String classId) {
+		this.classId = classId;
 	}
+	/**
+	 * 获取课程类型(coursetype)。
+	 * @return 课程类型。
+	 */
 	public String getCourseType() {
 		return courseType;
 	}
+	/**
+	 * 设置课程类型(coursetype)。
+	 * @param courseType
+	 * 课程类型。
+	 */
 	public void setCourseType(String courseType) {
 		this.courseType = courseType;
 	}
+	/**
+	 * 获取课程模式(coursemode)。
+	 * @return 课程模式。
+	 */
 	public String getCourseMode() {
 		return courseMode;
 	}
+	/**
+	 * 设置课程模式(coursemode)。
+	 * @param courseMode
+	 * 课程模式。
+	 */
 	public void setCourseMode(String courseMode) {
 		this.courseMode = courseMode;
 	}
+	/**
+	 * 获取课程组(coursegroup)。
+	 * @return 课程组。
+	 */
 	public String getCourseGroup() {
 		return courseGroup;
 	}
+	/**
+	 * 设置课程组(coursegroup)。
+	 * @param courseGroup
+	 * 课程组。
+	 */
 	public void setCourseGroup(String courseGroup) {
 		this.courseGroup = courseGroup;
 	}
-	public int getFilesize() {
-		return filesize;
+	/**
+	 * 获取视频文件大小(filesize)。
+	 * @return 视频文件大小。
+	 */
+	public long getFileSize() {
+		return fileSize;
 	}
-	public void setFilesize(int filesize) {
-		this.filesize = filesize;
+	/**
+	 * 设置视频文件大小(filesize)。
+	 * @param filesize
+	 * 视频文件大小。
+	 */
+	public void setFileSize(long fileSize) {
+		this.fileSize = fileSize;
 	}
-	public int getFinishsize() {
-		return finishsize;
+	/**
+	 * 获取下载大小(finishsize)。
+	 * @return 下载大小。
+	 */
+	public long getFinishSize() {
+		return finishSize;
 	}
-	public void setFinishsize(int finishsize) {
-		this.finishsize = finishsize;
+	/**
+	 * 设置下载大小(finishsize)。
+	 * @param finishsize
+	 * 下载大小。
+	 */
+	public void setFinishSize(long finishSize) {
+		this.finishSize = finishSize;
 	}
+	/**
+	 * 获取下载路径(filepath)。
+	 * @return 下载路径。
+	 */
 	public String getFilePath() {
 		return filePath;
 	}
+	/**
+	 * 设置下载路径(filepath)。
+	 * @param filePath
+	 * 下载路径。
+	 */
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}
+	/**
+	 * 获取课程URL(fileurl)。
+	 * @return 课程URL。
+	 */
 	public String getFileUrl() {
 		if(!StringUtils.isEmpty(fileUrl))
 		{
@@ -101,65 +175,42 @@ public class Course {
 		}
 		return fileUrl;
 	}
+	/**
+	 * 设置课程URL(fileurl)。
+	 * @param fileUrl
+	 * 课程URL。
+	 */
 	public void setFileUrl(String fileUrl) {
 		this.fileUrl = fileUrl;
 	}
+	/**
+	 * 获取课程状态(state)。
+	 * @return 课程状态。
+	 */
 	public int getState() {
 		return state;
 	}
+	/**
+	 * 设置课程状态(state)。
+	 * @param state
+	 * 课程状态
+	 */
 	public void setState(int state) {
 		this.state = state;
 	}
-	public String getUsername() {
-		return username;
+	/**
+	 * 获取所属用户(username)。
+	 * @return 所属用户。
+	 */
+	public String getUserName() {
+		return userName;
 	}
-	public void setUsername(String username) {
-		this.username = username;
+	/**
+	 * 设置所属用户(username)。
+	 * @param username
+	 * 所属用户。
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
-	public Course(String courseId, String courseName, String classid,
-			String courseType, String courseMode, String courseGroup,
-			int filesize, int finishsize, String filePath, String fileUrl,
-			int state,String username) {
-		super();
-		this.courseId = courseId;
-		this.courseName = courseName;
-		this.classid = classid;
-		this.courseType = courseType;
-		this.courseMode = courseMode;
-		this.courseGroup = courseGroup;
-		this.filesize = filesize;
-		this.finishsize = finishsize;
-		this.filePath = filePath;
-		this.fileUrl = fileUrl;
-		this.state = state;
-		this.username = username;
-	}
-	public Course(String courseId, String courseName, String classid,
-			int filesize, int finishsize, String filePath, String fileUrl,
-			int state) {
-		super();
-		this.courseId = courseId;
-		this.courseName = courseName;
-		this.classid = classid;
-		this.filesize = filesize;
-		this.finishsize = finishsize;
-		this.filePath = filePath;
-		this.fileUrl = fileUrl;
-		this.state = state;
-	}
-	
-	public Course(String courseId, String courseName, String classid,
-			String fileUrl, int state,String username) {
-		super();
-		this.courseId = courseId;
-		this.courseName = courseName;
-		this.classid = classid;
-		this.fileUrl = fileUrl;
-		this.state = state;
-		this.username = username;
-	}
-	public Course() {
-		// TODO Auto-generated constructor stub
-	}
-	
 }

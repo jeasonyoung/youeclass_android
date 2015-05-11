@@ -1,96 +1,171 @@
 package com.youeclass.entity;
 
+import com.youeclass.util.StringUtils;
+
+/**
+ * 正在下载的课程模型。
+ * @author jeasonyoung
+ *
+ */
 public class DowningCourse {
-	private String courseName;//课程的名字
-	private int filesize;	//文件大小
-	private int finishsize;//完成数
-	private String filePath;//文件路径
-	private String fileurl;	//文件下载路径
-	private int status;//文件的下载状态     0:暂停状态, -1:初始状态还没有获得文件大小
-	private String username;
+	private String courseName,filePath,fileUrl,userName;
+	private long fileSize,finishSize;
+	private int state;
+	/**
+	 * 初始状态。
+	 */
+	public static final int STATE_INIT = -1;
+	/**
+	 * 连接失败状态。
+	 */
+	public static final int STATE_NETFAIL = -2;
+	/**
+	 * 暂停状态。
+	 */
+	public static final int STATE_PAUSE = 0; 
+	/**
+	 * 下载状态。
+	 */
+	public static final int STATE_DOWNING = 1;
+	/**
+	 * 下载完成状态。
+	 */
+	public static final int STATE_FINISH = 2;
+	/**
+	 *  下载取消状态。
+	 */
+	public static final int STATE_CANCEL = 3;
+	/**
+	 * 等待状态。
+	 */
+	public static final int STATE_WAITTING = 4;
+	/**
+	 * 获取课程名称。
+	 * @return 课程名称。
+	 */
 	public String getCourseName() {
 		return courseName;
 	}
+	/**
+	 * 设置课程名称。
+	 * @param courseName
+	 * 课程名称。
+	 */
 	public void setCourseName(String courseName) {
 		this.courseName = courseName;
 	}
-	public int getFilesize() {
-		return filesize;
-	}
-	public void setFilesize(int filesize) {
-		this.filesize = filesize;
-	}
-	public int getFinishsize() {
-		return finishsize;
-	}
-	public void setFinishsize(int finishsize) {
-		this.finishsize = finishsize;
-	}
+	/**
+	 * 获取视频存储路径。
+	 * @return 视频存储路径。
+	 */
 	public String getFilePath() {
 		return filePath;
 	}
+	/**
+	 * 设置视频存储路径。
+	 * @param filePath
+	 * 视频存储路径。
+	 */
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}
-	public String getFileurl() {
-		return fileurl;
+	/**
+	 * 获取视频大小。
+	 * @return 视频大小。
+	 */
+	public long getFileSize() {
+		return fileSize;
 	}
-	public void setFileurl(String fileurl) {
-		this.fileurl = fileurl;
+	/**
+	 * 设置视频大小。
+	 * @param fileSize
+	 * 视频大小。
+	 */
+	public void setFileSize(long fileSize) {
+		this.fileSize = fileSize;
 	}
-	public DowningCourse() {
-		// TODO Auto-generated constructor stub
+	/**
+	 * 获取视频下载大小。
+	 * @return 视频下载大小。
+	 */
+	public long getFinishSize() {
+		return finishSize;
 	}
-	public String getUsername() {
-		return username;
+	/**
+	 * 设置视频下载大小。
+	 * @param finishSize
+	 * 视频下载大小。
+	 */
+	public void setFinishSize(long finishSize) {
+		this.finishSize = finishSize;
 	}
-	public void setUsername(String username) {
-		this.username = username;
+	/**
+	 * 获取视频URL。
+	 * @return 视频URL。
+	 */
+	public String getFileUrl() {
+		return fileUrl;
 	}
-	public DowningCourse(String courseName, int filesize, int finishsize,
-			String filePath, String fileurl,String username) {
-		super();
-		this.courseName = courseName;
-		this.filesize = filesize;
-		this.finishsize = finishsize;
-		this.filePath = filePath;
-		this.fileurl = fileurl;
-		this.username = username;
+	/**
+	 * 设置视频URL。
+	 * @param fileUrl
+	 * 视频URL。
+	 */
+	public void setFileUrl(String fileUrl) {
+		this.fileUrl = fileUrl;
 	}
-	
-	public int getStatus() {
-		return status;
+	/**
+	 * 获取所属用户。
+	 * @return 所属用户。
+	 */
+	public String getUserName() {
+		return userName;
 	}
-	public void setStatus(int status) {
-		this.status = status;
+	/**
+	 * 设置所属用户。
+	 * @param userName
+	 * 所属用户。
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
+	/**
+	 * 获取课程状态。
+	 * @return 课程状态。
+	 */
+	public int getState() {
+		return state;
+	}
+	/**
+	 * 设置课程状态。
+	 * @param status
+	 * 课程状态。
+	 */
+	public void setState(int state) {
+		this.state = state;
+	}
+	/*
+	 * 重载。
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((fileurl == null) ? 0 : fileurl.hashCode());
-		return result;
+		return 31  + (this.fileUrl == null ? 0 : this.fileUrl.hashCode());
 	}
+	/*
+	 * 重载对象比较
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		DowningCourse other = (DowningCourse) obj;
-		if (fileurl == null) {
-			if (other.fileurl != null)
-				return false;
-		} else if (!fileurl.equals(other.fileurl))
-			return false;
+	public boolean equals(Object o) {
+		if(this == o) return true;
+		if(o == null) return false;
+		if(o instanceof DowningCourse){
+			DowningCourse data = (DowningCourse)o;
+			if(!StringUtils.isEmpty(this.fileUrl) && !StringUtils.isEmpty(data.getFileUrl())){
+				return this.fileUrl.equalsIgnoreCase(data.getFileUrl());
+			}
+		}
 		return true;
 	}
-	@Override
-	public String toString() {
-		return "DowningCourse [courseName=" + courseName + ", fileurl="
-				+ fileurl + "]";
-	}
-	
 }

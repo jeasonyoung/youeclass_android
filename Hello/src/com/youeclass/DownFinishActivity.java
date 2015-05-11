@@ -159,7 +159,7 @@ public class DownFinishActivity extends BaseActivity {
 					Course c = list.get(index);
 					new File(c.getFilePath()).delete();
 					//Log.i("DownFinish","删除了文件");
-					dao.updateState(c.getFileUrl(), 0, c.getUsername());
+					dao.updateState(c.getUserName(), c.getFileUrl(), 0);
 					list.remove(index);
 					mAdapter.notifyDataSetChanged();
 				}

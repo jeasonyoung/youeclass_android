@@ -37,7 +37,6 @@ import android.widget.Toast;
 import com.umeng.analytics.MobclickAgent;
 import com.youeclass.app.AppContext;
 import com.youeclass.dao.UserDao;
-import com.youeclass.db.MyDBHelper;
 import com.youeclass.entity.User;
 import com.youeclass.util.Constant;
 import com.youeclass.util.HttpConnectUtil;
@@ -71,7 +70,7 @@ public class LoginActivity extends Activity implements TextWatcher {
 		rememeberCheck = (CheckBox) this.findViewById(R.id.rememeberCheck);// 记住密码
 		goRegisterBtn = (Button) this.findViewById(R.id.goRegisterBtn);// 注册
 		goRegisterBtn.setText(Html.fromHtml("<u>免费注册</u>"));
-		userdao = new UserDao(new MyDBHelper(this)); 	//操作数据库
+		userdao = new UserDao(this); 	//操作数据库
 		share = getSharedPreferences("passwordfile", 0);
 		share2 = getSharedPreferences("abfile", 0);
 		userinfo = getSharedPreferences("userinfo", 0);
@@ -285,21 +284,18 @@ public class LoginActivity extends Activity implements TextWatcher {
 	 * */
 	private void saveSharePreferences(boolean saveUserName, boolean savePassword) {
 		if (saveUserName) {
-			Log.d(this.toString(), "saveUserName="
-					+ usernameText.getText().toString());
+			Log.d(this.toString(), "saveUserName=" + usernameText.getText().toString());
 			share.edit()
 					.putString(
 							usernameText.getText().toString(),
-							Base64.encodeToString(
-									Base64.encode(password.getBytes(), 0), 0))
+							Base64.encodeToString(Base64.encode(password.getBytes(), 0), 0))
 					.commit();
 			share2.edit().putString("n", usernameText.getText().toString())
 					.commit();
 			share2.edit()
 					.putString(
 							"p",
-							Base64.encodeToString(
-									Base64.encode(password.getBytes(), 0), 0))
+							Base64.encodeToString(Base64.encode(password.getBytes(), 0), 0))
 					.commit();
 		}
 		//share = null;
@@ -308,7 +304,7 @@ public class LoginActivity extends Activity implements TextWatcher {
 	public void saveToLocaleDB(User user){
 		if(userdao==null)
 		{
-			userdao = new UserDao(new MyDBHelper(this));
+			userdao = new UserDao(this);
 		}
 			try {
 				userdao.saveOrUpdate(user);
@@ -364,11 +360,9 @@ public class LoginActivity extends Activity implements TextWatcher {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		this.usernameText.setText(this.getSharedPreferences("abfile", 0)
-				.getString("n", ""));
+		this.usernameText.setText(this.getSharedPreferences("abfile", 0).getString("n", ""));
 		String pwd = this.getSharedPreferences("abfile", 0).getString("p", "");
-		this.pwdText
-				.setText(new String(Base64.decode(Base64.decode(pwd, 0), 0)));
+		this.pwdText.setText(new String(Base64.decode(Base64.decode(pwd, 0), 0)));
 		MobclickAgent.onResume(this);
 	}
 
@@ -397,8 +391,7 @@ public class LoginActivity extends Activity implements TextWatcher {
 	public void afterTextChanged(Editable s) {
 		// TODO Auto-generated method stub
 		String name = usernameText.getText().toString();
-		pwdText.setText(new String(Base64.decode(
-				Base64.decode(share.getString(name, ""), 0), 0)));
+		pwdText.setText(new String(Base64.decode(Base64.decode(share.getString(name, ""), 0), 0)));
 		if (pwdText.getText().toString().length() > 0)
 			pwdText.requestFocus();
 	}
@@ -420,12 +413,7 @@ public class LoginActivity extends Activity implements TextWatcher {
 	}
 	@Override
 	protected void onStop() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
-		if(userdao!=null)
-		{
-			userdao.closeDB();
-		}
 	}
 	@Override
 	protected void onStart() {
@@ -433,7 +421,7 @@ public class LoginActivity extends Activity implements TextWatcher {
 		super.onStart();
 		if(userdao==null)
 		{
-			userdao = new UserDao(new MyDBHelper(this));
+			userdao = new UserDao(this);
 		}
 	}
 	@Override

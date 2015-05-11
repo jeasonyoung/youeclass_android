@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">优异网校</string>
-    <string name="versions">版本号：V1.1.1</string>
+    <string name="versions">版本号：V1.1.2</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="startBtnlab">开始体验</string>
@@ -213,8 +213,8 @@
     <string name="reg_readCheakStr">已认真阅读</string>
     <string name="reg_treatyStr">《网校服务协议》</string>
     <string name="reg_subStr">注 册</string>
-    <string name="reg_userNameHintStr">4-18位</string>
-    <string name="reg_userPwdHintStr">6-20位</string>
+    <string name="reg_userNameHintStr">4－18位</string>
+    <string name="reg_userPwdHintStr">6－20位</string>
     <string name="reg_successStr">注册成功!</string>
     <string name="reg_selectStr">选择学习科目:</string>
     <string name="reg_loadingStr">科目数据加载中…</string>

@@ -11,201 +11,282 @@ import android.util.Log;
 import com.youeclass.db.MyDBHelper;
 import com.youeclass.entity.Course;
 import com.youeclass.entity.DowningCourse;
+import com.youeclass.util.StringUtils;
 
+/**
+ * 课程数据操作类。
+ * @author jeasonyoung
+ *
+ */
 public class CourseDao {
-	private MyDBHelper dbhelper;
 	private static final String TAG = "CourseDao";
-
+	private MyDBHelper dbHelper;
+	/**
+	 * 构造函数。
+	 * @param context
+	 */
 	public CourseDao(Context context) {
-		dbhelper = new MyDBHelper(context);
+		this.dbHelper = new MyDBHelper(context);
 	}
-
-	public List<Course> findByClassId(String id,String username) {
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.READ);
-		Log.d(TAG, "findByClassId方法打开了数据库连接");
+	/**
+	 * 根据班级ID加载用户课程。
+	 * @param classId
+	 * 班级ID。
+	 * @param userName
+	 * 用户
+	 * @return
+	 */
+	public List<Course> findByClassId(String classId,String userName) {
+		Log.d(TAG, "开始加载班级["+classId+"]用户["+userName+"]课程...");
+		final String query_sql = "select _id,courseid,coursename,coursetype,coursemode,coursegroup,filesize,finishsize,filepath,fileurl,state from CourseTab where classid = ? and username = ?";
 		List<Course> list = new ArrayList<Course>();
-		String sql = "select courseid,coursename,classid,coursetype,coursemode,coursegroup,filesize,finishsize,filepath,fileurl,state from CourseTab where classid = ? and username = ?";
-		Cursor cursor = db.rawQuery(sql, new String[] { id,username });
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();
+		Cursor cursor = db.rawQuery(query_sql, new String[] { classId,userName });
 		while (cursor.moveToNext()) {
-			Course uc = new Course(cursor.getString(0), cursor.getString(1),
-					cursor.getString(2), cursor.getString(3),
-					cursor.getString(4), cursor.getString(5), cursor.getInt(6),
-					cursor.getInt(7), cursor.getString(8), cursor.getString(9),
-					cursor.getInt(10),username);
-			list.add(uc);
+			Course data = new Course();
+			data.setId(cursor.getLong(0));
+			data.setCourseId(cursor.getString(1));
+			data.setCourseName(cursor.getString(2));
+			
+			data.setCourseType(cursor.getString(3));
+			data.setCourseMode(cursor.getString(4));
+			data.setCourseGroup(cursor.getString(5));
+			data.setFileSize(cursor.getLong(6));
+			data.setFinishSize(cursor.getLong(7));
+			
+			data.setFilePath(cursor.getString(8));
+			data.setFileUrl(cursor.getString(9));
+			
+			data.setState(cursor.getInt(10));
+			
+			data.setClassId(classId);
+			data.setUserName(userName);
+			
+			list.add(data);
 		}
 		cursor.close();
-		dbhelper.closeDb();
-		Log.d(TAG, "findByClassId方法关闭了数据库连接");
+		db.close();
+		Log.d(TAG, "完成加载班级["+classId+"]用户["+userName+"]课程=>" + list.size());
 		return list;
 	}
-
-	public void save(List<Course> courses,String username) {
-		SQLiteDatabase db = dbhelper.getDatabase(1);
-		Log.d(TAG, "save方法打开了数据库连接");
-		db.beginTransaction();
+	/**
+	 * 保存或更新数据。
+	 * @param userName
+	 * @param courses
+	 */
+	public void save(String userName,List<Course> courses) {
+		if(StringUtils.isEmpty(userName) || courses == null || courses.size() == 0)return;
+		Log.d(TAG, "开始保存用户["+userName+"]课程数["+courses.size()+"]...");
+		final String query_sql = "select 0 from CourseTab where username=?";
+		SQLiteDatabase db = this.dbHelper.getWritableDatabase();
+		boolean isAdded = false;
+		Cursor cursor = db.rawQuery(query_sql, new String[]{ userName });
+		if(cursor.getCount() == 0){
+			isAdded = true;
+		}
+		cursor.close();
 		try {
-			if (courses.size() == 0) {
-				return;
-			} else {
-				// 如果一开始数据库数据为空,直接加
-				String sql = "select classid from CourseTab where username = ?";
-				Cursor cursor = db.rawQuery(sql, new String[] {username});
-				if (cursor.getCount() == 0) {
-					cursor.close();
-					//循环加
-					for (Course c1 : courses) {
-						String sql1 = "insert into CourseTab(courseid,coursename,classid,coursetype,coursemode,coursegroup,filesize,finishsize,filepath,fileurl,state,username) values (?,?,?,?,?,?,?,?,?,?,?,?)";
-						Object[] values = new Object[] { c1.getCourseId(),
-								c1.getCourseName(), c1.getClassid(),
-								c1.getCourseType(), c1.getCourseMode(),
-								c1.getCourseGroup(), c1.getFilesize(),
-								c1.getFinishsize() , c1.getFilePath(),
-								c1.getFileUrl(), c1.getState(),c1.getUsername() };
-						db.execSQL(sql1, values);
-					}
-				} else {
-					cursor.close();
-					for (Course c : courses) {
-						String sqleach = "select classid from CourseTab where fileurl = ? and username=?";
-						Cursor cursoreach = db.rawQuery(sqleach,
-								new String[] { c.getFileUrl(),c.getUsername() });
-						if (cursoreach.getCount() > 0) {	//有记录则跳过不再增加
-							cursoreach.close();
-							continue;
-						}
-						cursoreach.close();
-						String sql1 = "insert into CourseTab(courseid,coursename,classid,coursetype,coursemode,coursegroup,filesize,finishsize,filepath,fileurl,state,username) values (?,?,?,?,?,?,?,?,?,?,?,?)";
-						Object[] values = new Object[] { c.getCourseId(),
-								c.getCourseName(), c.getClassid(),
-								c.getCourseType(), c.getCourseMode(),
-								c.getCourseGroup(), c.getFilesize(),
-								c.getFinishsize() , c.getFilePath(),
-								c.getFileUrl(), c.getState() ,c.getUsername()};
-						db.execSQL(sql1, values);
-					}
+			db.beginTransaction();
+			if(isAdded){
+				for(Course course : courses){
+					course.setUserName(userName);
+					this.save(db, course);
+				}
+			}else {
+				final String query = "select 0 from CourseTab where fileurl=? and username=?";
+				for(Course course : courses){
+					 if(course == null)continue;
+					 course.setUserName(userName);
+					 Cursor c = db.rawQuery(query, new String[]{ course.getFileUrl(),  course.getUserName() });
+					 if(c.getCount() > 0){//有记录则跳过
+						 c.close();
+						 continue;
+					 }
+					 c.close();
+					 this.save(db, course);
 				}
 			}
 			db.setTransactionSuccessful();
-		} finally {
+		} catch (Exception e) {
+			 Log.e(TAG, "保存数据发生异常：" + e.getMessage(), e);
+		}finally{
 			db.endTransaction();
+			db.close();
 		}
-		dbhelper.closeDb();
-		Log.d(TAG, "save方法关闭了数据库连接");
 	}
-
-	public void deleteAll(String classid,String username) {
-		SQLiteDatabase db = dbhelper.getDatabase(1);
-		Log.d(TAG, "deleteAll方法打开了数据库连接");
-		db.beginTransaction();
+	//
+	private static final String course_insert_sql =  "insert into CourseTab(courseid,coursename,classid,coursetype,coursemode,coursegroup,filesize,finishsize,filepath,fileurl,state,username) values (?,?,?,?,?,?,?,?,?,?,?,?)";
+	//添加数据
+	private void save(SQLiteDatabase db, Course data){
+		if(db == null || data == null)return;
+		Object[] insertValues = new Object[]{
+				data.getCourseId(),
+				data.getCourseName(),
+				data.getClassId(),
+				data.getCourseType(),
+				data.getCourseMode(),
+				data.getCourseGroup(),
+				data.getFileSize(),
+				data.getFinishSize(),
+				data.getFilePath(),
+				data.getFileUrl(),
+				data.getState(),
+				data.getUserName()
+		};
+		db.execSQL(course_insert_sql, insertValues);
+	}
+	/**
+	 * 删除班级ID下的全部课程数据。
+	 * @param classid
+	 * 班级ID
+	 * @param username
+	 * 用户
+	 */
+	public void deleteAllByClassId(String classId, String userName) {
+		if(StringUtils.isEmpty(classId) || StringUtils.isEmpty(userName)) return;
+		Log.d(TAG, "开始删除班级["+classId+"]下用户["+userName+"]的全部课程数据...");
+		final String delete_sql = "delete from CourseTab where classid = ? and username = ?";
+		SQLiteDatabase db = this.dbHelper.getWritableDatabase();
 		try {
-			String sql = "delete from CourseTab where classid = ? and username = ?";
-			db.execSQL(sql, new String[] { classid,username });
+			db.beginTransaction();
+			db.execSQL(delete_sql, new String[] { classId, userName });
 			db.setTransactionSuccessful();
-		} finally {
+		} catch (Exception e) {
+			Log.e(TAG, "删除班级课程发生异常："+ e.getMessage(), e);
+		}finally {
 			db.endTransaction();
+			db.close();
 		}
-		dbhelper.closeDb();
-		Log.d(TAG, "deleteAll方法关闭了数据库连接");
 	}
+//	public List<DowningCourse> findAll(String username) {
+//		List<DowningCourse> list = new ArrayList<DowningCourse>();
+//		SQLiteDatabase db = this.dbhelper.getReadableDatabase();//dbhelper.getDatabase(0);
+//		Log.d(TAG, "findAll方法打开了数据库连接");
+//		String sql = "select coursename,filesize,finishsize,filepath,fileurl from CourseTab where username = ?";
+//		Cursor cursor = db.rawQuery(sql, new String[]{username});
+//		while (cursor.moveToNext()) {
+//			DowningCourse dc = new DowningCourse(cursor.getString(0),
+//					cursor.getInt(1), cursor.getInt(2), cursor.getString(3),
+//					cursor.getString(4),username);
+//			list.add(dc);
+//		}
+//		cursor.close();
+//		//dbhelper.closeDb();
+//		db.close();
+//		Log.d(TAG, "findAll方法关闭了数据库连接");
+//		return list;
+//	}
 
-	public List<DowningCourse> findAll(String username) {
+	/**
+	 * 加载正在下载的课程。
+	 * @param userName
+	 * @return
+	 */
+	public List<DowningCourse> findAllDowning(String userName) {
+		Log.d(TAG, "开始加载正在下载的课程:" + userName +"...");
 		List<DowningCourse> list = new ArrayList<DowningCourse>();
-		SQLiteDatabase db = dbhelper.getDatabase(0);
-		Log.d(TAG, "findAll方法打开了数据库连接");
-		String sql = "select coursename,filesize,finishsize,filepath,fileurl from CourseTab where username = ?";
-		Cursor cursor = db.rawQuery(sql, new String[]{username});
+		final String query_sql = "select coursename,filesize,finishsize,filepath,fileurl from CourseTab where state = 1 and username = ?";
+		SQLiteDatabase db = this.dbHelper.getReadableDatabase();
+		Cursor cursor = db.rawQuery(query_sql, new String[] {userName});
 		while (cursor.moveToNext()) {
-			DowningCourse dc = new DowningCourse(cursor.getString(0),
-					cursor.getInt(1), cursor.getInt(2), cursor.getString(3),
-					cursor.getString(4),username);
-			list.add(dc);
+			DowningCourse data = new DowningCourse();
+			data.setCourseName(cursor.getString(0));
+			data.setFileSize(cursor.getLong(1));
+			data.setFinishSize(cursor.getLong(2));
+			data.setFilePath(cursor.getString(3));
+			data.setFileUrl(cursor.getString(4));
+			data.setUserName(userName);
+			list.add(data);
 		}
 		cursor.close();
-		dbhelper.closeDb();
-		Log.d(TAG, "findAll方法关闭了数据库连接");
+		db.close();
+		Log.d(TAG, "完成加载正在下载的课程["+userName+"]=>" + list.size());
 		return list;
 	}
-
-	public List<DowningCourse> findAllDowning(String username) {
-		// TODO Auto-generated method stub
-		List<DowningCourse> list = new ArrayList<DowningCourse>();
-		SQLiteDatabase db = dbhelper.getDatabase(0);
-		// 查找所有正在下载的课程
-		String sql = "select coursename,filesize,finishsize,filepath,fileurl from CourseTab where state = 1 and username = ?";
-		Cursor cursor = db.rawQuery(sql, new String[] {username});
-		while (cursor.moveToNext()) {
-			DowningCourse dc = new DowningCourse(cursor.getString(0),
-					cursor.getInt(1), cursor.getInt(2), cursor.getString(3),
-					cursor.getString(4),username);
-			list.add(dc);
-		}
-		cursor.close();
-		dbhelper.closeDb();
-		return list;
-	}
-	public List<Course> findAllDowned(String username)
+	/**
+	 * 加载已下载完成的课程。
+	 * @param username
+	 * @return
+	 */
+	public List<Course> findAllDowned(String userName)
 	{
+		Log.d(TAG, "开始加载已下载完成的课程["+userName+"]...");
 		List<Course> list = new ArrayList<Course>();
-		SQLiteDatabase db = dbhelper.getDatabase(0);
-		// 查找所有正在下载的课程
-		String sql = "select courseid,coursename,filepath,fileurl from CourseTab where state = 2 and username = ?";
-		Cursor cursor = db.rawQuery(sql, new String[] {username});
+		final String query_sql = "select courseid,coursename,filepath,fileurl from CourseTab where state = 2 and username = ?";
+		SQLiteDatabase db =  this.dbHelper.getReadableDatabase();
+		Cursor cursor = db.rawQuery(query_sql, new String[] { userName });
 		while (cursor.moveToNext()) {
 			Course c = new Course();
 			c.setCourseId(cursor.getString(0));
 			c.setCourseName(cursor.getString(1));
 			c.setFilePath(cursor.getString(2));
 			c.setFileUrl(cursor.getString(3));
-			c.setUsername(username);
+			c.setUserName(userName);
 			list.add(c);
 		}
 		cursor.close();
-		dbhelper.closeDb();
+		db.close();
+		Log.d(TAG, "完成加载已下载完成的课程["+userName+"]=>" + list.size());
 		return list;
 	}
-	public void updateState(String url, int state , String username) {
-		System.out.println("更新文件下载状态:"+state);
-		SQLiteDatabase db = dbhelper.getDatabase(0);
-		db.beginTransaction();
+	/**
+	 * 更新状态。
+	 * @param userName
+	 * @param fileUrl
+	 * @param state
+	 */
+	public void updateState(String userName,String fileUrl, int state) {
+		Log.d(TAG, "开始更新状态[username="+userName+"][url="+fileUrl+"][state="+state+"]...");
+		final String update_sql = "update CourseTab set state = ? where fileurl = ? and username = ?";
+		SQLiteDatabase db = this.dbHelper.getWritableDatabase();
 		try {
-			String sql = "update CourseTab set state = ? where fileurl = ? and username = ?";
-			db.execSQL(sql, new Object[] { state, url,username });
+			db.beginTransaction();
+			db.execSQL(update_sql, new Object[] { state, fileUrl,userName });
 			db.setTransactionSuccessful();
-		} finally {
-			db.endTransaction();
-		}
-		dbhelper.closeDb();
-	}
-
-	public void updateFileSize(String url, int size ,int status,String filePath, String username) {
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.WRITE);
-		db.beginTransaction();
-		try {
-			String sql = "update CourseTab set filesize = ? ,state = ?,filepath = ? where fileurl = ? and username = ?";
-			db.execSQL(sql, new Object[] { size,status,filePath, url ,username});
-			db.setTransactionSuccessful();
-		} finally {
-			db.endTransaction();
-		}
-		dbhelper.closeDb();
-	}
-	public void deleteDowingCourse(String url,String username)
-	{
-		SQLiteDatabase db = dbhelper.getDatabase(MyDBHelper.WRITE);
-		db.beginTransaction();
-		try
-		{
-			String sql = "update CourseTab set filesize = 0 ,state = 0,filepath = null,finishsize = 0 where fileurl = ? and username = ?";
-			String sql2 = "delete from DownloadTab where url = ? and username = ?";
-			Object[] params = new Object[]{url,username};
-			db.execSQL(sql, params);
-			db.execSQL(sql2, params);
-			db.setTransactionSuccessful();
+		}catch (Exception e) {
+			Log.e(TAG, "更新状态发生异常:"+ e.getMessage(), e);
 		}finally {
 			db.endTransaction();
+			db.close();
 		}
-		dbhelper.closeDb();
+		Log.d(TAG, "完成更新状态[username="+userName+"][url="+fileUrl+"][state="+state+"].");
+	}
+//	public void updateFileSize(String url, int size ,int status,String filePath, String username) {
+//		SQLiteDatabase db = this.dbhelper.getWritableDatabase();//dbhelper.getDatabase(MyDBHelper.WRITE);
+//		try {
+//			String sql = "update CourseTab set filesize = ? ,state = ?,filepath = ? where fileurl = ? and username = ?";
+//			db.beginTransaction();
+//			db.execSQL(sql, new Object[] { size,status,filePath, url ,username});
+//			db.setTransactionSuccessful();
+//		} finally {
+//			db.endTransaction();
+//			db.close();
+//		}
+//		//dbhelper.closeDb();
+//	}
+	/**
+	 * 删除正在下载的课程。
+	 * @param userName
+	 * @param fileUrl
+	 */
+	public void deleteDowing(String userName,String fileUrl)
+	{
+		Log.d(TAG, "开始删除正在下载的课程[username="+userName+"][url="+fileUrl+"]...");
+		final String update_sql = "update CourseTab set filesize = 0 ,state = 0,filepath = null,finishsize = 0 where fileurl = ? and username = ?";
+		final String delete_sql = "delete from DownloadTab where url = ? and username = ?";
+		SQLiteDatabase db = this.dbHelper.getWritableDatabase();
+		try {
+			Object[] parameters = new Object[]{ fileUrl,userName };
+			db.beginTransaction();
+			db.execSQL(update_sql, parameters);
+			db.execSQL(delete_sql, parameters);
+			db.setTransactionSuccessful();
+		} catch (Exception e) {
+			 Log.e(TAG, "删除正在下载的课程异常:" + e.getMessage(), e);
+		}finally{
+			db.endTransaction();
+			db.close();
+		}
 	}
 //	public void updateDowningCourse(DowningCourse course, int state , String username) {
 //		SQLiteDatabase db = dbhelper.getDatabase(0);

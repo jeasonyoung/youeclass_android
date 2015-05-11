@@ -9,12 +9,12 @@ import java.io.File;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Point;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.MessageQueue;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.Gravity;
@@ -71,6 +71,7 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 	 * 重载创建
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -99,11 +100,10 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 		this.videoLoadingLayout = (RelativeLayout)this.findViewById(R.id.videoloadingLayout);
 		this.videoLoadingLayout.setVisibility(View.VISIBLE);
 		
-		Point outSizePoint = new Point();
 		WindowManager wManager = (WindowManager)this.getSystemService(WINDOW_SERVICE);
-		wManager.getDefaultDisplay().getSize(outSizePoint);
-		this.width = outSizePoint.x;//屏幕宽度
-		this.height = outSizePoint.y;//屏幕高度
+		Display display = wManager.getDefaultDisplay();//.getSize(outSizePoint);
+		this.width = display.getWidth();//屏幕宽度
+		this.height =display.getHeight();//屏幕高度
 		
 		this.title = new PopupWindow(titleView, 400, 50);
 		this.title.setAnimationStyle(R.style.AnimationFade);
@@ -218,7 +218,7 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 			if(!"free".equalsIgnoreCase(this.playType)){
 				Toast.makeText(this, "本地文件已经被删除", Toast.LENGTH_SHORT).show();
 				//修改courseTab中的记录
-				new CourseDao(this).updateState(this.httpUrl, 0, this.username);
+				new CourseDao(this).updateState(this.username, this.httpUrl, 0);//.updateState(this.httpUrl, 0, this.username);
 				if("local".equalsIgnoreCase(intent.getStringExtra("loginType"))){
 					this.finish();
 					return null;

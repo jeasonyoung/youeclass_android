@@ -139,10 +139,16 @@ public class MyCourseDetailActivity extends BaseActivity implements OnClickListe
 			for(int i=0;i<json.length();i++)
 			{
 				JSONObject j = json.getJSONObject(i);
-				Course c = new Course(j.getInt("classId")+"",j.getString("classTitle"),j.getInt("gradeId")+"",j.getString("classHdUrl"),0,username);
-				list.add(c);
+				Course data = new Course();
+				data.setCourseId(j.getInt("classId")+"");
+				data.setCourseName(j.getString("classTitle"));
+				data.setClassId(j.getInt("gradeId")+"");
+				data.setFileUrl(j.getString("classHdUrl"));
+				data.setState(0);
+				data.setUserName(username);
+				 list.add(data);
 			}
-			dao.save(list,username);
+			dao.save(username, list);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

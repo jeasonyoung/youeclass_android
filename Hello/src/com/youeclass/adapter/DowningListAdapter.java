@@ -1,17 +1,14 @@
 package com.youeclass.adapter;
 
-import java.io.File;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo.State;
-import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ProgressBar;
@@ -20,267 +17,320 @@ import android.widget.Toast;
 
 import com.youeclass.R;
 import com.youeclass.customview.DownloadButton;
-import com.youeclass.downloader.SmartFileDownloader;
 import com.youeclass.entity.DowningCourse;
 import com.youeclass.service.DownloadService;
-import com.youeclass.util.FileUtil;
+import com.youeclass.util.StringUtils;
 
+/**
+ * 正在下载列表数据适配器。
+ * @author jeasonyoung
+ *
+ */
 public class DowningListAdapter extends BaseAdapter {
+	private static final String TAG = "DowningListAdapter";
 	private Context context;
+	private LayoutInflater layoutInflater;
+	private DownloadService.IFileDownloadService downloadService;
+	private UpdateUIHandler updateUIHandler;
 	private List<DowningCourse> list;
-	private String username;
-	private SharedPreferences settingfile;
-	public DowningListAdapter(Context context, List<DowningCourse> list,String username) {
+	/**
+	 * 构造函数。
+	 * @param context
+	 * @param list
+	 * @param username
+	 */
+	public DowningListAdapter(Context context, List<DowningCourse> list, DownloadService.IFileDownloadService downloadService) {
 		super();
 		this.context = context;
 		this.list = list;
-		this.username = username;
-		this.settingfile = context.getSharedPreferences("settingfile", 0);
+		this.downloadService = downloadService;
+		
+		this.layoutInflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		
+		this.updateUIHandler = new UpdateUIHandler();
+		if(this.downloadService != null){
+			this.downloadService.setHandler(this.updateUIHandler);
+		}
 	}
-
+	/*
+	 * 获取数据总数。
+	 * @see android.widget.Adapter#getCount()
+	 */
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
 		return list.size();
 	}
-
+	/*
+	 * 获取指定行数据。
+	 * @see android.widget.Adapter#getItem(int)
+	 */
 	@Override
 	public Object getItem(int position) {
-		// TODO Auto-generated method stub
 		return list.get(position);
 	}
-
+	/*
+	 * 获取指定行ID。
+	 * @see android.widget.Adapter#getItemId(int)
+	 */
 	@Override
 	public long getItemId(int position) {
-		// TODO Auto-generated method stub
 		return position;
 	}
-
+	/*
+	 * 创建行UI。
+	 * @see android.widget.Adapter#getView(int, android.view.View, android.view.ViewGroup)
+	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		// TODO Auto-generated method stub.Boolean flag =
-		// SmartFileDownloader.flagMap.get(url);
-		//if (convertView == null) {
-		/*
-		 * 初始化下载项的问题
-		 * 一开始数据库还没有下载项,都是新的,文件大小不定
-		 * 有数据的情况
-		 */
-			DowningListItem item = null;
-			if(convertView==null)	//converView还不存在
-			{
-				LayoutInflater inflater = LayoutInflater.from(context);
-				convertView = inflater.inflate(R.layout.list_downing_layout, null);
-				item = new DowningListItem();
-				// 文件名
-				item.filenameLab = (TextView) convertView
-						.findViewById(R.id.filenameLab);
-				// 进度条
-				item.finishProgress = (ProgressBar) convertView
-						.findViewById(R.id.finishProgress);
-				item.finishProgress.setMax(100);
-				// 下载中
-				item.downing = (TextView) convertView
-						.findViewById(R.id.fileDownText);
-				// 百分数
-				item.percent = (TextView) convertView
-						.findViewById(R.id.fileFininshProgressLab);
-				// 连接中
-				item.connecting = (TextView) convertView
-						.findViewById(R.id.finishSizeTextView);
-				// 暂停或继续按钮
-				item.pauseBtn = (DownloadButton) convertView
-						.findViewById(R.id.pauseBtn);
-				convertView.setTag(item);
-			}else
-			{
-				item = (DowningListItem) convertView.getTag();
+		Log.d(TAG, "开始创建行:"+position+"...");
+		TextView tvFileName,tvDowning,tvPercent,tvConnecting;
+		ProgressBar progressBar;
+		DownloadButton btnPause;
+		
+		DowningItemContentWrapper wrapper = null;
+		if(convertView == null){
+			Log.d(TAG, "创建新的行：" + position);
+			convertView = this.layoutInflater.inflate(R.layout.list_downing_layout, null);
+			//文件名
+			tvFileName = (TextView)convertView.findViewById(R.id.filenameLab);
+			//进度条
+			progressBar = (ProgressBar) convertView.findViewById(R.id.finishProgress);
+			progressBar.setMax(100);
+			//下载中
+			tvDowning = (TextView) convertView.findViewById(R.id.fileDownText);
+			//百分数
+			tvPercent = (TextView) convertView.findViewById(R.id.fileFininshProgressLab);
+			//连接中
+			tvConnecting = (TextView) convertView.findViewById(R.id.finishSizeTextView);
+			//暂停或继续按钮
+			btnPause = (DownloadButton) convertView.findViewById(R.id.pauseBtn);
+			//创建包装对象
+			wrapper = new DowningItemContentWrapper(tvFileName, tvDowning, tvPercent, tvConnecting, btnPause, progressBar);
+			//存储包装对象
+			convertView.setTag(wrapper);
+		}else {
+			Log.d(TAG, "重复利用行:" + position);
+			//获取包装对象
+			wrapper = (DowningItemContentWrapper)convertView.getTag();
+			//文件名
+			tvFileName = wrapper.fileName;
+			//进度条
+			progressBar = wrapper.progressBar;
+			//下载中
+			tvDowning = wrapper.downing;
+			//百分数
+			tvPercent = wrapper.percent;
+			//连接中
+			tvConnecting = wrapper.connecting;
+			//暂停或继续按钮
+			btnPause = wrapper.pause;
+		}
+		Log.d(TAG, "开始装载行["+position+"]数据...");
+		DowningCourse course = (DowningCourse)this.getItem(position);
+		//添加到下载服务
+		if(this.downloadService != null){
+			this.downloadService.addDownload(course, position);
+		}
+		//文件名
+		tvFileName.setText(course.getCourseName());
+		//注册按钮事件
+		btnPause.setOnClickListener(new ItemContentOnClickListener(wrapper,course, position));
+		//进度百分比
+		int percent = (int) (course.getFinishSize() * 100.0/ course.getFileSize());
+		if(percent > 0){
+			tvPercent.setText(percent + "%");
+			progressBar.setProgress(percent);
+		}
+		switch(course.getState()){
+			case DowningCourse.STATE_INIT:{//初始状态
+				tvConnecting.setText("排队连接中...");
+				tvDowning.setText("");// 还没开始下载
+				btnPause.setEnabled(false);
+				break;
 			}
-			DowningCourse dc = list.get(position);
-			System.out.println(dc.getFileurl()+" 下载状态 : "+dc.getStatus());
-			item.filenameLab.setText(dc.getCourseName());
-			//获取下载状态
-			Boolean flag = SmartFileDownloader.flagMap.get(dc.getFileurl());
-			//为空表示尚未下载过,为假表示暂停了
-			if(flag == null || !flag)
-			{
-				//初始化,--暂停,
-				if(dc.getStatus()==0)	//以前没有下载完的状态玛都为0;显示继续
-				{
-					int percentNum = (int) (dc.getFinishsize()*100.0/dc.getFilesize());
-					item.percent.setText(percentNum	+ "%");
-					item.finishProgress.setProgress(percentNum);
-					// 已有下载但是没有启动下载
-					item.pauseBtn.setImageResource(R.drawable.continuedown);// 显示继续按钮
-					item.pauseBtn.setText(R.string.continueDown);// 显示继续
-					item.downing.setText("暂停中");
-				}else if (dc.getStatus()== -1) {	//表示刚刚加入进来,还没有开始下载
-					item.connecting.setText("连接中...");
-					item.downing.setText("");// 还没开始下载
-					// 禁用按钮或者设置取消
-					//item.pauseBtn.setEnabled(false);
-				}else if(dc.getStatus() == 4)
-				{
-					item.downing.setText("等待中");
-					item.pauseBtn.setImageResource(R.drawable.waitdown);// 显示等待按钮
-					item.pauseBtn.setText(R.string.waitDown);// 显示等待
-//					item.pauseBtn.setEnabled(false);//禁用按钮
-				}else if(dc.getStatus() == -2)
-				{
-					item.connecting.setText("连接失败!");
-					item.pauseBtn.setImageResource(R.drawable.retry);
-					item.pauseBtn.setText(R.string.retry);
-				}
-			}else	//正在下载
-			{
-				if(dc.getStatus()==1)	//刚刚加入进来的开始下载了
-				{
-					item.connecting.setText("");
-					item.pauseBtn.setEnabled(true);
-					//item.finishProgress.setProgress(0);
-					//dc.setStatus(0);
-				}
-				dc.setStatus(1);
-				//正在下载  
-				// 更新进度数值
-				int percentNum = (int) (dc.getFinishsize()*100.0/dc.getFilesize());
-				item.percent.setText(percentNum	+ "%");
-				//更新进度条
-				item.finishProgress.setProgress(percentNum);
-				item.downing.setText("下载中");
-				item.pauseBtn.setImageResource(R.drawable.pausedown);// 显示继续按钮
-				item.pauseBtn.setText(R.string.pauseDown);// 显示继续
-				System.out.println("!!!!!!! update the progress !!!!!!!!!");
+			case DowningCourse.STATE_NETFAIL:{//连接失败
+				tvConnecting.setText("连接失败!");
+				tvDowning.setText("");
+				btnPause.setImageResource(R.drawable.retry);
+				btnPause.setText(R.string.retry);
+				btnPause.setEnabled(true);
+				break;
 			}
-			// 设置按钮事件
-			item.pauseBtn.setOnClickListener(new PauseClickEvent(position, list,
-					item.downing));
+			case DowningCourse.STATE_PAUSE:{//暂停中
+				tvConnecting.setText("");
+				tvDowning.setText("暂停中");
+				btnPause.setImageResource(R.drawable.continuedown);// 显示继续按钮
+				btnPause.setText(R.string.continueDown);// 显示继续
+				btnPause.setEnabled(true);
+				break;
+			}
+			case DowningCourse.STATE_DOWNING:{//下载中
+				tvConnecting.setText("");
+				tvDowning.setText("下载中");
+				
+				if(percent == 0){
+					tvPercent.setText("0%");
+					progressBar.setProgress(0);
+				}
+				
+				btnPause.setImageResource(R.drawable.pausedown);// 显示暂停按钮
+				btnPause.setText(R.string.pauseDown);// 显示暂停
+				btnPause.setEnabled(true);
+				break;
+			}
+			case DowningCourse.STATE_WAITTING:{//排队中
+				tvConnecting.setText("");
+				tvDowning.setText("排队中");
+				btnPause.setImageResource(R.drawable.waitdown);// 显示等待按钮
+				btnPause.setText(R.string.waitDown);// 显示等待
+				btnPause.setEnabled(false);
+				break;
+			}
+			default:{
+				Log.e(TAG, position +"." + course.getCourseName() + ",state:" + course.getState() + ",未加载数据...");
+				break;
+			}
+		}
 		return convertView;
 	}
-
-	// 判断下载与暂停的标识是什么
-	/*
-	 * map里取不到 url对应的值,表示没有开始下载 取出为false,暂停了下载 取出为true,正在下载
+	/**
+	 * 下载行内容。
+	 * @author jeasonyoung
 	 */
-	private class PauseClickEvent implements OnClickListener {
-		private TextView textView;
-		private DowningCourse dc;
-
-		public PauseClickEvent(int position, List<DowningCourse> l, TextView t) {
-			// TODO Auto-generated constructor stub
-			this.textView = t;
-			this.dc = l.get(position);
+	private final class DowningItemContentWrapper{
+		public TextView fileName,downing,percent,connecting;
+		public DownloadButton pause;
+		public ProgressBar progressBar;
+		/**
+		 * 构造函数。
+		 * @param fileName
+		 * @param downing
+		 * @param percent
+		 * @param connecting
+		 * @param pause
+		 * @param progressBar
+		 */
+		public DowningItemContentWrapper(TextView fileName,TextView downing,TextView percent,TextView connecting,DownloadButton pause,ProgressBar progressBar){
+			this.fileName = fileName;
+			this.downing = downing;
+			this.percent = percent;
+			this.connecting = connecting;
+			this.pause = pause;
+			this.progressBar = progressBar;
 		}
-
+	}
+	/**
+	 * 下载行内容点击事件处理。
+	 * @author jeasonyoung
+	 *
+	 */
+	private class ItemContentOnClickListener implements View.OnClickListener{
+		private DowningItemContentWrapper wrapper;
+		private DowningCourse course;
+		private int position;
+		/**
+		 * 构造函数。
+		 * @param wrapper
+		 * @param course
+		 * @param position
+		 */
+		public ItemContentOnClickListener(DowningItemContentWrapper wrapper,DowningCourse course, int position) {
+			this.wrapper = wrapper;
+			this.course = course;
+			this.position = position;
+		}
+		/*
+		 * 实现点击事件
+		 * @see android.view.View.OnClickListener#onClick(android.view.View)
+		 */
 		@Override
 		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			if(dc.getStatus()==4||dc.getStatus()==-1) return;
-			String url  = dc.getFileurl();
-			Boolean flag = SmartFileDownloader.flagMap.get(url);
-			// 停止了下载
-			if (flag == null || !flag) {
-				// 启动下载
-				if(SmartFileDownloader.getDowningCount()>=2)
-				{
-					dc.setStatus(4);  //等待状态
-					((DownloadButton) v).setImageResource(R.drawable.waitdown);// 显示暂停按钮
-					((DownloadButton) v).setText(R.string.waitDown);
-					return;
+			DownloadButton btn = (DownloadButton)v;
+			switch(course.getState()){
+				case DowningCourse.STATE_NETFAIL:{//连接失败
+					//重新连接
+					Log.d(TAG, "重新连接课程:"+ this.position+"." + this.course.getCourseName());
+					//继续
+					downloadService.continueDownload(course);
+					wrapper.connecting.setText("重新连接中..."); 
+					btn.setEnabled(false);
+					break;
 				}
-				Boolean wifiState = checkWifiNetworkInfo();
-				Boolean isDownUse3G = settingfile.getBoolean("setDownIsUse3G", true);
-				if(wifiState==null)
-				{
-					//print("请检查您的网络");
-					Toast.makeText(context, "请检查您的网络", Toast.LENGTH_SHORT).show();
-					return;
+				case DowningCourse.STATE_PAUSE:{//暂停中
+					//继续下载
+					Log.d(TAG, "继续下载课程:"+ this.position+"." + this.course.getCourseName());
+					downloadService.continueDownload(course);
+					wrapper.connecting.setText("重启下载中...");
+					btn.setEnabled(false);
+					break;
 				}
-				if(wifiState==false&&isDownUse3G==false)//没有wifi,又不允许3G下载
-				{
-					//print("当前网络为2G/3G,要下载请修改设置或开启wifi");
-					Toast.makeText(context, "当前网络为2G/3G,要下载请修改设置或开启wifi", Toast.LENGTH_SHORT).show();
-					return;
+				case DowningCourse.STATE_DOWNING:{//下载中
+					//暂停课程
+					Log.d(TAG, "暂停下载课程:"+ this.position+"." + this.course.getCourseName());
+					downloadService.pauseDownload(course);
+					wrapper.connecting.setText("暂停下载中...");
+					btn.setEnabled(false);
+					break;
 				}
-				if(!FileUtil.checkSDCard(dc.getFilesize()))
-				{
-					Toast.makeText(context, "没有SD卡或者空间不够", Toast.LENGTH_SHORT).show();
-					return;
-				}
-				SmartFileDownloader.flagMap.put(url, true);
-				Intent intent = new Intent(context, DownloadService.class);
-				intent.putExtra("url", url);
-				File dir = Environment.getExternalStorageDirectory();
-				intent.putExtra("dir", dir.getPath() + "/eschool");
-				intent.putExtra("username", username);
-				context.startService(intent);
-				textView.setText("下载中");
-				dc.setStatus(1);
-				((DownloadButton) v).setImageResource(R.drawable.pausedown);// 显示暂停按钮
-				((DownloadButton) v).setText(R.string.pauseDown);
-			} else {
-				// 发广播通知后台service暂停
-				SmartFileDownloader.flagMap.put(url, false);
-				Intent myIntent = new Intent();// 创建Intent对象
-				myIntent.setAction("commandFromActivity");
-				myIntent.putExtra("cmd", 0);
-				myIntent.putExtra("url", url);
-				context.sendBroadcast(myIntent);// 发送广播
-				textView.setText("暂停中");
-				//下载状态码为0
-				dc.setStatus(0);
-				((DownloadButton) v).setImageResource(R.drawable.continuedown);// 显示继续按钮
-				((DownloadButton) v).setText(R.string.continueDown);// 显示继续
-				//同时查找处于暂停状态的任务
-				DowningCourse waiting = getFirstWait();
-				if(waiting!=null)
-				{
-					SmartFileDownloader.flagMap.put(waiting.getFileurl(), true);
-					Intent intent = new Intent(context, DownloadService.class);
-					intent.putExtra("url", waiting.getFileurl());
-					File dir = Environment.getExternalStorageDirectory();
-					intent.putExtra("dir", dir.getPath() + "/eschool");
-					intent.putExtra("username", username);
-					context.startService(intent);
-					waiting.setStatus(1);
-					DowningListAdapter.this.notifyDataSetChanged();
+				default:{
+					Log.e(TAG, "课程["+position+"."+course.getCourseName()+"]按钮事件类型["+course.getState()+"]未设置处理函数！");
+					break;
 				}
 			}
 		}
 	}
-	static class DowningListItem
-	{
-		TextView filenameLab,downing,percent,connecting;
-		DownloadButton pauseBtn;
-		ProgressBar finishProgress;
-	}
-	//获得列表中第一个等待的任务
-	private DowningCourse getFirstWait()
-	{
-		for(DowningCourse dc:list)
-		{
-			if(dc.getStatus()==4)
-			{
-				return dc;
+	
+	/**
+	 * 更新UI的Handler。
+	 * @author jeasonyoung
+	 *
+	 */
+	@SuppressLint("HandlerLeak") 
+	private final class UpdateUIHandler extends Handler{
+		@Override
+		public void handleMessage(Message msg) {
+			Integer pos = msg.arg1;
+			switch(msg.what){
+				case DowningCourse.STATE_NETFAIL:{//连接失败
+					if(pos > -1 && pos < getCount()){
+						DowningCourse data = list.get(pos);
+						data.setState(DowningCourse.STATE_NETFAIL);
+						//通知事件适配器
+						notifyDataSetChanged();
+					}
+					break;
+				}
+				case DowningCourse.STATE_PAUSE:{//暂停
+					if(pos > -1 && pos < getCount()){
+						DowningCourse data = list.get(pos);
+						data.setState(DowningCourse.STATE_PAUSE);
+						//通知事件适配器
+						notifyDataSetChanged();
+					}
+					break;
+				}
+				case DowningCourse.STATE_DOWNING:{//下载进度
+					if(pos > -1 && pos < getCount()){
+						DowningCourse data = list.get(pos);
+						data.setState(DowningCourse.STATE_DOWNING);
+						Long finishTotal = (Long)msg.obj;
+						if(finishTotal != null && finishTotal > 0){
+							//更新下载的数据
+							data.setFinishSize(finishTotal);
+							//通知事件适配器
+							notifyDataSetChanged();
+						}
+					}
+					return;
+				}
+			}
+			//通知提示
+			if((msg.obj instanceof String)){
+				String content = (String)msg.obj;
+				if(StringUtils.isEmpty(content))return;
+				
+				Toast.makeText(context, content, Toast.LENGTH_LONG).show();
 			}
 		}
-		return null;
-	}
-	private Boolean checkWifiNetworkInfo()
-	{
-		ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		 //mobile 3G Data Network
-        State mobile = conMan.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
-        //wifi
-        State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
-        if(wifi==State.CONNECTED||wifi==State.CONNECTING)
-        {
-        	return true;
-        }
-        if(mobile==State.CONNECTED||mobile==State.CONNECTING)
-        {
-        	return false;
-        }
-		return null;
 	}
 }

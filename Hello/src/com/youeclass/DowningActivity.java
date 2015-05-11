@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -13,7 +12,6 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -34,7 +32,7 @@ public class DowningActivity extends BaseActivity{
 	private ListView listView;
 	private LinearLayout nodata;
 	private List<DowningCourse> list;
-	private BaseAdapter mAdapter;
+	private DowningListAdapter mAdapter;
 	private CourseDao dao;
 	private String username;
 	
@@ -66,8 +64,8 @@ public class DowningActivity extends BaseActivity{
 		this.nodata = (LinearLayout) this.findViewById(R.id.down_nodataLayout);
 		
 		//绑定服务
-		Intent service = new Intent(this, DownloadService.class);
-		 this.bindService(service, this.connection, Context.BIND_AUTO_CREATE);
+		Intent serviceIntent = new Intent(this, DownloadService.class);
+		this.getApplicationContext().bindService(serviceIntent, connection, BIND_AUTO_CREATE);
 		
 		//找出数据库中所有正在下载的课程
 		this.list = this.dao.findAllDowning(this.username);
@@ -86,7 +84,7 @@ public class DowningActivity extends BaseActivity{
 			}
 		}
 		//配置数据源
-		this.mAdapter = new DowningListAdapter(this, list, this.fileDownloadService);
+		this.mAdapter = new DowningListAdapter(this, this.list);
 		this.listView.setAdapter(this.mAdapter);
 		if(list.size() == 0)
 		{
@@ -135,6 +133,7 @@ public class DowningActivity extends BaseActivity{
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			Log.d(TAG, "连接下载服务...");
 			fileDownloadService = (DownloadService.IFileDownloadService)service;
+			mAdapter.setDownloadService(fileDownloadService);
 		}
 		/*
 		 * 断开服务。

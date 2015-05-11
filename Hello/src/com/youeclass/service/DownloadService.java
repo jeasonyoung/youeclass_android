@@ -186,8 +186,10 @@ public class DownloadService extends Service {
 				 
 				boolean result = false;
 				if(!downloadQueue.contains(course)){//如果队列中不存在则加入对尾
-					result = downloadQueue.offer(course);
-					Log.d(TAG, "压入到队尾:" + result);
+					if(course.getState() != DowningCourse.STATE_PAUSE){
+						result = downloadQueue.offer(course);
+						Log.d(TAG, "压入到队尾:" + result);
+					}
 					//设置位置集合
 					downloadPositions.put(course, pos);
 				}
@@ -305,6 +307,7 @@ public class DownloadService extends Service {
 		if(course != null && thread != null){
 			//设置文件大小
 			course.setFileSize(thread.getFileSize());
+			Log.d(TAG, "设置文件大小=>"+thread.getFileSize()+"/" + course.getFileSize() + "...");
 			//添加到下载线程集合
 			this.downloadThreads.put(course, thread);
 		}
@@ -322,7 +325,7 @@ public class DownloadService extends Service {
 			Log.d(TAG, "前台处理Handler为null.");
 			return;
 		}
-		int pos = this.downloadPositions.get(course);
+		int pos = this.downloadPositions.size() == 0 ? -1 :  this.downloadPositions.get(course);
 		Log.d(TAG, "发送课程["+pos+"."+course.getCourseName()+"]前台UI处理消息：" + msgType);
 		this.downloadHandler.sendMessage(this.downloadHandler.obtainMessage(msgType, pos, 0, msg));
 	}
@@ -339,7 +342,7 @@ public class DownloadService extends Service {
 		}
 		//设置课程下载量
 		course.setFinishSize(totalFileSize);
-		int pos = this.downloadPositions.get(course);
+		int pos = this.downloadPositions.size() == 0 ? -1 :  this.downloadPositions.get(course);
 		Log.d(TAG, "发送课程["+pos+"."+course.getCourseName()+"]下载进度:"+ totalFileSize);
 		this.downloadHandler.sendMessage(this.downloadHandler.obtainMessage(DowningCourse.STATE_DOWNING, pos, 0, Long.valueOf(totalFileSize)));
 	}
@@ -350,6 +353,7 @@ public class DownloadService extends Service {
 		//线程执行体
 		@Override
 		public void run() {
+			Log.d(TAG, "下载服务队列轮询线程启动...");
 			while(!isStop){
 				try {
 					//线程等待

@@ -133,6 +133,27 @@ public class DownloadDao {
 		db.execSQL(delete_sql, new Object[]{url, userName});
 	}
 	/**
+	 * 更新课程完成的数据
+	 * @param url
+	 * @param userName
+	 * @param finishsize
+	 */
+	public void updateCourseFinish(String url,String userName,long finishsize){
+		Log.d(TAG, "更新课程完成文件下载量...");
+		final String update_sql = "update CourseTab set finishsize=? where fileurl=? and username=?";
+		SQLiteDatabase db = this.dbHelper.getWritableDatabase();
+		try {
+			db.beginTransaction();
+			db.execSQL(update_sql, new Object[]{finishsize, url, userName});
+			db.setTransactionSuccessful();
+		} catch (Exception e) {
+			Log.e(TAG, "更新课程完成文件下载量发生异常：" + e.getMessage(), e);
+		}finally{
+			db.endTransaction();
+			db.close();
+		}
+	}
+	/**
 	 * 完成文件下载后，删除对应的下载记录，更新课程信息。
 	 * @param url
 	 * @param userName
@@ -140,23 +161,15 @@ public class DownloadDao {
 	 */
 	public void finish(String url,String userName, String filePath){
 		Log.d(TAG, "完成文件下载操作...");
-		final String total_sql = "select sum(complete_size) from DownloadTab where url=? and username=? ";
-		final String update_sql = "update CourseTab set finishsize = ?,filepath = ? ,state = 2 where fileurl = ? and username = ?";
+		final String update_sql = "update CourseTab set filepath=?, state=2 where fileurl=? and username=?";
 		SQLiteDatabase db = this.dbHelper.getWritableDatabase();
 		try {
-			int total = 0;
-			//获取下载的总数据量
-			Cursor cursor = db.rawQuery(total_sql, new String[]{url, userName});
-			if(cursor.isFirst()){
-				total = cursor.getInt(0);
-			}
-			cursor.close();
 			//开始事务处理
 			db.beginTransaction();
 			//删除下载记录
 			this.deleteAllRecord(db, url, userName);
 			//更新数据
-			db.execSQL(update_sql, new Object[]{total, filePath, url, userName});
+			db.execSQL(update_sql, new Object[]{filePath, url, userName});
 			//提交事务
 			db.setTransactionSuccessful();
 		} catch (Exception e) {

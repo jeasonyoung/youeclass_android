@@ -1,9 +1,12 @@
 package com.youeclass.adapter;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -19,6 +22,7 @@ import com.youeclass.R;
 import com.youeclass.customview.DownloadButton;
 import com.youeclass.entity.DowningCourse;
 import com.youeclass.service.DownloadService;
+import com.youeclass.service.DownloadService.IFileDownloadService;
 import com.youeclass.util.StringUtils;
 
 /**
@@ -34,23 +38,56 @@ public class DowningListAdapter extends BaseAdapter {
 	private UpdateUIHandler updateUIHandler;
 	private List<DowningCourse> list;
 	/**
-	 * 构造函数。
+	 * 构造函数
 	 * @param context
 	 * @param list
-	 * @param username
 	 */
-	public DowningListAdapter(Context context, List<DowningCourse> list, DownloadService.IFileDownloadService downloadService) {
-		super();
+	public DowningListAdapter(Context context, List<DowningCourse> list) {
+		Log.d(TAG, "初始化构造函数...");
 		this.context = context;
 		this.list = list;
-		this.downloadService = downloadService;
 		
 		this.layoutInflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
 		this.updateUIHandler = new UpdateUIHandler();
-		if(this.downloadService != null){
-			this.downloadService.setHandler(this.updateUIHandler);
-		}
+	}
+	/**
+	 * 设置下载服务操作。
+	 * @param fileDownloadService
+	 */
+	public void setDownloadService(IFileDownloadService fileDownloadService) {
+		Log.d(TAG, "设置下载服务操作对象:" + fileDownloadService);
+		 this.downloadService = fileDownloadService;
+		 if(this.downloadService != null){
+			 Log.d(TAG, "设置UI更新Handler...");
+			 this.downloadService.setHandler(this.updateUIHandler);
+			 if(this.list.size() == 0)return;
+			 Log.d(TAG, "添加列表数据到下载队列...");
+			 new AsyncTask<DowningCourse, Integer, Integer>(){
+				@Override
+				protected Integer doInBackground(DowningCourse... params) {
+					if(params != null && params.length > 0){
+						Log.d(TAG, "准备添加到下载队列...");
+						int index = 0;
+						for(DowningCourse data : params){
+							if(data != null){
+								downloadService.addDownload(data, index);
+							}
+							index++;
+						}
+						return index;
+					}
+					return null;
+				}
+				@Override
+				protected void onPostExecute(Integer result) {
+					if(result > 0){
+						Log.d(TAG, "通知更新列表数据状态...");
+						notifyDataSetChanged();
+					}
+				};
+			 }.execute(this.list.toArray(new DowningCourse[0]));
+		 }
 	}
 	/*
 	 * 获取数据总数。
@@ -127,10 +164,6 @@ public class DowningListAdapter extends BaseAdapter {
 		}
 		Log.d(TAG, "开始装载行["+position+"]数据...");
 		DowningCourse course = (DowningCourse)this.getItem(position);
-		//添加到下载服务
-		if(this.downloadService != null){
-			this.downloadService.addDownload(course, position);
-		}
 		//文件名
 		tvFileName.setText(course.getCourseName());
 		//注册按钮事件
@@ -287,12 +320,14 @@ public class DowningListAdapter extends BaseAdapter {
 	 */
 	@SuppressLint("HandlerLeak") 
 	private final class UpdateUIHandler extends Handler{
+		private Map<DowningCourse, Integer> coursePercentMap = new HashMap<DowningCourse, Integer>();
 		@Override
 		public void handleMessage(Message msg) {
 			Integer pos = msg.arg1;
 			switch(msg.what){
 				case DowningCourse.STATE_NETFAIL:{//连接失败
 					if(pos > -1 && pos < getCount()){
+						Log.d(TAG, "更新连接失败UI...");
 						DowningCourse data = list.get(pos);
 						data.setState(DowningCourse.STATE_NETFAIL);
 						//通知事件适配器
@@ -301,6 +336,7 @@ public class DowningListAdapter extends BaseAdapter {
 					break;
 				}
 				case DowningCourse.STATE_PAUSE:{//暂停
+					Log.d(TAG, "更新暂停连接失败UI...");
 					if(pos > -1 && pos < getCount()){
 						DowningCourse data = list.get(pos);
 						data.setState(DowningCourse.STATE_PAUSE);
@@ -317,8 +353,15 @@ public class DowningListAdapter extends BaseAdapter {
 						if(finishTotal != null && finishTotal > 0){
 							//更新下载的数据
 							data.setFinishSize(finishTotal);
-							//通知事件适配器
-							notifyDataSetChanged();
+							Integer oldPercent = this.coursePercentMap.get(data);							
+							//新的百分比
+							int newPercent = (int) (data.getFinishSize() * 100.0/ data.getFileSize());
+							if(oldPercent == null || newPercent > oldPercent){
+								this.coursePercentMap.put(data, newPercent);
+								Log.d(TAG, "更新下载进度:"+newPercent+"%("+data.getFinishSize()+"/"+data.getFileSize()+")...");
+								//通知事件适配器
+								notifyDataSetChanged();
+							}
 						}
 					}
 					return;

@@ -50,7 +50,7 @@ public class MultiThreadDownload {
      */
     private MultiThreadDownload(){
     	this.threadsPosCache = new ConcurrentHashMap<Integer, Long>();
-    	this.pools = Executors.newFixedThreadPool(DOWNLOAD_THREADS);
+    	this.pools = Executors.newCachedThreadPool();//.newFixedThreadPool(DOWNLOAD_THREADS);
     }
 	/**
 	 * 构造函数。
@@ -134,6 +134,7 @@ public class MultiThreadDownload {
 	 * @param pos 最后下载的位置
 	 */
 	protected synchronized void update(int threadId,long  pos){
+		Log.d(TAG, "线程["+threadId+"]下载:" + pos);
 		//更新线程下载长度缓存。
 		this.threadsPosCache.put(threadId, pos);
 		//更新线程下载数据库数据
@@ -202,6 +203,7 @@ public class MultiThreadDownload {
 				}
 			}
 			//循环检查各线程下载状态
+			long oldTotal = this.totalDownloadSize;
 			boolean isFinish = false;
 			while(!isFinish){//守候循环
 				Thread.sleep(THREAD_SLEEP);
@@ -218,13 +220,16 @@ public class MultiThreadDownload {
 					}
 				}
 				//更新下载进度
-				if(listener != null){
+				if(listener != null && this.totalDownloadSize > oldTotal){
+					oldTotal = this.totalDownloadSize;
 					//通知目前已下载完成的数据长度。
 					listener.onDownloadSize(this.totalDownloadSize);
 				}
 			}
+			//更新课程下载量
+			this.downloadDao.updateCourseFinish(this.url, this.userName, this.totalDownloadSize);
 			//已下载完成
-			if(this.totalDownloadSize == this.fileSize){
+			if(this.totalDownloadSize != this.fileSize){
 				//更新数据库
 				this.downloadDao.finish(this.url, this.userName, this.savePath.getAbsolutePath());
 				///TODO:数据文件加密处理
@@ -301,7 +306,7 @@ public class MultiThreadDownload {
 				//设置获取数据的范围
 				http.setRequestProperty("Range", "bytes=" + startPos + "-" + endPos);
 				
-				Log.d(TAG, "Thread " + this.threadId + ": start download from start pos:" + startPos + " ...");
+				Log.d(TAG, "Thread: " + this.threadId + ": start download from start pos:" + startPos + " ...");
 				//获取输入流数据
 				InputStream inStream = http.getInputStream();
 				byte[] buffer = new byte[NET_BUFFER_SIZE];
@@ -322,7 +327,7 @@ public class MultiThreadDownload {
 				inStream.close();
 				
 				this.finish = true;
-				Log.d(TAG, "Thread " + this.threadId + " download finish.");
+				Log.d(TAG, "Thread :" + this.threadId + " download finish.");
 			} catch (Exception e) {
 				this.downLength = -1;
 				Log.e(TAG, "[线程:"+this.threadId+"]下载数据时发生异常：" + e.getMessage(), e);

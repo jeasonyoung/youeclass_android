@@ -20,8 +20,8 @@ public class HttpConnectUtil {
 		try {
 			URL url = new URL(urladdr);
 			conn = (HttpURLConnection) url.openConnection();
-			conn.setConnectTimeout(60000);
-			conn.setReadTimeout(60000);
+			conn.setConnectTimeout(600000);
+			conn.setReadTimeout(600000);
 			conn.setRequestMethod("GET");
 			// 检查网络
 			conn.connect();

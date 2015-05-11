@@ -202,12 +202,12 @@ containing a value of this type.
         public static int icon=0x7f020000;
     }
     public static final class id {
-        public static int fill=0x7f030001;
-        public static int stroke=0x7f030000;
+        public static int fill=0x7f040000;
+        public static int stroke=0x7f040001;
     }
     public static final class string {
-        public static int app_name=0x7f040001;
-        public static int hello=0x7f040000;
+        public static int app_name=0x7f030001;
+        public static int hello=0x7f030000;
     }
     public static final class styleable {
         /** Attributes that can be used with a CircleFlowIndicator.
@@ -252,7 +252,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name org.taptwo.android.widget.viewflow:activeColor
         */
-        public static final int CircleFlowIndicator_activeColor = 0;
+        public static int CircleFlowIndicator_activeColor = 0;
         /**
           <p>This symbol is the offset where the {@link org.taptwo.android.widget.viewflow.R.attr#activeType}
           attribute's value can be found in the {@link #CircleFlowIndicator} array.
@@ -269,7 +269,7 @@ containing a value of this type.
 </table>
           @attr name org.taptwo.android.widget.viewflow:activeType
         */
-        public static final int CircleFlowIndicator_activeType = 7;
+        public static int CircleFlowIndicator_activeType = 7;
         /**
           <p>This symbol is the offset where the {@link org.taptwo.android.widget.viewflow.R.attr#centered}
           attribute's value can be found in the {@link #CircleFlowIndicator} array.
@@ -283,7 +283,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name org.taptwo.android.widget.viewflow:centered
         */
-        public static final int CircleFlowIndicator_centered = 4;
+        public static int CircleFlowIndicator_centered = 4;
         /**
           <p>This symbol is the offset where the {@link org.taptwo.android.widget.viewflow.R.attr#fadeOut}
           attribute's value can be found in the {@link #CircleFlowIndicator} array.
@@ -297,7 +297,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name org.taptwo.android.widget.viewflow:fadeOut
         */
-        public static final int CircleFlowIndicator_fadeOut = 5;
+        public static int CircleFlowIndicator_fadeOut = 5;
         /**
           <p>This symbol is the offset where the {@link org.taptwo.android.widget.viewflow.R.attr#inactiveColor}
           attribute's value can be found in the {@link #CircleFlowIndicator} array.
@@ -312,7 +312,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name org.taptwo.android.widget.viewflow:inactiveColor
         */
-        public static final int CircleFlowIndicator_inactiveColor = 1;
+        public static int CircleFlowIndicator_inactiveColor = 1;
         /**
           <p>This symbol is the offset where the {@link org.taptwo.android.widget.viewflow.R.attr#inactiveType}
           attribute's value can be found in the {@link #CircleFlowIndicator} array.
@@ -329,7 +329,7 @@ containing a value of this type.
 </table>
           @attr name org.taptwo.android.widget.viewflow:inactiveType
         */
-        public static final int CircleFlowIndicator_inactiveType = 6;
+        public static int CircleFlowIndicator_inactiveType = 6;
         /**
           <p>This symbol is the offset where the {@link org.taptwo.android.widget.viewflow.R.attr#radius}
           attribute's value can be found in the {@link #CircleFlowIndicator} array.
@@ -345,7 +345,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name org.taptwo.android.widget.viewflow:radius
         */
-        public static final int CircleFlowIndicator_radius = 2;
+        public static int CircleFlowIndicator_radius = 2;
         /**
           <p>This symbol is the offset where the {@link org.taptwo.android.widget.viewflow.R.attr#spacing}
           attribute's value can be found in the {@link #CircleFlowIndicator} array.
@@ -361,7 +361,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name org.taptwo.android.widget.viewflow:spacing
         */
-        public static final int CircleFlowIndicator_spacing = 3;
+        public static int CircleFlowIndicator_spacing = 3;
         /** Attributes that can be used with a TitleFlowIndicator.
            <p>Includes the following attributes:</p>
            <table>
@@ -414,7 +414,7 @@ containing a value of this type.
           <p>This is a private symbol.
           @attr name org.taptwo.android.widget.viewflow:clipPadding
         */
-        public static final int TitleFlowIndicator_clipPadding = 1;
+        public static int TitleFlowIndicator_clipPadding = 1;
         /**
           <p>This symbol is the offset where the {@link org.taptwo.android.widget.viewflow.R.attr#customTypeface}
           attribute's value can be found in the {@link #TitleFlowIndicator} array.
@@ -428,7 +428,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name org.taptwo.android.widget.viewflow:customTypeface
         */
-        public static final int TitleFlowIndicator_customTypeface = 10;
+        public static int TitleFlowIndicator_customTypeface = 10;
         /**
           <p>This symbol is the offset where the {@link org.taptwo.android.widget.viewflow.R.attr#footerColor}
           attribute's value can be found in the {@link #TitleFlowIndicator} array.
@@ -443,7 +443,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name org.taptwo.android.widget.viewflow:footerColor
         */
-        public static final int TitleFlowIndicator_footerColor = 8;
+        public static int TitleFlowIndicator_footerColor = 8;
         /**
           <p>This symbol is the offset where the {@link org.taptwo.android.widget.viewflow.R.attr#footerLineHeight}
           attribute's value can be found in the {@link #TitleFlowIndicator} array.
@@ -459,7 +459,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name org.taptwo.android.widget.viewflow:footerLineHeight
         */
-        public static final int TitleFlowIndicator_footerLineHeight = 7;
+        public static int TitleFlowIndicator_footerLineHeight = 7;
         /**
           <p>This symbol is the offset where the {@link org.taptwo.android.widget.viewflow.R.attr#footerTriangleHeight}
           attribute's value can be found in the {@link #TitleFlowIndicator} array.
@@ -475,7 +475,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name org.taptwo.android.widget.viewflow:footerTriangleHeight
         */
-        public static final int TitleFlowIndicator_footerTriangleHeight = 9;
+        public static int TitleFlowIndicator_footerTriangleHeight = 9;
         /**
           <p>This symbol is the offset where the {@link org.taptwo.android.widget.viewflow.R.attr#selectedBold}
           attribute's value can be found in the {@link #TitleFlowIndicator} array.
@@ -489,7 +489,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name org.taptwo.android.widget.viewflow:selectedBold
         */
-        public static final int TitleFlowIndicator_selectedBold = 3;
+        public static int TitleFlowIndicator_selectedBold = 3;
         /**
           <p>This symbol is the offset where the {@link org.taptwo.android.widget.viewflow.R.attr#selectedColor}
           attribute's value can be found in the {@link #TitleFlowIndicator} array.
@@ -504,7 +504,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name org.taptwo.android.widget.viewflow:selectedColor
         */
-        public static final int TitleFlowIndicator_selectedColor = 2;
+        public static int TitleFlowIndicator_selectedColor = 2;
         /**
           <p>This symbol is the offset where the {@link org.taptwo.android.widget.viewflow.R.attr#selectedSize}
           attribute's value can be found in the {@link #TitleFlowIndicator} array.
@@ -520,7 +520,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name org.taptwo.android.widget.viewflow:selectedSize
         */
-        public static final int TitleFlowIndicator_selectedSize = 4;
+        public static int TitleFlowIndicator_selectedSize = 4;
         /**
           <p>This symbol is the offset where the {@link org.taptwo.android.widget.viewflow.R.attr#textColor}
           attribute's value can be found in the {@link #TitleFlowIndicator} array.
@@ -535,7 +535,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name org.taptwo.android.widget.viewflow:textColor
         */
-        public static final int TitleFlowIndicator_textColor = 5;
+        public static int TitleFlowIndicator_textColor = 5;
         /**
           <p>This symbol is the offset where the {@link org.taptwo.android.widget.viewflow.R.attr#textSize}
           attribute's value can be found in the {@link #TitleFlowIndicator} array.
@@ -551,7 +551,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name org.taptwo.android.widget.viewflow:textSize
         */
-        public static final int TitleFlowIndicator_textSize = 6;
+        public static int TitleFlowIndicator_textSize = 6;
         /**
           <p>This symbol is the offset where the {@link org.taptwo.android.widget.viewflow.R.attr#titlePadding}
           attribute's value can be found in the {@link #TitleFlowIndicator} array.
@@ -567,7 +567,7 @@ theme attribute (in the form
 containing a value of this type.
           @attr name org.taptwo.android.widget.viewflow:titlePadding
         */
-        public static final int TitleFlowIndicator_titlePadding = 0;
+        public static int TitleFlowIndicator_titlePadding = 0;
         /** Attributes that can be used with a ViewFlow.
            <p>Includes the following attributes:</p>
            <table>
@@ -594,6 +594,6 @@ theme attribute (in the form
 containing a value of this type.
           @attr name org.taptwo.android.widget.viewflow:sidebuffer
         */
-        public static final int ViewFlow_sidebuffer = 0;
+        public static int ViewFlow_sidebuffer = 0;
     };
 }

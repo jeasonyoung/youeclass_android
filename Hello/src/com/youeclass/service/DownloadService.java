@@ -52,7 +52,7 @@ public class DownloadService extends Service {
 	 * 构造函数。
 	 */
 	public DownloadService(){
-		//单线程池
+		//下载服务队列轮询单线程池
 		this.pools = Executors.newSingleThreadExecutor();
 		//下载队列(线程安全)
 		this.downloadQueue = new LinkedBlockingQueue<DowningCourse>();

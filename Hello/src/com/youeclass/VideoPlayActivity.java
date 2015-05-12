@@ -8,12 +8,15 @@ import java.io.File;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.MessageQueue;
+import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
@@ -36,6 +39,7 @@ import android.widget.Toast;
 import com.umeng.analytics.MobclickAgent;
 import com.youeclass.dao.CourseDao;
 import com.youeclass.dao.PlayrecordDao;
+import com.youeclass.downloads.MultiThreadDownload;
 import com.youeclass.entity.Playrecord;
 import com.youeclass.player.VitamioVideoPlayer;
 import com.youeclass.util.Constant;
@@ -48,6 +52,8 @@ import com.youeclass.util.StringUtils;
  */
 @SuppressLint("ClickableViewAccessibility")
 public class VideoPlayActivity extends Activity implements OnTouchListener, OnGestureListener {
+	private static final String TAG = "VideoPlayActivity";
+	
 	private PopupWindow title,toolbar;
 	private SeekBar seekBar,volumnBar;
 	private TextView tvTitle,tvCurrentTime,tvTotalTime,tvVolumnSize;
@@ -63,10 +69,11 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 	private Playrecord playRecord;
 	private PlayrecordDao playRecordDao;
 	
-	private int height,width,volumnMax;
-	//private boolean endFlag = false;
-//	private long touchStartTime = System.currentTimeMillis();
-	private String name,username,playType,url,courseId,httpUrl;
+	private int height,width,volumnMax,recordTime;
+	private String name,username,playType,courseId,httpUrl;
+	private Uri videoUri;
+	
+	private boolean isDecrypted = false;
 	/*
 	 * 重载创建
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -90,7 +97,7 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 		//设置audioManager
 		this.audioManager = (AudioManager)this.getSystemService(AUDIO_SERVICE);
 		//加载传递数据
-		Uri uri = this.loadIntentData();
+		 this.videoUri = this.loadIntentData();
 		//
 		LayoutInflater inflater = LayoutInflater.from(this);
 		View titleView = inflater.inflate(R.layout.title, null);
@@ -172,12 +179,6 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 		this.tvTotalTime = (TextView)barView.findViewById(R.id.totalTime);
 		this.tvCurrentTime = (TextView)barView.findViewById(R.id.playTime);
 		
-		if(!StringUtils.isEmpty(this.url)  && (this.url.indexOf(this.username) == -1) && (this.url.indexOf(Constant.NGINX_URL) == -1)){
-			this.url = Constant.NGINX_URL + this.url;
-			uri = Uri.parse(this.url);
-		}
-		
-		int recordTime = 0;
 		if(!"free".equalsIgnoreCase(this.playType)){
 			if(this.playRecordDao == null){
 				this.playRecordDao = new PlayrecordDao(this);
@@ -191,41 +192,88 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 			}
 			recordTime = this.playRecord.getCurrentTime();
 		}
-		this.player = new VitamioVideoPlayer(this, this.videoView, this.seekBar, this.tvCurrentTime, this.tvTotalTime, recordTime, this.videoLoadingLayout, uri);
-		
-		this.gestureDetector = new GestureDetector(this, this);
+		//播放文件处理
+		Log.d(TAG, "开始解密运算");
+		this.asyncVideoTask.execute(this.videoUri, this.username);
+		//
 		this.videoView.setOnTouchListener(this);
 		this.videoView.setLongClickable(true);
 		this.videoView.setFocusable(true);
 		this.videoView.setClickable(true);
+		this.gestureDetector = new GestureDetector(this, this);
 		this.gestureDetector.setIsLongpressEnabled(true);
 	}
+	
+	//播放文件解密操作
+	private AsyncTask<Object, Integer, Uri> asyncVideoTask = new AsyncTask<Object, Integer, Uri> (){
+		/*
+		 * 解密播放文件
+		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
+		 */
+		@Override
+		protected Uri doInBackground(Object... params) {
+			Log.d(TAG, "开始处理视频加/解密...");
+			Uri uri = (Uri)params[0];
+			String userName = (String)params[1];
+			if(uri != null && !StringUtils.isEmpty(userName) &&  
+					ContentResolver.SCHEME_FILE.equals(uri.getScheme()) && uri.getPath().indexOf(userName) > -1){
+				File file = new File(uri.getPath());
+				if(file.exists() && !isDecrypted ){
+					 try {
+						 Log.d(TAG, "开始加/解密文件...");
+						 byte[] keys = userName.getBytes("UTF-8");
+						 //解密(异或运算)
+						 MultiThreadDownload.encryptFile(file, 0, keys);
+						 //
+						 isDecrypted = true;
+					} catch (Exception e) {
+						Log.e(TAG, "加/解密时发生异常:" + e.getMessage(), e);
+					}
+				}
+			}
+			return uri;
+		}
+		/*
+		 * 更新UI线程
+		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+		 */
+		protected void onPostExecute(Uri result) {
+			player = new VitamioVideoPlayer(VideoPlayActivity.this, videoView, seekBar, tvCurrentTime, tvTotalTime, recordTime, videoLoadingLayout, result, username);
+		};
+	};
+	
+	
 	//加载传递数据
 	private Uri loadIntentData(){
 		Intent intent = this.getIntent();
 		this.name = intent.getStringExtra("name");
-		this.url = intent.getStringExtra("url");
 		this.username = intent.getStringExtra("username");
 		this.courseId = intent.getStringExtra("courseid");
 		this.httpUrl = intent.getStringExtra("httpUrl");
 		this.playType = intent.getStringExtra("playType");
-		//
-		if(!StringUtils.isEmail(this.url) && this.url.indexOf(this.username) > -1){
-			File file = new File(this.url);
-			if(file.exists()){
-				return Uri.fromFile(file);
+		
+		String url = intent.getStringExtra("url");
+		if(!StringUtils.isEmpty(url)){
+			if(url.indexOf(this.username) == -1 && url.indexOf(Constant.NGINX_URL) == -1){
+				return Uri.parse(Constant.NGINX_URL + url);
 			}
-			if(!"free".equalsIgnoreCase(this.playType)){
+			if(url.indexOf(this.username) > -1){
+				File file = new File(url);
+				if(file.exists()){
+					return Uri.fromFile(file);
+				}
 				Toast.makeText(this, "本地文件已经被删除", Toast.LENGTH_SHORT).show();
 				//修改courseTab中的记录
-				new CourseDao(this).updateState(this.username, this.httpUrl, 0);//.updateState(this.httpUrl, 0, this.username);
-				if("local".equalsIgnoreCase(intent.getStringExtra("loginType"))){
-					this.finish();
-					return null;
-				}
+				new CourseDao(this).updateState(this.username, this.httpUrl, 0);
+				this.finish();
+				return null;
 			}
 		}
-		return StringUtils.isEmpty(this.httpUrl) ? null : Uri.parse(this.httpUrl);
+		if(!StringUtils.isEmpty(this.httpUrl)){
+			return Uri.parse(this.httpUrl);
+		}
+		this.finish();
+		return null;
 	}
 	//加载popupwindow
 	private void loadPopupWindows(){
@@ -336,6 +384,19 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 	
 	@Override
 	protected void onDestroy() {
+		if(this.videoUri != null && !StringUtils.isEmpty(this.username) &&  
+				ContentResolver.SCHEME_FILE.equals(this.videoUri.getScheme()) && this.videoUri.getPath().indexOf(this.username) > -1){
+			Log.d(TAG, "开始加密...");
+			File file = new File(this.videoUri.getPath());
+			if(file.exists()){
+				 try {
+					 MultiThreadDownload.encryptFile(file, 0, this.username.getBytes("UTF-8"));
+					 Log.d(TAG, "加密文件完成");
+				} catch (Exception e) {
+					Log.e(TAG, "加密时发生异常:" + e.getMessage(), e);
+				}
+			}
+		}
 		//this.endFlag = true;
 		if(this.title != null && this.title.isShowing()){
 			this.title.dismiss();
@@ -345,6 +406,7 @@ public class VideoPlayActivity extends Activity implements OnTouchListener, OnGe
 		}
 		super.onDestroy();
 	}
+	
 	
 	@Override
 	public boolean onDown(MotionEvent e) {

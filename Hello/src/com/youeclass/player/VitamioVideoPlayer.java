@@ -32,8 +32,7 @@ public class VitamioVideoPlayer {
 	private RelativeLayout loadLayout;
 	private VideoPlayActivity videoPlayActivity;
 	private Timer timer ;
-	private int recordTime;
-	
+	private int recordTime; 
 	private HandlePlayProgress handlePlayProgress;
 	/**
 	 * 构造函数
@@ -47,7 +46,7 @@ public class VitamioVideoPlayer {
 	 * @param url
 	 */
 	public VitamioVideoPlayer(VideoPlayActivity vpActivity, VideoView videoView,SeekBar skbProgress, TextView currentTime, TextView totalTime,
-			int recordTime, RelativeLayout loadLayout,Uri uri) {
+			int recordTime, RelativeLayout loadLayout,Uri uri, String userName) {
 		
 		this.videoPlayActivity = vpActivity;
 		this.skbProgress = skbProgress;
@@ -55,10 +54,9 @@ public class VitamioVideoPlayer {
 		this.totalTime = totalTime;
 		this.recordTime = recordTime;
 		this.loadLayout = loadLayout;
-//		String url2 = "http://www.youeclass.com:8090/2013yjssssjj2-1.flv";
-		 
-		Log.d(TAG, "最终的播放地址为:"+uri);
 		
+		Log.d(TAG, "最终的播放地址为:"+uri);
+
 		this.videoView = videoView;
 		this.videoView.setVideoURI(uri);
 		this.videoView.requestFocus();

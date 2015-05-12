@@ -15,6 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.youeclass.dao.DownloadDao;
@@ -27,12 +28,12 @@ import com.youeclass.util.StringUtils;
  */
 public class MultiThreadDownload {
 	private static final String TAG = "FileDownloadService";
-	private static final int DOWNLOAD_THREADS = 2;//下载线程数
-	private static final long THREAD_SLEEP = 900;//
+	private static final int DOWNLOAD_THREADS = 3;//下载线程数
+	private static final long THREAD_SLEEP = 300;//
 	private static final int CONNECT_TIMEOUT = 5000;//链接超时
 	private static final int CONNECT_SUCCESS = 200;//链接成功
 	private static final String CONNECT_METHOD_GET  = "GET";//get链接
-	private static final int NET_BUFFER_SIZE = 1024;//
+	private static final int NET_BUFFER_SIZE = 2048;//
 	
 	private File savePath;
 	private String userName,url;
@@ -50,7 +51,7 @@ public class MultiThreadDownload {
      */
     private MultiThreadDownload(){
     	this.threadsPosCache = new ConcurrentHashMap<Integer, Long>();
-    	this.pools = Executors.newCachedThreadPool();//.newFixedThreadPool(DOWNLOAD_THREADS);
+    	this.pools = Executors.newCachedThreadPool();
     }
 	/**
 	 * 构造函数。
@@ -133,12 +134,23 @@ public class MultiThreadDownload {
 	 * @param threadId 线程ID
 	 * @param pos 最后下载的位置
 	 */
-	protected synchronized void update(int threadId,long  pos){
-		Log.d(TAG, "线程["+threadId+"]下载:" + pos);
+	protected void update(final int threadId,final long  pos){
 		//更新线程下载长度缓存。
 		this.threadsPosCache.put(threadId, pos);
-		//更新线程下载数据库数据
-		this.downloadDao.update(this.url, this.userName, threadId, pos);
+		//更新到数据库线程
+		new AsyncTask<String, Integer, Integer>(){
+			/*
+			 * 后台线程处理更新到数据库
+			 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
+			 */
+			@Override
+			protected Integer doInBackground(String... params) {
+				Log.d(TAG, "线程["+threadId+"]下载:" + pos);
+				//更新线程下载数据库数据
+				downloadDao.update(url, userName, threadId, pos);
+				return null;
+			}
+		}.execute(null, null);
 	}
 	//初始化下载线程
 	private void initDownloadThreads(){
@@ -232,7 +244,7 @@ public class MultiThreadDownload {
 			//已下载完成
 			if(this.totalDownloadSize == this.fileSize){
 				//数据文件加密处理
-				this.encryptDownloadFile(savePath, 0, this.userName.getBytes("UTF-8"));
+				encryptFile(this.savePath, 0, this.userName.getBytes("UTF-8"));
 				//更新数据库
 				this.downloadDao.finish(this.url, this.userName, this.savePath.getAbsolutePath());
 				this.isStop = true;
@@ -243,16 +255,16 @@ public class MultiThreadDownload {
 		 return this.totalDownloadSize;
 	}
 	/**
-	 * 加密下载文件。
+	 * 加密/解密文件。
 	 * @param file 下载的文件
 	 * @param skip 插入的位置
 	 * @param data 密钥
 	 */
-	private synchronized void encryptDownloadFile(File file, long skip, byte[] keys){
+	public synchronized static void encryptFile(File file, long skip, byte[] keys){
 		if(file == null || skip < 0 || keys.length == 0)return;
-		Log.d(TAG, "开始对下载完成后的文件进行头加密处理..");
+		Log.d(TAG, "开始对文件进行加密处理..");
 		try {
-			RandomAccessFile accessFile = new RandomAccessFile(this.savePath, "rwd");
+			RandomAccessFile accessFile = new RandomAccessFile(file, "rwd");
 			if(skip < 0 || skip > accessFile.length()){
 				accessFile.close();
 				Log.d(TAG, "加密跳过字节数无效...");
@@ -279,7 +291,7 @@ public class MultiThreadDownload {
 				accessFile.write(encrypt);
 			}
 			accessFile.close();
-			Log.d(TAG, "下载文件加密完成！");
+			Log.d(TAG, "文件加密完成！");
 		} catch (Exception e) {
 			Log.e(TAG, "文件加密异常:" + e.getMessage(), e);
 		}

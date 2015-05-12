@@ -22,17 +22,9 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.StatFs;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.youeclass.downloads.MultiThreadDownload;
 import com.youeclass.entity.DowningCourse;
-///**
-// * service是看不见的Activity 下载服务,在服务里启动线程进行下载,同时注册广播,接收来自Activity的广播信息 在线程中发送
-// * 特定的广播让activity进行接收,更新UI
-// * 
-// * @author Administrator
-// * 
-// */
 /**
  * 课程视频下载服务。
  * @author jeasonyoung
@@ -112,8 +104,9 @@ public class DownloadService extends Service {
 	}
 	
 	//检测网络
-	private boolean checkNetwork(){
+	private boolean checkNetwork(InnerMessage innerMessage){
 		Log.d(TAG, "开始检查网络...");
+		String msg = null;
 		NetworkInfo network = this.connectivityManager.getActiveNetworkInfo();
 		if(network != null){
 			State state = network.getState();
@@ -128,9 +121,17 @@ public class DownloadService extends Service {
 					if(state  == State.CONNECTED || state == State.CONNECTING){
 						boolean isDownUse3G = this.settings.getBoolean("setDownIsUse3G", true);
 						if(!isDownUse3G){
-							Toast.makeText(this, "当前网络为2G/3G,要下载请修改设置或开启wifi", Toast.LENGTH_LONG).show();
+							msg = "当前网络为2G/3G,要下载请修改设置或开启wifi";
+							if(innerMessage != null){
+								innerMessage.show(msg);
+							}
+							Log.d(TAG, msg);
 						}else{
-							Toast.makeText(this, "当前网络为2G/3G", Toast.LENGTH_LONG).show();
+							msg = "当前网络为2G/3G";
+							if(innerMessage != null){
+								innerMessage.show(msg);
+							}
+							Log.d(TAG, msg);
 						}
 						return isDownUse3G;
 					}
@@ -139,8 +140,11 @@ public class DownloadService extends Service {
 				default:break;
 			}
 		}
-		Log.d(TAG, "当前网络类型:["+network.getTypeName()+"],网络状态:["+network.getState()+"]!");
-		Toast.makeText(this, "请检查您的网络!",Toast.LENGTH_LONG).show();
+		msg = "请检查您的网络!";
+		if(innerMessage != null){
+			innerMessage.show(msg);
+		}
+		Log.d(TAG, "当前网络类型:["+network.getTypeName()+"],网络状态:["+network.getState()+"]!=>" + msg );
 		return false;
 	}
 	/**
@@ -322,14 +326,17 @@ public class DownloadService extends Service {
 	 * @param msg
 	 */
 	private synchronized void sendHandlerMessage(DowningCourse course,int msgType,String msg){
-		if(course == null)return;
 		Log.d(TAG, "发送前台UI处理消息：" + msgType);
 		if(this.downloadHandler == null){
 			Log.d(TAG, "前台处理Handler为null.");
 			return;
 		}
-		int pos = this.downloadPositions.size() == 0 ? -1 :  this.downloadPositions.get(course);
-		Log.d(TAG, "发送课程["+pos+"."+course.getCourseName()+"]前台UI处理消息：type=>" + msgType +",msg=>" + msg);
+		int pos = (course == null) ? -1 : (this.downloadPositions.size() == 0 ? -1 :  this.downloadPositions.get(course));
+		if(course != null){
+			Log.d(TAG, "发送课程["+pos+"."+course.getCourseName()+"]前台UI处理消息：type=>" + msgType +",msg=>" + msg);
+		}else {
+			Log.d(TAG, "发送前台消息:" + msg);
+		}
 		this.downloadHandler.sendMessage(this.downloadHandler.obtainMessage(msgType, pos, 0, msg));
 	}
 	/**
@@ -351,7 +358,7 @@ public class DownloadService extends Service {
 	}
 	
 	//文件下载管理线程(负责轮询下载队列)。
-	private final class FileDownloadManagerThread extends Thread{
+	private final class FileDownloadManagerThread extends Thread implements InnerMessage{
 		private static final String TAG = "FileDownloadManagerThread";
 		//线程执行体
 		@Override
@@ -366,7 +373,7 @@ public class DownloadService extends Service {
 					if(course != null){
 						Log.d(TAG, "开始下载课程：" + course.getCourseName() + "...");
 						//检查网络
-						if(!checkNetwork()){
+						if(!checkNetwork(this)){
 							sendHandlerMessage(course, DowningCourse.STATE_NETFAIL, "网络不可用");
 							continue;
 						}
@@ -405,6 +412,14 @@ public class DownloadService extends Service {
 					Log.d(TAG, "下载队列轮询线程发生异常:" + e.getMessage(),e);
 				}
 			}
+		}
+		/*
+		 * 显示内部消息
+		 * @see com.youeclass.service.DownloadService.InnerMessage#show(java.lang.String)
+		 */
+		@Override
+		public void show(String msg) {
+			sendHandlerMessage(null, 0, msg);
 		}
 	}
 	//下载进程更新
@@ -480,6 +495,18 @@ public class DownloadService extends Service {
 			Log.d(TAG, "继续课程["+course.getCourseName()+"]下载...");
 			continueCourseDownload(course);
 		}
+	}
+	/**
+	 * 内部消息接口
+	 * @author jeasonyoung
+	 *
+	 */
+	private interface InnerMessage{
+		/**
+		 * 显示消息。
+		 * @param msg
+		 */
+		void show(String msg);
 	}
 	/**
 	 * 文件下载服务接口。

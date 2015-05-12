@@ -27,7 +27,7 @@ import com.youeclass.util.StringUtils;
  */
 public class MultiThreadDownload {
 	private static final String TAG = "FileDownloadService";
-	private static final int DOWNLOAD_THREADS = 3;//下载线程数
+	private static final int DOWNLOAD_THREADS = 2;//下载线程数
 	private static final long THREAD_SLEEP = 900;//
 	private static final int CONNECT_TIMEOUT = 5000;//链接超时
 	private static final int CONNECT_SUCCESS = 200;//链接成功
@@ -226,20 +226,63 @@ public class MultiThreadDownload {
 					listener.onDownloadSize(this.totalDownloadSize);
 				}
 			}
+			Log.d(TAG, "下载完成："+this.totalDownloadSize+"/" + this.fileSize);
 			//更新课程下载量
 			this.downloadDao.updateCourseFinish(this.url, this.userName, this.totalDownloadSize);
 			//已下载完成
 			if(this.totalDownloadSize == this.fileSize){
-				Log.d(TAG, "下载完成："+this.totalDownloadSize+"/" + this.fileSize);
+				//数据文件加密处理
+				this.encryptDownloadFile(savePath, 0, this.userName.getBytes("UTF-8"));
 				//更新数据库
 				this.downloadDao.finish(this.url, this.userName, this.savePath.getAbsolutePath());
-				///TODO:数据文件加密处理
 				this.isStop = true;
 			}
 		} catch (Exception e) {
 			Log.e(TAG, "下载文件发生异常:" + e.getMessage(), e);
 		}
 		 return this.totalDownloadSize;
+	}
+	/**
+	 * 加密下载文件。
+	 * @param file 下载的文件
+	 * @param skip 插入的位置
+	 * @param data 密钥
+	 */
+	private synchronized void encryptDownloadFile(File file, long skip, byte[] keys){
+		if(file == null || skip < 0 || keys.length == 0)return;
+		Log.d(TAG, "开始对下载完成后的文件进行头加密处理..");
+		try {
+			RandomAccessFile accessFile = new RandomAccessFile(this.savePath, "rwd");
+			if(skip < 0 || skip > accessFile.length()){
+				accessFile.close();
+				Log.d(TAG, "加密跳过字节数无效...");
+				return;
+			}
+			//密钥长度
+			int len = keys.length;
+			if(skip + len > accessFile.length()){
+				accessFile.close();
+				Log.d(TAG, "密钥长度("+len+")＋跳过长度("+skip+") > 文件长度("+accessFile.length()+")!");
+				return;
+			}
+			//加密运算
+			int source,encrypt;
+			for(int i = 0;  i < len; i++){
+				//指定位置
+				accessFile.seek(skip + i);
+				//读取数据后指针下移
+				source = accessFile.read();
+				encrypt = source ^ (int)keys[i];
+				//重新指定位置
+				accessFile.seek(skip + i);
+				//用密文替换原文
+				accessFile.write(encrypt);
+			}
+			accessFile.close();
+			Log.d(TAG, "下载文件加密完成！");
+		} catch (Exception e) {
+			Log.e(TAG, "文件加密异常:" + e.getMessage(), e);
+		}
 	}
 	/**
 	 * 停止下载。

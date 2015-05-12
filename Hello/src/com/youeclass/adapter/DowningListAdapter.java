@@ -41,7 +41,7 @@ public class DowningListAdapter extends BaseAdapter {
 	private AdapterServiceConnection connection;
 	private IFileDownloadService downloadService;
 	private List<DowningCourse> list;
-	private UpdateUIHandler handler;
+	//private UpdateUIHandler handler;
 	/*
 	 * 构造函数。
 	 */
@@ -49,7 +49,6 @@ public class DowningListAdapter extends BaseAdapter {
 		Log.d(TAG, "初始化构造函数...");
 		this.context = context;
 		this.list = list;
-		this.handler = new UpdateUIHandler(this);
 		this.connection = new AdapterServiceConnection();
 		
 		this.layoutInflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -58,16 +57,6 @@ public class DowningListAdapter extends BaseAdapter {
 		Intent serviceIntent = new Intent(context, DownloadService.class);
 		context.bindService(serviceIntent, this.connection, Context.BIND_AUTO_CREATE);
 	}
-//	/**
-//	 * 设置下载服务操作。
-//	 * @param fileDownloadService
-//	 */
-//	public void setDownloadService(IFileDownloadService fileDownloadService) {
-//		Log.d(TAG, "设置下载服务操作对象:" + fileDownloadService);
-//		 this.downloadService = fileDownloadService;
-//		
-//		 }
-//	}
 	/**
 	 * 删除课程。
 	 * @param course
@@ -322,7 +311,7 @@ public class DowningListAdapter extends BaseAdapter {
 			downloadService = (IFileDownloadService)service;
 			 if(downloadService != null){
 				 Log.d(TAG, "设置UI更新Handler...");
-				 downloadService.setHandler(handler);
+				 downloadService.setHandler(new UpdateUIHandler(DowningListAdapter.this));
 				 if(list.size() == 0)return;
 				 Log.d(TAG, "添加列表数据到下载队列...");
 				 new AsyncTask<DowningCourse, Integer, Integer>(){

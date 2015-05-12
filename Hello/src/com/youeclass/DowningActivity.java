@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -31,23 +32,20 @@ public class DowningActivity extends BaseActivity{
 	private static final String TAG = "DowningActivity";
 	private ListView listView;
 	private LinearLayout nodata;
-	private List<DowningCourse> list;
-	private DowningListAdapter mAdapter;
 	private CourseDao dao;
-	private String username;
-	
+	private DowningListAdapter mAdapter;
 	private DownloadServiceConnection connection;
 	private DownloadService.IFileDownloadService fileDownloadService;
 	
+	private String username;
 	/**
 	 * 构造函数。
 	 */
 	public DowningActivity(){
 		super();
-		this.dao = new CourseDao(this);
 		this.connection = new DownloadServiceConnection();
+		this.dao = new CourseDao(this);
 	}
-	
 	/*
 	 * 重载创建。
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -56,44 +54,63 @@ public class DowningActivity extends BaseActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_downing);
-		Intent intent = getIntent();
-		String name=intent.getStringExtra("name");
-		String url = intent.getStringExtra("url");
-		this.username = intent.getStringExtra("username");
+		
 		this.listView = (ListView) this.findViewById(R.id.videoListView);
 		this.nodata = (LinearLayout) this.findViewById(R.id.down_nodataLayout);
-		
 		//绑定服务
 		Intent serviceIntent = new Intent(this, DownloadService.class);
 		this.getApplicationContext().bindService(serviceIntent, connection, BIND_AUTO_CREATE);
 		
-		//找出数据库中所有正在下载的课程
-		this.list = this.dao.findAllDowning(this.username);
-		//System.out.println("list size = "+list.size()+"!!!!!!!!!");
-		Log.d(TAG, "正在下载的课程 list size = " + list.size());
-		//初始化从课程列表中点击的要下载项
-		if(!StringUtils.isEmpty(name) && !StringUtils.isEmpty(url))
-		{
-			DowningCourse downing = new DowningCourse();
-			downing.setCourseName(name);
-			downing.setFileUrl(url);
-			downing.setState(DowningCourse.STATE_INIT);
-			downing.setUserName(this.username);
-			if(!list.contains(downing)){
-				list.add(downing);
-			}
-		}
-		//配置数据源
-		this.mAdapter = new DowningListAdapter(this, this.list);
-		this.listView.setAdapter(this.mAdapter);
-		if(list.size() == 0)
-		{
-			//数据库中没有正在下载中的数据
-			this.nodata.setVisibility(View.VISIBLE);
-		}
+		Intent intent = getIntent();
+		this.username = intent.getStringExtra("username");
+		//异步加载数据
+		this.asyncLoadData.execute(this.username, intent.getStringExtra("name"),intent.getStringExtra("url"));
+		
 		//长按弹出取消下载的PopupWindow
 		this.listView.setOnItemLongClickListener(new OnItemLongClickListener());
 	}
+	
+	/**
+	 * 异步加载数据。
+	 */
+	private AsyncTask<String, Integer, List<DowningCourse>> asyncLoadData = new AsyncTask<String, Integer, List<DowningCourse>>(){
+		/*
+		 * 后台线程。
+		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
+		 */
+		@Override
+		protected List<DowningCourse> doInBackground(String... params) {
+			Log.d(TAG, "正在加载的课程... ");
+			List<DowningCourse> list = dao.findAllDowning(params[0]);
+			String name = params[1],url = params[2];
+			//初始化从课程列表中点击的要下载项
+			if(!StringUtils.isEmpty(name) && !StringUtils.isEmpty(url))
+			{
+				DowningCourse downing = new DowningCourse();
+				downing.setCourseName(name);
+				downing.setFileUrl(url);
+				downing.setState(DowningCourse.STATE_INIT);
+				downing.setUserName(params[0]);
+				if(!list.contains(downing)){
+					list.add(downing);
+				}
+			}
+			return list;
+		}
+		/*
+		 * UI处理
+		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+		 */
+		@Override
+		protected void onPostExecute(List<DowningCourse> result) {
+			mAdapter = new DowningListAdapter(getApplicationContext(), result);
+			listView.setAdapter(mAdapter);
+			if(result.size() == 0){
+				nodata.setVisibility(View.VISIBLE);
+			}
+		};
+	};
+	
 	/*
 	 * 重载恢复。
 	 * @see android.app.Activity#onResume()
@@ -116,7 +133,7 @@ public class DowningActivity extends BaseActivity{
 	@Override
 	protected void onDestroy() {
 		//取消绑定服务
-		this.unbindService(this.connection);
+		this.getApplicationContext().unbindService(this.connection);
 		super.onDestroy();
 	}
 	/**
@@ -133,7 +150,6 @@ public class DowningActivity extends BaseActivity{
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			Log.d(TAG, "连接下载服务...");
 			fileDownloadService = (DownloadService.IFileDownloadService)service;
-			mAdapter.setDownloadService(fileDownloadService);
 		}
 		/*
 		 * 断开服务。
@@ -161,8 +177,8 @@ public class DowningActivity extends BaseActivity{
 		  */
 		@Override
 		public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-			if(list.size() < position){
-				this.course = list.get(position);
+			if(position > -1 && position < mAdapter.getCount()){
+				this.course = (DowningCourse)mAdapter.getItem(position);
 				this.showPopupWindow(view);
 			}
 			return false;
@@ -213,7 +229,7 @@ public class DowningActivity extends BaseActivity{
 					 //删除数据库记录
 					 dao.deleteDowing(username, this.course.getFileUrl());
 					 //从数据集合中移除
-					 list.remove(this.course);
+					 mAdapter.removeCourse(this.course);
 					 //更新UI
 					 mAdapter.notifyDataSetChanged();
 					 break;

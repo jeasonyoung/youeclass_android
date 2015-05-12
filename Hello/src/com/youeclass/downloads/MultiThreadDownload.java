@@ -229,7 +229,8 @@ public class MultiThreadDownload {
 			//更新课程下载量
 			this.downloadDao.updateCourseFinish(this.url, this.userName, this.totalDownloadSize);
 			//已下载完成
-			if(this.totalDownloadSize != this.fileSize){
+			if(this.totalDownloadSize == this.fileSize){
+				Log.d(TAG, "下载完成："+this.totalDownloadSize+"/" + this.fileSize);
 				//更新数据库
 				this.downloadDao.finish(this.url, this.userName, this.savePath.getAbsolutePath());
 				///TODO:数据文件加密处理

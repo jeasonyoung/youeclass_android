@@ -26,9 +26,6 @@ import android.widget.Toast;
 
 import com.youeclass.downloads.MultiThreadDownload;
 import com.youeclass.entity.DowningCourse;
-//
-//import com.youeclass.downloader.SmartDownloadProgressListener;
-//import com.youeclass.downloader.SmartFileDownloader;
 ///**
 // * service是看不见的Activity 下载服务,在服务里启动线程进行下载,同时注册广播,接收来自Activity的广播信息 在线程中发送
 // * 特定的广播让activity进行接收,更新UI
@@ -185,16 +182,16 @@ public class DownloadService extends Service {
 				Log.d(TAG, "添加下载课程["+pos+"."+course+"]到队列...");
 				 
 				boolean result = false;
-				if(!downloadQueue.contains(course)){//如果队列中不存在则加入对尾
-					if(course.getState() != DowningCourse.STATE_PAUSE){
+				if(!downloadQueue.contains(course) && ((course.getState() != DowningCourse.STATE_PAUSE))){//如果队列中不存在则加入对尾
 						result = downloadQueue.offer(course);
-						Log.d(TAG, "压入到队尾:" + result);
-					}
-					//设置位置集合
-					downloadPositions.put(course, pos);
+						Log.d(TAG, "压入到队尾:" + result); 
 				}
+				//设置位置集合
+				downloadPositions.put(course, pos);
 				//发送UIHandler
-				sendHandlerMessage(course, DowningCourse.STATE_INIT, result ? "已添加到下载队列，等候排队连接!":"下载队列中已存在！");
+				String msg = result ? "已添加到下载队列，等候排队连接!" : "下载队列中已存在!";
+				Log.d(TAG, msg);
+				sendHandlerMessage(course, DowningCourse.STATE_INIT, msg);
 				return null;
 			}
 		}.execute(null,null);
@@ -218,7 +215,9 @@ public class DownloadService extends Service {
 				//移除相关缓存
 				removeCourseCache(course);
 				//发送UIHandler
-				sendHandlerMessage(course, DowningCourse.STATE_CANCEL, course.getCourseName() + " 已取消下载!");
+				String msg = course.getCourseName() + " 已取消下载!";
+				Log.d(TAG, msg);
+				sendHandlerMessage(course, DowningCourse.STATE_CANCEL, msg);
 				return null;
 			}
 		}.execute(null,null);
@@ -240,7 +239,9 @@ public class DownloadService extends Service {
 					threadDownload.Stop();
 				}
 				//发送UIHandler
-				sendHandlerMessage(course, DowningCourse.STATE_PAUSE,  course.getCourseName() + " 下载已暂停!");
+				String msg = course.getCourseName() + " 下载已暂停!";
+				Log.d(TAG, msg);
+				sendHandlerMessage(course, DowningCourse.STATE_PAUSE,  msg);
 				return null;
 			}
 		}.execute(null,null);
@@ -260,7 +261,9 @@ public class DownloadService extends Service {
 					Log.d(TAG, "压入到队尾:" + result);
 				}
 				//发送UIHandler
-				sendHandlerMessage(course, DowningCourse.STATE_WAITTING,  course.getCourseName() + " 重新进入排队中...");
+				String msg = course.getCourseName() + " 重新进入排队中...";
+				Log.d(TAG, msg);
+				sendHandlerMessage(course, DowningCourse.STATE_WAITTING,  msg);
 				return null;
 			}
 		}.execute(null,null);
@@ -326,7 +329,7 @@ public class DownloadService extends Service {
 			return;
 		}
 		int pos = this.downloadPositions.size() == 0 ? -1 :  this.downloadPositions.get(course);
-		Log.d(TAG, "发送课程["+pos+"."+course.getCourseName()+"]前台UI处理消息：" + msgType);
+		Log.d(TAG, "发送课程["+pos+"."+course.getCourseName()+"]前台UI处理消息：type=>" + msgType +",msg=>" + msg);
 		this.downloadHandler.sendMessage(this.downloadHandler.obtainMessage(msgType, pos, 0, msg));
 	}
 	/**

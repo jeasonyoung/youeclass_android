@@ -1,13 +1,17 @@
 package com.youeclass.adapter;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.annotation.SuppressLint;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,60 +38,44 @@ public class DowningListAdapter extends BaseAdapter {
 	private static final String TAG = "DowningListAdapter";
 	private Context context;
 	private LayoutInflater layoutInflater;
-	private DownloadService.IFileDownloadService downloadService;
-	private UpdateUIHandler updateUIHandler;
+	private AdapterServiceConnection connection;
+	private IFileDownloadService downloadService;
 	private List<DowningCourse> list;
-	/**
-	 * 构造函数
-	 * @param context
-	 * @param list
+	private UpdateUIHandler handler;
+	/*
+	 * 构造函数。
 	 */
 	public DowningListAdapter(Context context, List<DowningCourse> list) {
 		Log.d(TAG, "初始化构造函数...");
 		this.context = context;
 		this.list = list;
+		this.handler = new UpdateUIHandler(this);
+		this.connection = new AdapterServiceConnection();
 		
 		this.layoutInflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
-		this.updateUIHandler = new UpdateUIHandler();
+		//绑定服务。
+		Intent serviceIntent = new Intent(context, DownloadService.class);
+		context.bindService(serviceIntent, this.connection, Context.BIND_AUTO_CREATE);
 	}
+//	/**
+//	 * 设置下载服务操作。
+//	 * @param fileDownloadService
+//	 */
+//	public void setDownloadService(IFileDownloadService fileDownloadService) {
+//		Log.d(TAG, "设置下载服务操作对象:" + fileDownloadService);
+//		 this.downloadService = fileDownloadService;
+//		
+//		 }
+//	}
 	/**
-	 * 设置下载服务操作。
-	 * @param fileDownloadService
+	 * 删除课程。
+	 * @param course
 	 */
-	public void setDownloadService(IFileDownloadService fileDownloadService) {
-		Log.d(TAG, "设置下载服务操作对象:" + fileDownloadService);
-		 this.downloadService = fileDownloadService;
-		 if(this.downloadService != null){
-			 Log.d(TAG, "设置UI更新Handler...");
-			 this.downloadService.setHandler(this.updateUIHandler);
-			 if(this.list.size() == 0)return;
-			 Log.d(TAG, "添加列表数据到下载队列...");
-			 new AsyncTask<DowningCourse, Integer, Integer>(){
-				@Override
-				protected Integer doInBackground(DowningCourse... params) {
-					if(params != null && params.length > 0){
-						Log.d(TAG, "准备添加到下载队列...");
-						int index = 0;
-						for(DowningCourse data : params){
-							if(data != null){
-								downloadService.addDownload(data, index);
-							}
-							index++;
-						}
-						return index;
-					}
-					return null;
-				}
-				@Override
-				protected void onPostExecute(Integer result) {
-					if(result > 0){
-						Log.d(TAG, "通知更新列表数据状态...");
-						notifyDataSetChanged();
-					}
-				};
-			 }.execute(this.list.toArray(new DowningCourse[0]));
-		 }
+	public void removeCourse(DowningCourse course) {
+		if(course != null && this.list.size() > 0){
+			this.list.remove(course);
+		}
 	}
 	/*
 	 * 获取数据总数。
@@ -284,7 +272,9 @@ public class DowningListAdapter extends BaseAdapter {
 					//重新连接
 					Log.d(TAG, "重新连接课程:"+ this.position+"." + this.course.getCourseName());
 					//继续
-					downloadService.continueDownload(course);
+					if(downloadService != null){
+						downloadService.continueDownload(course);
+					}
 					wrapper.connecting.setText("重新连接中..."); 
 					btn.setEnabled(false);
 					break;
@@ -292,7 +282,9 @@ public class DowningListAdapter extends BaseAdapter {
 				case DowningCourse.STATE_PAUSE:{//暂停中
 					//继续下载
 					Log.d(TAG, "继续下载课程:"+ this.position+"." + this.course.getCourseName());
-					downloadService.continueDownload(course);
+					if(downloadService != null){
+						downloadService.continueDownload(course);
+					}
 					wrapper.connecting.setText("重启下载中...");
 					btn.setEnabled(false);
 					break;
@@ -300,7 +292,9 @@ public class DowningListAdapter extends BaseAdapter {
 				case DowningCourse.STATE_DOWNING:{//下载中
 					//暂停课程
 					Log.d(TAG, "暂停下载课程:"+ this.position+"." + this.course.getCourseName());
-					downloadService.pauseDownload(course);
+					if(downloadService != null){
+						downloadService.pauseDownload(course);
+					}
 					wrapper.connecting.setText("暂停下载中...");
 					btn.setEnabled(false);
 					break;
@@ -314,40 +308,107 @@ public class DowningListAdapter extends BaseAdapter {
 	}
 	
 	/**
+	 * 下载服务连接器。
+	 * @author jeasonyoung
+	 *
+	 */
+	private final class AdapterServiceConnection implements ServiceConnection{
+		/*
+		 * 服务连接。
+		 * @see android.content.ServiceConnection#onServiceConnected(android.content.ComponentName, android.os.IBinder)
+		 */
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			downloadService = (IFileDownloadService)service;
+			 if(downloadService != null){
+				 Log.d(TAG, "设置UI更新Handler...");
+				 downloadService.setHandler(handler);
+				 if(list.size() == 0)return;
+				 Log.d(TAG, "添加列表数据到下载队列...");
+				 new AsyncTask<DowningCourse, Integer, Integer>(){
+					@Override
+					protected Integer doInBackground(DowningCourse... params) {
+						if(params != null && params.length > 0){
+							Log.d(TAG, "准备添加到下载队列...");
+							int index = 0;
+							for(DowningCourse data : params){
+								if(data != null){
+									downloadService.addDownload(data, index);
+								}
+								index++;
+							}
+							return index;
+						}
+						return null;
+					}
+					@Override
+					protected void onPostExecute(Integer result) {
+						if(result > 0){
+							Log.d(TAG, "通知更新列表数据状态...");
+							notifyDataSetChanged();
+						}
+					};
+				 }.execute(list.toArray(new DowningCourse[0]));
+			 }
+		}
+		/*
+		 * 服务断开。
+		 * @see android.content.ServiceConnection#onServiceDisconnected(android.content.ComponentName)
+		 */
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			 downloadService = null;
+		}
+	}
+	
+	/**
 	 * 更新UI的Handler。
 	 * @author jeasonyoung
 	 *
 	 */
-	@SuppressLint("HandlerLeak") 
-	private final class UpdateUIHandler extends Handler{
-		private Map<DowningCourse, Integer> coursePercentMap = new HashMap<DowningCourse, Integer>();
+
+ 	private static final class UpdateUIHandler extends Handler{
+		private Map<DowningCourse, Integer> coursePercentMap;
+		private final WeakReference<DowningListAdapter> downingAdapter;
+		/**
+		 * 构造函数。
+		 * @param adapter
+		 */
+		public UpdateUIHandler(DowningListAdapter adapter){
+			this.coursePercentMap = new HashMap<DowningCourse, Integer>();
+			this.downingAdapter = new WeakReference<DowningListAdapter>(adapter);
+		}
+		
 		@Override
 		public void handleMessage(Message msg) {
+			DowningListAdapter adapter = this.downingAdapter.get();
+			if(adapter == null)return;
+			
 			Integer pos = msg.arg1;
 			switch(msg.what){
 				case DowningCourse.STATE_NETFAIL:{//连接失败
-					if(pos > -1 && pos < getCount()){
+					if(pos > -1 && pos < adapter.getCount()){
 						Log.d(TAG, "更新连接失败UI...");
-						DowningCourse data = list.get(pos);
+						DowningCourse data = adapter.list.get(pos);
 						data.setState(DowningCourse.STATE_NETFAIL);
 						//通知事件适配器
-						notifyDataSetChanged();
+						adapter.notifyDataSetChanged();
 					}
 					break;
 				}
 				case DowningCourse.STATE_PAUSE:{//暂停
 					Log.d(TAG, "更新暂停连接失败UI...");
-					if(pos > -1 && pos < getCount()){
-						DowningCourse data = list.get(pos);
+					if(pos > -1 && pos < adapter.getCount()){
+						DowningCourse data = adapter.list.get(pos);
 						data.setState(DowningCourse.STATE_PAUSE);
 						//通知事件适配器
-						notifyDataSetChanged();
+						adapter.notifyDataSetChanged();
 					}
 					break;
 				}
 				case DowningCourse.STATE_DOWNING:{//下载进度
-					if(pos > -1 && pos < getCount()){
-						DowningCourse data = list.get(pos);
+					if(pos > -1 && pos < adapter.getCount()){
+						DowningCourse data = adapter.list.get(pos);
 						data.setState(DowningCourse.STATE_DOWNING);
 						Long finishTotal = (Long)msg.obj;
 						if(finishTotal != null && finishTotal > 0){
@@ -360,11 +421,20 @@ public class DowningListAdapter extends BaseAdapter {
 								this.coursePercentMap.put(data, newPercent);
 								Log.d(TAG, "更新下载进度:"+newPercent+"%("+data.getFinishSize()+"/"+data.getFileSize()+")...");
 								//通知事件适配器
-								notifyDataSetChanged();
+								adapter.notifyDataSetChanged();
 							}
 						}
 					}
 					return;
+				}
+				case DowningCourse.STATE_FINISH:{//下载完成
+					if(pos > -1 && pos < adapter.getCount()){
+						//移除完成数据
+						adapter.list.remove(pos);
+						//通知UI更新适配器
+						adapter.notifyDataSetChanged();
+					}
+					break;
 				}
 			}
 			//通知提示
@@ -372,7 +442,7 @@ public class DowningListAdapter extends BaseAdapter {
 				String content = (String)msg.obj;
 				if(StringUtils.isEmpty(content))return;
 				
-				Toast.makeText(context, content, Toast.LENGTH_LONG).show();
+				Toast.makeText(adapter.context, content, Toast.LENGTH_LONG).show();
 			}
 		}
 	}

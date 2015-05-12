@@ -185,12 +185,14 @@ public class CourseDao {
 	public List<DowningCourse> findAllDowning(String userName) {
 		Log.d(TAG, "开始加载正在下载的课程:" + userName +"...");
 		List<DowningCourse> list = new ArrayList<DowningCourse>();
-		final String query_sql = "select coursename,filesize,finishsize,filepath,fileurl from CourseTab where state = 1 and username = ?";
+		final String query_sql = "select coursename,filesize,finishsize,filepath,fileurl from CourseTab a where state = 1 and username = ?";
 		SQLiteDatabase db = this.dbHelper.getReadableDatabase();
 		Cursor cursor = db.rawQuery(query_sql, new String[] {userName});
 		while (cursor.moveToNext()) {
 			DowningCourse data = new DowningCourse();
 			data.setCourseName(cursor.getString(0));
+			//long fileSize = cursor.getLong(1),fininishSize = cursor.getLong(2);
+			//Log.d(TAG, "fileSize - fininishSize = "+fileSize+"-"+ fininishSize + "=" + (fileSize - fininishSize) + ">>>>>>>>>>>>>");
 			data.setFileSize(cursor.getLong(1));
 			data.setFinishSize(cursor.getLong(2));
 			data.setFilePath(cursor.getString(3));

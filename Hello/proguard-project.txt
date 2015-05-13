@@ -30,12 +30,12 @@
 #-keep class org.apache.commons.httpclient.** { *; }
 -keep class io.vov.vitamio.** {*;}
 -keep class org.taptwo.android.widget.** {*;}
--keep class **.R$* {*;}
+#-keep class **.R$* {*;}
 
 -dontwarn org.apache.commons.httpclient.** 
 -dontwarn android.support.v4.**
 
--ignorewarnings
+#-ignorewarnings
 -libraryjars libs/commons-httpclient-3.1.jar
 -libraryjars libs/gson-1.7.1.jar
 -libraryjars libs/httpmime-4.2.3.jar

@@ -3,6 +3,8 @@
 	<name>youeclass</name>
 	<comment></comment>
 	<projects>
+		<project>InitActivity</project>
+		<project>viewflow</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -53,7 +53,7 @@ public class DownloadService extends Service {
 	 */
 	public DownloadService(){
 		//下载服务队列轮询单线程池
-		this.pools = Executors.newSingleThreadExecutor();
+		this.pools = Executors.newCachedThreadPool();//.newSingleThreadExecutor();
 		//下载队列(线程安全)
 		this.downloadQueue = new LinkedBlockingQueue<DowningCourse>();
 		//下载线程集合(线程安全)
@@ -198,7 +198,7 @@ public class DownloadService extends Service {
 				sendHandlerMessage(course, DowningCourse.STATE_INIT, msg);
 				return null;
 			}
-		}.execute(null,null);
+		}.executeOnExecutor(this.pools,null,null);
 	}
 	/**
 	 * 取消课程下载。
@@ -224,7 +224,7 @@ public class DownloadService extends Service {
 				sendHandlerMessage(course, DowningCourse.STATE_CANCEL, msg);
 				return null;
 			}
-		}.execute(null,null);
+		}.executeOnExecutor(this.pools,null,null);
 	}
 	/**
 	 * 暂停课程下载。
@@ -248,7 +248,7 @@ public class DownloadService extends Service {
 				sendHandlerMessage(course, DowningCourse.STATE_PAUSE,  msg);
 				return null;
 			}
-		}.execute(null,null);
+		}.executeOnExecutor(this.pools,null,null);
 	}
 	/**
 	 * 继续课程下载。
@@ -270,7 +270,7 @@ public class DownloadService extends Service {
 				sendHandlerMessage(course, DowningCourse.STATE_WAITTING,  msg);
 				return null;
 			}
-		}.execute(null,null);
+		}.executeOnExecutor(this.pools,null,null);
 	}
 	/**
 	 * 移除课程相关缓存

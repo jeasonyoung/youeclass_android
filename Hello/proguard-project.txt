@@ -26,6 +26,17 @@
 #-keep class com.google.gson.stream.** { *; } 
 
 # Application classes that will be serialized/deserialized over Gson 
--keep class com.google.gson.examples.android.model.** { *; } 
--keep class org.apache.commons.httpclient.** { *; }
+#-keep class com.google.gson.examples.android.model.** { *; } 
+#-keep class org.apache.commons.httpclient.** { *; }
+-keep class io.vov.vitamio.** {*;}
+-keep class org.taptwo.android.widget.** {*;}
+-keep class **.R$* {*;}
+
 -dontwarn org.apache.commons.httpclient.** 
+-dontwarn android.support.v4.**
+
+-ignorewarnings
+-libraryjars libs/commons-httpclient-3.1.jar
+-libraryjars libs/gson-1.7.1.jar
+-libraryjars libs/httpmime-4.2.3.jar
+-libraryjars libs/umeng_sdk.jar

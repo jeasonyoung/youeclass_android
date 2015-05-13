@@ -15,7 +15,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.youeclass.dao.DownloadDao;
@@ -28,7 +27,7 @@ import com.youeclass.util.StringUtils;
  */
 public class MultiThreadDownload {
 	private static final String TAG = "FileDownloadService";
-	private static final int DOWNLOAD_THREADS = 3;//下载线程数
+	private static final int DOWNLOAD_THREADS = 2;//下载线程数
 	private static final long THREAD_SLEEP = 300;//
 	private static final int CONNECT_TIMEOUT = 5000;//链接超时
 	private static final int CONNECT_SUCCESS = 200;//链接成功
@@ -134,23 +133,23 @@ public class MultiThreadDownload {
 	 * @param threadId 线程ID
 	 * @param pos 最后下载的位置
 	 */
-	protected void update(final int threadId,final long  pos){
-		//更新线程下载长度缓存。
-		this.threadsPosCache.put(threadId, pos);
+	protected synchronized void update(final int threadId,final long  pos){
 		//更新到数据库线程
-		new AsyncTask<String, Integer, Integer>(){
+		this.pools.execute(new Runnable() {
 			/*
 			 * 后台线程处理更新到数据库
-			 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
+			 * @see java.lang.Runnable#run()
 			 */
 			@Override
-			protected Integer doInBackground(String... params) {
-				Log.d(TAG, "线程["+threadId+"]下载:" + pos);
+			public void run() {
+				//更新线程下载长度缓存。
+				threadsPosCache.put(threadId, pos);
 				//更新线程下载数据库数据
-				downloadDao.update(url, userName, threadId, pos);
-				return null;
+				if(downloadDao != null){
+					downloadDao.update(url, userName, threadId, pos);
+				}
 			}
-		}.execute(null, null);
+		});
 	}
 	//初始化下载线程
 	private void initDownloadThreads(){

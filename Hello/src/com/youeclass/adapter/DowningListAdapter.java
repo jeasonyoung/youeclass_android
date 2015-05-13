@@ -9,7 +9,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -38,24 +37,20 @@ public class DowningListAdapter extends BaseAdapter {
 	private static final String TAG = "DowningListAdapter";
 	private Context context;
 	private LayoutInflater layoutInflater;
-	private AdapterServiceConnection connection;
+	private AdapterServiceConnection connection = new AdapterServiceConnection();
 	private IFileDownloadService downloadService;
 	private List<DowningCourse> list;
-	//private UpdateUIHandler handler;
 	/*
 	 * 构造函数。
 	 */
 	public DowningListAdapter(Context context, List<DowningCourse> list) {
 		Log.d(TAG, "初始化构造函数...");
-		this.context = context;
 		this.list = list;
-		this.connection = new AdapterServiceConnection();
-		
-		this.layoutInflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		
+		this.context = context;
 		//绑定服务。
-		Intent serviceIntent = new Intent(context, DownloadService.class);
-		context.bindService(serviceIntent, this.connection, Context.BIND_AUTO_CREATE);
+		context.bindService(new Intent(this.context, DownloadService.class), this.connection, Context.BIND_AUTO_CREATE);
+		//加载布局
+		this.layoutInflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 	/**
 	 * 删除课程。
@@ -314,30 +309,13 @@ public class DowningListAdapter extends BaseAdapter {
 				 downloadService.setHandler(new UpdateUIHandler(DowningListAdapter.this));
 				 if(list.size() == 0)return;
 				 Log.d(TAG, "添加列表数据到下载队列...");
-				 new AsyncTask<DowningCourse, Integer, Integer>(){
-					@Override
-					protected Integer doInBackground(DowningCourse... params) {
-						if(params != null && params.length > 0){
-							Log.d(TAG, "准备添加到下载队列...");
-							int index = 0;
-							for(DowningCourse data : params){
-								if(data != null){
-									downloadService.addDownload(data, index);
-								}
-								index++;
-							}
-							return index;
-						}
-						return null;
-					}
-					@Override
-					protected void onPostExecute(Integer result) {
-						if(result > 0){
-							Log.d(TAG, "通知更新列表数据状态...");
-							notifyDataSetChanged();
-						}
-					};
-				 }.execute(list.toArray(new DowningCourse[0]));
+				 int index = 0;
+				for(DowningCourse data : list){
+					if(data != null) downloadService.addDownload(data, index);
+					index++;
+				}
+				Log.d(TAG, "通知更新列表数据状态...");
+				notifyDataSetChanged();
 			 }
 		}
 		/*

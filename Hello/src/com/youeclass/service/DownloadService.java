@@ -15,7 +15,6 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.NetworkInfo.State;
-import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Environment;
 import android.os.Handler;
@@ -34,9 +33,6 @@ public class DownloadService extends Service {
 	 private static final String TAG = "DownloadService";
 	 private static final long THREAD_SLEEP = 500;
 	 
-	 private ConnectivityManager connectivityManager;
-	 private SharedPreferences settings;
-	 
 	 private ExecutorService pools;
 	 
 	 private BlockingQueue<DowningCourse> downloadQueue;
@@ -45,22 +41,20 @@ public class DownloadService extends Service {
 	 private Handler downloadHandler;
 	 
 	 private IBinder binder;
-	 
-	 private File downloadRootDir;
 	 private boolean isStop;
 	/**
 	 * 构造函数。
 	 */
 	public DownloadService(){
 		//下载服务队列轮询单线程池
-		this.pools = Executors.newCachedThreadPool();//.newSingleThreadExecutor();
+		this.pools = Executors.newSingleThreadExecutor();
 		//下载队列(线程安全)
 		this.downloadQueue = new LinkedBlockingQueue<DowningCourse>();
 		//下载线程集合(线程安全)
 		this.downloadThreads = new ConcurrentHashMap<DowningCourse, MultiThreadDownload>();
 		//下载课程位置集合(线程安全)
 		this.downloadPositions = new ConcurrentHashMap<DowningCourse, Integer>();
-		//
+		//服务绑定接口
 		this.binder = new FileDownloadServiceBinder();
 	}
 	/*
@@ -80,12 +74,6 @@ public class DownloadService extends Service {
 	@Override
 	public void onCreate() {
 		Log.d(TAG, "下载服务正在被创建...");
-		//网络连接服务
-		this.connectivityManager = (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
-		//获取配置
-		this.settings = this.getSharedPreferences("settingfile", 0);
-		//获取下载存储根目录
-		this.downloadRootDir = Environment.getExternalStorageDirectory();
 		//执行文件下载管理线程。
 		pools.execute(new FileDownloadManagerThread());
 		super.onCreate();
@@ -104,10 +92,11 @@ public class DownloadService extends Service {
 	}
 	
 	//检测网络
-	private boolean checkNetwork(InnerMessage innerMessage){
+	private synchronized static final boolean checkNetwork(Context context,InnerMessage innerMessage){
 		Log.d(TAG, "开始检查网络...");
 		String msg = null;
-		NetworkInfo network = this.connectivityManager.getActiveNetworkInfo();
+		ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo network = connectivityManager.getActiveNetworkInfo();
 		if(network != null){
 			State state = network.getState();
 			switch(network.getType()){
@@ -119,7 +108,8 @@ public class DownloadService extends Service {
 				}
 				case ConnectivityManager.TYPE_MOBILE:{
 					if(state  == State.CONNECTED || state == State.CONNECTING){
-						boolean isDownUse3G = this.settings.getBoolean("setDownIsUse3G", true);
+						SharedPreferences settings = context.getSharedPreferences("settingfile", 0);
+						boolean isDownUse3G = settings.getBoolean("setDownIsUse3G", true);
 						if(!isDownUse3G){
 							msg = "当前网络为2G/3G,要下载请修改设置或开启wifi";
 							if(innerMessage != null){
@@ -147,31 +137,33 @@ public class DownloadService extends Service {
 		Log.d(TAG, "当前网络类型:["+network.getTypeName()+"],网络状态:["+network.getState()+"]!=>" + msg );
 		return false;
 	}
-	/**
-	 * 创建文件下载目录。
-	 * @param course
-	 * @return
-	 */
-	private File createDownloadSaveFileDir(DowningCourse course) throws Exception{
-		if(this.downloadRootDir == null || !this.downloadRootDir.exists()){
-			Log.d(TAG, "SD卡不存在！");
-			 throw new Exception("未检测到SD卡，请检查SD是否插好！");
-		}
-		return new File(this.downloadRootDir + File.separator + "eschool" + File.separator + course.getUserName() + File.separator + "video");
-	}
 	//检查存储容量
-	private boolean checkStorageCapacity(long fileSIze) throws Exception{
-		Log.d(TAG, "检查SD卡容量：" + fileSIze);
+	private synchronized static final boolean checkStorageCapacity(long fileSize) throws Exception{
+		Log.d(TAG, "检查SD卡容量：" + fileSize);
 		boolean result = true;
-		if(fileSIze > 0){
-			StatFs statFs = new StatFs(this.downloadRootDir.getPath());
-			result = (statFs.getAvailableBlocks() * statFs.getBlockSize()) > fileSIze;
+		if(fileSize > 0){
+			File root = Environment.getExternalStorageDirectory();
+			if(root == null || !root.exists()){
+				 throw new Exception("未检测到SD卡，请检查SD是否插好！");
+			}
+			StatFs statFs = new StatFs(root.getPath());
+			result = (statFs.getAvailableBlocks() * statFs.getBlockSize()) > fileSize;
 			if(!result){
 				throw new Exception("可用容量不足，不能下载！");
 			}
 		}
 		return result;
 	}
+	//创建文件下载目录。
+	private synchronized static final File createDownloadSaveFileDir(String userName) throws Exception{
+		Log.d(TAG, "创建下载目录.");
+		File root = Environment.getExternalStorageDirectory();
+		if(root == null || !root.exists()){
+			 throw new Exception("未检测到SD卡，请检查SD是否插好！");
+		}
+		return new File(root + File.separator + "eschool" + File.separator + userName + File.separator + "video");
+	}
+	
 	/**
 	 * 添加课程下载。
 	 * @param course
@@ -179,26 +171,18 @@ public class DownloadService extends Service {
 	 */
 	protected synchronized void addCourseDownload(final DowningCourse course, final int pos){
 		if(course == null || pos < 0) return;
-		//异步处理
-		new AsyncTask<String, Integer, Integer>(){
-			@Override
-			protected Integer doInBackground(String... params) {
-				Log.d(TAG, "添加下载课程["+pos+"."+course+"]到队列...");
-				 
-				boolean result = false;
-				if(!downloadQueue.contains(course) && ((course.getState() != DowningCourse.STATE_PAUSE))){//如果队列中不存在则加入对尾
-						result = downloadQueue.offer(course);
-						Log.d(TAG, "压入到队尾:" + result); 
-				}
-				//设置位置集合
-				downloadPositions.put(course, pos);
-				//发送UIHandler
-				String msg = result ? "已添加到下载队列，等候排队连接!" : "下载队列中已存在!";
-				Log.d(TAG, msg);
-				sendHandlerMessage(course, DowningCourse.STATE_INIT, msg);
-				return null;
-			}
-		}.executeOnExecutor(this.pools,null,null);
+		Log.d(TAG, "添加下载课程["+pos+"."+course+"]到队列...");
+		boolean result = false;
+		if(!downloadQueue.contains(course) && ((course.getState() != DowningCourse.STATE_PAUSE))){//如果队列中不存在则加入对尾
+				result = downloadQueue.offer(course);
+				Log.d(TAG, "压入到队尾:" + result); 
+		}
+		//设置位置集合
+		downloadPositions.put(course, pos);
+		//发送UIHandler
+		String msg = result ? "已添加到下载队列，等候排队连接!" : "下载队列中已存在!";
+		sendHandlerMessage(course, DowningCourse.STATE_INIT, msg);
+		Log.d(TAG, msg);
 	}
 	/**
 	 * 取消课程下载。
@@ -206,25 +190,18 @@ public class DownloadService extends Service {
 	 */
 	protected synchronized void cancelCourseDownload(final DowningCourse course){
 		if(course == null)return;
-		//异步处理
-		new AsyncTask<String, Integer, Integer>(){
-			@Override
-			protected Integer doInBackground(String... params) {
-				Log.d(TAG, "取消课程["+course.getCourseName()+"]下载...");
-				//如果在队列中排序则从队列中移除
-				if(downloadQueue.contains(course)){
-					boolean result = downloadQueue.remove(course);
-					Log.d(TAG, "从队列中移除:" + result);
-				}
-				//移除相关缓存
-				removeCourseCache(course);
-				//发送UIHandler
-				String msg = course.getCourseName() + " 已取消下载!";
-				Log.d(TAG, msg);
-				sendHandlerMessage(course, DowningCourse.STATE_CANCEL, msg);
-				return null;
-			}
-		}.executeOnExecutor(this.pools,null,null);
+		Log.d(TAG, "取消课程["+course.getCourseName()+"]下载...");
+		//如果在队列中排序则从队列中移除
+		if(downloadQueue.contains(course)){
+			boolean result = downloadQueue.remove(course);
+			Log.d(TAG, "从队列中移除:" + result);
+		}
+		//移除相关缓存
+		removeCourseCache(course);
+		//发送UIHandler
+		String msg = course.getCourseName() + " 已取消下载!";
+		sendHandlerMessage(course, DowningCourse.STATE_CANCEL, msg);
+		Log.d(TAG, msg);
 	}
 	/**
 	 * 暂停课程下载。
@@ -232,23 +209,17 @@ public class DownloadService extends Service {
 	 */
 	protected synchronized void pauseCourseDownload(final DowningCourse course){
 		if(course == null)return;
-		new AsyncTask<String, Integer, Integer>(){
-			@Override
-			protected Integer doInBackground(String... params) {
-				Log.d(TAG, "暂停课程["+course.getCourseName()+"]下载...");
-				//从下载线程集合中获取下载线程
-				MultiThreadDownload threadDownload = downloadThreads.get(course);
-				if(threadDownload != null){
-					Log.d(TAG, "停止线程下载...");
-					threadDownload.Stop();
-				}
-				//发送UIHandler
-				String msg = course.getCourseName() + " 下载已暂停!";
-				Log.d(TAG, msg);
-				sendHandlerMessage(course, DowningCourse.STATE_PAUSE,  msg);
-				return null;
-			}
-		}.executeOnExecutor(this.pools,null,null);
+		Log.d(TAG, "暂停课程["+course.getCourseName()+"]下载...");
+		//从下载线程集合中获取下载线程
+		MultiThreadDownload threadDownload = downloadThreads.get(course);
+		if(threadDownload != null){
+			Log.d(TAG, "停止线程下载...");
+			threadDownload.Stop();
+		}
+		//发送UIHandler
+		String msg = course.getCourseName() + " 下载已暂停!";
+		sendHandlerMessage(course, DowningCourse.STATE_PAUSE,  msg);
+		Log.d(TAG, msg);
 	}
 	/**
 	 * 继续课程下载。
@@ -256,21 +227,15 @@ public class DownloadService extends Service {
 	 */
 	protected synchronized void continueCourseDownload(final DowningCourse course){
 		if(course == null)return;
-		new AsyncTask<String, Integer, Integer>(){
-			@Override
-			protected Integer doInBackground(String... params) {
-				Log.d(TAG, "继续课程["+course.getCourseName()+"]下载...");
-				if(!downloadQueue.contains(course)){//如果队列中不存在则加入对尾
-					boolean result = downloadQueue.offer(course);
-					Log.d(TAG, "压入到队尾:" + result);
-				}
-				//发送UIHandler
-				String msg = course.getCourseName() + " 重新进入排队中...";
-				Log.d(TAG, msg);
-				sendHandlerMessage(course, DowningCourse.STATE_WAITTING,  msg);
-				return null;
-			}
-		}.executeOnExecutor(this.pools,null,null);
+		Log.d(TAG, "继续课程["+course.getCourseName()+"]下载...");
+		if(!downloadQueue.contains(course)){//如果队列中不存在则加入对尾
+			boolean result = downloadQueue.offer(course);
+			Log.d(TAG, "压入到队尾:" + result);
+		}
+		//发送UIHandler
+		String msg = course.getCourseName() + " 重新进入排队中...";
+		sendHandlerMessage(course, DowningCourse.STATE_WAITTING,  msg);
+		Log.d(TAG, msg);
 	}
 	/**
 	 * 移除课程相关缓存
@@ -373,7 +338,7 @@ public class DownloadService extends Service {
 					if(course != null){
 						Log.d(TAG, "开始下载课程：" + course.getCourseName() + "...");
 						//检查网络
-						if(!checkNetwork(this)){
+						if(!checkNetwork(getApplicationContext(), this)){
 							sendHandlerMessage(course, DowningCourse.STATE_NETFAIL, "网络不可用");
 							continue;
 						}
@@ -381,7 +346,7 @@ public class DownloadService extends Service {
 						MultiThreadDownload threadDownload = getDownloadThread(course);
 						if(threadDownload == null){
 							try {
-								File savePath = createDownloadSaveFileDir(course);
+								File savePath = createDownloadSaveFileDir(course.getCourseName());
 								threadDownload = new MultiThreadDownload(DownloadService.this, course.getUserName(), course.getFileUrl(), savePath);
 								addDownloadThread(course, threadDownload);
 							} catch (Exception e) {

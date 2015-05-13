@@ -56,7 +56,7 @@ public class DowningActivity extends BaseActivity{
 		Intent intent = this.getIntent();
 		this.username = intent.getStringExtra("username");
 		//异步加载数据
-		new AsyncLoadData(intent.getStringExtra("name"), intent.getStringExtra("url"));
+		new AsyncLoadData(this.username, intent.getStringExtra("name"), intent.getStringExtra("url"));
 	}
 	
 	/**
@@ -68,12 +68,13 @@ public class DowningActivity extends BaseActivity{
 		private static final String TAG = "AsyncLoadData";
 		/**
 		 * 构造函数。
+		 * @param userName  当前用户
 		 * @param courseName 课程名称
 		 * @param courseUrl 课程URL
 		 */
-		public AsyncLoadData(String courseName, String courseUrl){
+		public AsyncLoadData(String userName, String courseName, String courseUrl){
 			Log.d(TAG, "初始化异步加载...");
-			this.execute(courseName, courseUrl);
+			this.execute(username,courseName, courseUrl);
 		}
 		/*
 		 * 重载后台执行

@@ -323,8 +323,9 @@ public class DownloadService extends Service {
 	}
 	
 	//文件下载管理线程(负责轮询下载队列)。
-	private final class FileDownloadManagerThread extends Thread implements InnerMessage{
+	private final class FileDownloadManagerThread extends Thread implements InnerMessage,MultiThreadDownload.OnDownloadProgressListener{
 		private static final String TAG = "FileDownloadManagerThread";
+		private DowningCourse downingCourse;
 		//线程执行体
 		@Override
 		public void run() {
@@ -337,6 +338,9 @@ public class DownloadService extends Service {
 					DowningCourse course = downloadQueue.poll();
 					if(course != null){
 						Log.d(TAG, "开始下载课程：" + course.getCourseName() + "...");
+						if(this.downingCourse == null){//初始化
+							this.downingCourse = course;
+						}
 						//检查网络
 						if(!checkNetwork(getApplicationContext(), this)){
 							sendHandlerMessage(course, DowningCourse.STATE_NETFAIL, "网络不可用");
@@ -364,7 +368,9 @@ public class DownloadService extends Service {
 							continue;
 						}
 						//开始下载数据。
-						long totalSize = threadDownload.download(new OnDownloadProgressListener(course));
+						long totalSize = threadDownload.download(this);
+						//更新当前下载课程
+						this.downingCourse = course;
 						if(totalSize == threadDownload.getFileSize()){//下载完成
 							sendHandlerMessage(course, DowningCourse.STATE_FINISH, "下载完成!");
 							//移除全部缓存
@@ -386,25 +392,14 @@ public class DownloadService extends Service {
 		public void show(String msg) {
 			sendHandlerMessage(null, 0, msg);
 		}
-	}
-	//下载进程更新
-	private final class OnDownloadProgressListener implements MultiThreadDownload.OnDownloadProgressListener{
-		private DowningCourse course;
-		/**
-		 * 构造函数。
-		 * @param course
-		 */
-		public OnDownloadProgressListener(DowningCourse course) {
-			 this.course = course;
-		}
 		/*
-		 * 更新进度
+		 * 更新下载进度
 		 * @see com.youeclass.downloads.MultiThreadDownload.OnDownloadProgressListener#onDownloadSize(long)
 		 */
 		@Override
 		public void onDownloadSize(long size) {
 			//发送下载进度
-			sendHandlerDownloadProgress(this.course, size);
+			sendHandlerDownloadProgress(this.downingCourse, size);
 		}
 	}
 	/**

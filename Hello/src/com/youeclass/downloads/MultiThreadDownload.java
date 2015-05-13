@@ -28,11 +28,11 @@ import com.youeclass.util.StringUtils;
 public class MultiThreadDownload {
 	private static final String TAG = "FileDownloadService";
 	private static final int DOWNLOAD_THREADS = 2;//下载线程数
-	private static final long THREAD_SLEEP = 300;//
+	private static final long THREAD_SLEEP = 900;//
 	private static final int CONNECT_TIMEOUT = 5000;//链接超时
 	private static final int CONNECT_SUCCESS = 200;//链接成功
 	private static final String CONNECT_METHOD_GET  = "GET";//get链接
-	private static final int NET_BUFFER_SIZE = 2048;//
+	private static final int NET_BUFFER_SIZE = 1024;//
 	
 	private File savePath;
 	private String userName,url;
@@ -134,22 +134,8 @@ public class MultiThreadDownload {
 	 * @param pos 最后下载的位置
 	 */
 	protected synchronized void update(final int threadId,final long  pos){
-		//更新到数据库线程
-		this.pools.execute(new Runnable() {
-			/*
-			 * 后台线程处理更新到数据库
-			 * @see java.lang.Runnable#run()
-			 */
-			@Override
-			public void run() {
-				//更新线程下载长度缓存。
-				threadsPosCache.put(threadId, pos);
-				//更新线程下载数据库数据
-				if(downloadDao != null){
-					downloadDao.update(url, userName, threadId, pos);
-				}
-			}
-		});
+		//更新线程下载长度缓存。
+		threadsPosCache.put(threadId, pos);
 	}
 	//初始化下载线程
 	private void initDownloadThreads(){
@@ -219,6 +205,7 @@ public class MultiThreadDownload {
 			while(!isFinish){//守候循环
 				Thread.sleep(THREAD_SLEEP);
 				isFinish = true;
+				//循环检查线程下载情况
 				for(int i = 0; i < threadCount; i++){
 					if(this.threads[i] != null && !this.threads[i].isFinish()){//如果发现线程未完成下载
 						//设置标志为下载没有完成
@@ -227,6 +214,11 @@ public class MultiThreadDownload {
 							this.threads[i] = new DownloadThread(i + 1, this.threadsPosCache.get(i + 1));
 							//执行线程。
 							pools.execute(this.threads[i]);
+						}
+						//更新线程下载数据库数据
+						if(downloadDao != null){
+							Long total = this.threadsPosCache.get(i + 1);
+							downloadDao.update(url, userName, i + 1, total == null ? 0 : total);
 						}
 					}
 				}

@@ -339,10 +339,8 @@ public class DownloadService extends Service {
 					//从队列中获取需要下载的课程
 					DowningCourse course = downloadQueue.poll();
 					if(course != null){
-						Log.d(TAG, "开始下载课程：" + course.getCourseName() + "...");
-						if(this.downingCourse == null){//初始化
-							this.downingCourse = course;
-						}
+						Log.d(TAG, "开始下载课程：" + course.getCourseName() + "..."); 
+						this.downingCourse = course; 
 						//检查网络
 						if(!checkNetwork(getApplicationContext(), this)){
 							sendHandlerMessage(course, DowningCourse.STATE_NETFAIL, "网络不可用");
@@ -380,8 +378,6 @@ public class DownloadService extends Service {
 						}else{//暂停
 							sendHandlerMessage(course, DowningCourse.STATE_PAUSE, "下载被停止!");
 						}
-						//更新当前下载课程
-						this.downingCourse = course;
 					}					
 				} catch (Exception e) {
 					Log.d(TAG, "下载队列轮询线程发生异常:" + e.getMessage(),e);

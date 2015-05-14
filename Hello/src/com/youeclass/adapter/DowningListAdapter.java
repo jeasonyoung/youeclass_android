@@ -404,8 +404,12 @@ public class DowningListAdapter extends BaseAdapter {
 				}
 				case DowningCourse.STATE_FINISH:{//下载完成
 					Log.d(TAG, "下载完成...");
-					//通知UI更新适配器
-					adapter.notifyDataSetChanged(); 
+					if(pos > -1 && pos < adapter.getCount()){
+						DowningCourse data = adapter.list.get(pos);
+						data.setState(DowningCourse.STATE_FINISH);
+						//通知UI更新适配器
+						adapter.notifyDataSetChanged(); 
+					}
 					break;
 				}
 			}

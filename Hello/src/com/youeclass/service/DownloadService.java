@@ -169,7 +169,7 @@ public class DownloadService extends Service {
 	 * @param course
 	 * @param pos
 	 */
-	protected synchronized void addCourseDownload(final DowningCourse course, final int pos){
+	protected void addCourseDownload(final DowningCourse course, final int pos){
 		if(course == null || pos < 0) return;
 		Log.d(TAG, "添加下载课程["+pos+"."+course+"]到队列...");
 		boolean result = false;
@@ -188,7 +188,7 @@ public class DownloadService extends Service {
 	 * 取消课程下载。
 	 * @param course
 	 */
-	protected synchronized void cancelCourseDownload(final DowningCourse course){
+	protected  void cancelCourseDownload(final DowningCourse course){
 		if(course == null)return;
 		Log.d(TAG, "取消课程["+course.getCourseName()+"]下载...");
 		//如果在队列中排序则从队列中移除
@@ -207,7 +207,7 @@ public class DownloadService extends Service {
 	 * 暂停课程下载。
 	 * @param course
 	 */
-	protected synchronized void pauseCourseDownload(final DowningCourse course){
+	protected void pauseCourseDownload(final DowningCourse course){
 		if(course == null)return;
 		Log.d(TAG, "暂停课程["+course.getCourseName()+"]下载...");
 		//从下载线程集合中获取下载线程
@@ -225,7 +225,7 @@ public class DownloadService extends Service {
 	 * 继续课程下载。
 	 * @param course
 	 */
-	protected synchronized void continueCourseDownload(final DowningCourse course){
+	protected void continueCourseDownload(final DowningCourse course){
 		if(course == null)return;
 		Log.d(TAG, "继续课程["+course.getCourseName()+"]下载...");
 		if(!this.downloadQueue.contains(course)){//如果队列中不存在则加入对尾
@@ -241,7 +241,7 @@ public class DownloadService extends Service {
 	 * 移除课程相关缓存
 	 * @param course
 	 */
-	private synchronized void removeCourseCache(DowningCourse course){
+	private void removeCourseCache(DowningCourse course){
 		Log.d(TAG, "移除课程["+course.getCourseName()+"]下载相关缓存...");
 		//移除下载线程对象
 		if(this.downloadThreads.size() > 0 && this.downloadThreads.containsKey(course)){
@@ -260,7 +260,7 @@ public class DownloadService extends Service {
 	 * @param course
 	 * @return
 	 */
-	private synchronized MultiThreadDownload getDownloadThread(DowningCourse course) {
+	private MultiThreadDownload getDownloadThread(DowningCourse course) {
 		 Log.d(TAG, "获取下载课程[" + course.getCourseName() +"]线程...");
 		 return  (this.downloadThreads.size() == 0) ? null : this.downloadThreads.get(course);
 	}
@@ -285,7 +285,7 @@ public class DownloadService extends Service {
 	 * @param msgType
 	 * @param msg
 	 */
-	private synchronized void sendHandlerMessage(DowningCourse course,int msgType,String msg){
+	private void sendHandlerMessage(DowningCourse course,int msgType,String msg){
 		try {
 			Log.d(TAG, "开始发送前台UI处理消息：" + msgType);
 			if (this.downloadHandler == null) return;
@@ -306,7 +306,7 @@ public class DownloadService extends Service {
 	 * @param course
 	 * @param totalFileSize
 	 */
-	private synchronized void sendHandlerDownloadProgress(DowningCourse course, long totalFileSize){
+	private void sendHandlerDownloadProgress(DowningCourse course, long totalFileSize){
 		try {
 			Log.d(TAG, "开始发送下载进度...");
 			if (course == null || this.downloadHandler == null) return;

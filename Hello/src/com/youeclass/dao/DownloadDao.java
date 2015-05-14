@@ -78,7 +78,7 @@ public class DownloadDao {
 	 * @param threadId
 	 * @param pos
 	 */
-	public synchronized void update(String url,String userName, int threadId, long pos){
+	public void update(String url,String userName, int threadId, long pos){
 		Log.d(TAG, "开始实时更新每条线程已下载的文件长度...");
 		final String update_sql = "update DownloadTab set complete_size=?  where url=? and username=? and thread_id=?";
 		SQLiteDatabase db = this.dbHelper.getWritableDatabase();
@@ -92,7 +92,7 @@ public class DownloadDao {
 	 * @param filePath
 	 * @param fileSize
 	 */
-	public synchronized void updateDowningCourseFile(String url,String userName,String filePath, long fileSize){
+	public void updateDowningCourseFile(String url,String userName,String filePath, long fileSize){
 		Log.d(TAG, "更新下载课程文件信息...");
 		final String update_sql = "update CourseTab set filesize=?,filepath=?,state = 1 where fileurl = ? and username = ? ";
 		SQLiteDatabase db = this.dbHelper.getWritableDatabase();

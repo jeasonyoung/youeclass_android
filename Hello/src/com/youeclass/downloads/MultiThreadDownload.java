@@ -133,7 +133,7 @@ public class MultiThreadDownload {
 	 * @param threadId 线程ID
 	 * @param pos 最后下载的位置
 	 */
-	protected synchronized void update(final int threadId,final long  pos){
+	protected void update(final int threadId,final long  pos){
 		//更新线程下载长度缓存。
 		threadsPosCache.put(threadId, pos);
 	}
@@ -217,20 +217,23 @@ public class MultiThreadDownload {
 						if(this.threads[i].getDownLength() == -1){//下载失败,再重新下载
 							this.threads[i] = new DownloadThread(i + 1, this.threadsPosCache.get(i + 1));
 							//执行线程。
-							pools.execute(this.threads[i]);
-						}
-						//更新线程下载数据库数据
-						if(downloadDao != null){
-							Long total = this.threadsPosCache.get(i + 1);
-							downloadDao.update(url, userName, i + 1, total == null ? 0 : total);
+							this.pools.execute(this.threads[i]);
 						}
 					}
 				}
 				//更新下载进度
-				if(listener != null && this.totalDownloadSize > oldTotal){
+				if(this.totalDownloadSize > oldTotal){
 					oldTotal = this.totalDownloadSize;
+					//更新线程下载数据库数据
+					if(this.downloadDao != null && this.threadsPosCache.size() > 0){
+						for(Map.Entry<Integer, Long> entry : this.threadsPosCache.entrySet()){
+							this.downloadDao.update(this.url, this.userName, entry.getKey(), entry.getValue() == null ? 0 : entry.getValue());
+						}
+					}
 					//通知目前已下载完成的数据长度。
-					listener.onDownloadSize(this.totalDownloadSize);
+					if(listener != null){
+						listener.onDownloadSize(this.totalDownloadSize);
+					}
 				}
 			}
 			Log.d(TAG, "下载完成："+this.totalDownloadSize+"/" + this.fileSize);
@@ -377,11 +380,12 @@ public class MultiThreadDownload {
 				}
 				threadFile.close();
 				inStream.close();
-				this.finish = true;
 				Log.d(TAG, "Thread :" + this.threadId + " download finish.");
 			} catch (Exception e) {
 				this.downLength = -1;
 				Log.e(TAG, "[线程:"+this.threadId+"]下载数据时发生异常：" + e.getMessage(), e);
+			}finally{
+				this.finish = true;
 			}
 		}
 	}

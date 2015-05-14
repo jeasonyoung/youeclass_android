@@ -173,14 +173,15 @@ public class DownloadService extends Service {
 		if(course == null || pos < 0) return;
 		Log.d(TAG, "添加下载课程["+pos+"."+course+"]到队列...");
 		boolean result = false;
-		if(!this.downloadQueue.contains(course) && ((course.getState() != DowningCourse.STATE_PAUSE))){//如果队列中不存在则加入对尾
-				result = downloadQueue.offer(course);
-				Log.d(TAG, "压入到队尾:" + result); 
+		if(!this.downloadQueue.contains(course) && ((course.getState() != DowningCourse.STATE_PAUSE) 
+				&& (course.getState() != DowningCourse.STATE_FINISH))){//如果队列中不存在则加入对尾
+				result = this.downloadQueue.offer(course);
+				Log.d(TAG, "课程["+pos+"."+course.getCourseName()+"]压入到队尾:" + result); 
 		}
 		//设置位置集合
 		this.downloadPositions.put(course, pos);
 		//发送UIHandler
-		String msg = result ? "已添加到下载队列，等候排队连接!" : "下载队列中已存在!";
+		String msg = "["+course.getCourseName() +"]"+ (result ? "已添加到下载队列排队!" : "下载队列中已存在!");
 		this.sendHandlerMessage(course, DowningCourse.STATE_WAITTING, msg);
 		Log.d(TAG, msg);
 	}
@@ -194,7 +195,7 @@ public class DownloadService extends Service {
 		//如果在队列中排序则从队列中移除
 		if(this.downloadQueue.contains(course)){
 			boolean result = this.downloadQueue.remove(course);
-			Log.d(TAG, "从队列中移除:" + result);
+			Log.d(TAG, "课程["+course.getCourseName()+"]从队列中移除:" + result);
 		}
 		//发送UIHandler
 		String msg = course.getCourseName() + " 已取消下载!";
@@ -228,9 +229,9 @@ public class DownloadService extends Service {
 	protected void continueCourseDownload(final DowningCourse course){
 		if(course == null)return;
 		Log.d(TAG, "继续课程["+course.getCourseName()+"]下载...");
-		if(!this.downloadQueue.contains(course)){//如果队列中不存在则加入对尾
+		if(!this.downloadQueue.contains(course) && (course.getState() != DowningCourse.STATE_FINISH)){//如果队列中不存在则加入对尾
 			boolean result = this.downloadQueue.offer(course);
-			Log.d(TAG, "压入到队尾:" + result);
+			Log.d(TAG, "课程["+course.getCourseName()+"]压入到队尾:" + result);
 		}
 		//发送UIHandler
 		String msg = course.getCourseName() + " 重新进入排队中...";
@@ -249,6 +250,7 @@ public class DownloadService extends Service {
 			//如果现在存在，就停止下载
 			if(threadDownload != null){
 				threadDownload.Stop();
+				Log.d(TAG, "课程["+course.getCourseName()+"]下载停止...");
 			}
 			//从集合中移除
 			this.downloadThreads.remove(course);
@@ -334,49 +336,55 @@ public class DownloadService extends Service {
 					//线程等待
 					Thread.sleep(THREAD_SLEEP);
 					//从队列中获取需要下载的课程
-					this.course = downloadQueue.poll();
-					if(this.course != null){
-						Log.d(TAG, "开始下载课程：" + this.course.getCourseName() + "...");
-						//检查网络
-						if(!checkNetwork(getApplicationContext(), this)){
-							sendHandlerMessage(this.course, DowningCourse.STATE_NETFAIL, "网络不可用");
-							continue;
-						}
-						//下载线程创建
-						MultiThreadDownload threadDownload = getDownloadThread(this.course);
-						if(threadDownload == null){
-							try {
-								File savePath = createDownloadSaveFileDir(this.course.getUserName());
-								Log.d(TAG, "本地保存地址:" + savePath.getAbsolutePath());
-								threadDownload = new MultiThreadDownload(DownloadService.this, this.course.getUserName(), this.course.getFileUrl(), savePath);
-								addDownloadThread(this.course, threadDownload);
-							} catch (Exception e) {
-								Log.e(TAG, "创建课程["+this.course.getUserName()+"]下载线程时发生异常:" + e.getMessage(), e);
-								sendHandlerMessage(this.course, DowningCourse.STATE_NETFAIL, e.getMessage());
-								continue;
-							}
-						}
-						//检查磁盘容量
+					this.course = downloadQueue.peek();
+					if(this.course == null){
+						continue;
+					}
+					Log.d(TAG, "开始下载课程：" + this.course.getCourseName() + "...");
+					//检查网络
+					if(!checkNetwork(getApplicationContext(), this)){
+						sendHandlerMessage(this.course, DowningCourse.STATE_NETFAIL, "网络不可用");
+						continue;
+					}
+					//下载线程创建
+					MultiThreadDownload threadDownload = getDownloadThread(this.course);
+					if(threadDownload == null){
 						try {
-							checkStorageCapacity(threadDownload.getFileSize());
+							File savePath = createDownloadSaveFileDir(this.course.getUserName());
+							Log.d(TAG, "本地保存地址:" + savePath.getAbsolutePath());
+							threadDownload = new MultiThreadDownload(DownloadService.this, this.course.getUserName(), this.course.getFileUrl(), savePath);
+							addDownloadThread(this.course, threadDownload);
 						} catch (Exception e) {
-							Log.e(TAG, "检查磁盘容量：" + e.getMessage(), e);
-							sendHandlerMessage(this.course, DowningCourse.STATE_PAUSE, e.getMessage());
+							Log.e(TAG, "创建课程["+this.course.getUserName()+"]下载线程时发生异常:" + e.getMessage(), e);
+							sendHandlerMessage(this.course, DowningCourse.STATE_NETFAIL, e.getMessage());
 							continue;
 						}
-						//开始下载数据。
-						long totalSize = threadDownload.download(this);
-						if(totalSize == threadDownload.getFileSize()){//下载完成
-							//发送完成UI消息
-							sendHandlerMessage(this.course, DowningCourse.STATE_FINISH, "下载完成!");
-							//移除全部缓存
-							removeCourseCache(this.course);
-						}else{//暂停
-							sendHandlerMessage(this.course, DowningCourse.STATE_PAUSE, "下载已暂停!");
-						}
-					}					
+					}
+					//检查磁盘容量
+					try {
+						checkStorageCapacity(threadDownload.getFileSize());
+					} catch (Exception e) {
+						Log.e(TAG, "检查磁盘容量：" + e.getMessage(), e);
+						sendHandlerMessage(this.course, DowningCourse.STATE_PAUSE, e.getMessage());
+						continue;
+					}
+					//开始下载数据。
+					long totalSize = threadDownload.download(this);
+					if(totalSize == threadDownload.getFileSize()){//下载完成
+						//发送完成UI消息
+						sendHandlerMessage(this.course, DowningCourse.STATE_FINISH, "["+this.course.getCourseName()+"]下载完成!");
+						//移除全部缓存
+						removeCourseCache(this.course);
+					}else{//暂停
+						sendHandlerMessage(this.course, DowningCourse.STATE_PAUSE, "["+this.course.getCourseName()+"]下载已暂停!");
+					}
 				} catch (Exception e) {
 					Log.d(TAG, "下载队列轮询线程发生异常:" + e.getMessage(),e);
+				}finally{
+					if(this.course != null){//课程从队列中移除
+						DowningCourse dc = downloadQueue.poll();
+						if(dc != null) Log.d(TAG, "课程["+dc.getCourseName()+"]从队列中成功移除!");
+					}
 				}
 			}
 		}

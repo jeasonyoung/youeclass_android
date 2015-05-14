@@ -191,13 +191,12 @@ public class CourseDao {
 		while (cursor.moveToNext()) {
 			DowningCourse data = new DowningCourse();
 			data.setCourseName(cursor.getString(0));
-			//long fileSize = cursor.getLong(1),fininishSize = cursor.getLong(2);
-			//Log.d(TAG, "fileSize - fininishSize = "+fileSize+"-"+ fininishSize + "=" + (fileSize - fininishSize) + ">>>>>>>>>>>>>");
 			data.setFileSize(cursor.getLong(1));
 			data.setFinishSize(cursor.getLong(2));
 			data.setFilePath(cursor.getString(3));
 			data.setFileUrl(cursor.getString(4));
 			data.setUserName(userName);
+			data.setState(DowningCourse.STATE_WAITTING);
 			list.add(data);
 		}
 		cursor.close();

@@ -191,6 +191,13 @@ public class DowningListAdapter extends BaseAdapter {
 				btnPause.setEnabled(false);
 				break;
 			}
+			case DowningCourse.STATE_FINISH:{
+				tvConnecting.setText("");
+				tvDowning.setText("已完成");
+				btnPause.setImageResource(R.drawable.pausedown);// 显示暂停按钮
+				btnPause.setText(R.string.pauseDown);// 显示暂停
+				btnPause.setEnabled(false);
+			}
 			default:{
 				Log.e(TAG, position +"." + course.getCourseName() + ",state:" + course.getState() + ",未加载数据...");
 				break;
@@ -363,6 +370,16 @@ public class DowningListAdapter extends BaseAdapter {
 					}
 					break;
 				}
+				case DowningCourse.STATE_WAITTING:{//等待
+					if(pos > -1 && pos < adapter.getCount()){
+						Log.d(TAG, "更新连接等待UI...");
+						DowningCourse data = adapter.list.get(pos);
+						data.setState(DowningCourse.STATE_WAITTING);
+						//通知事件适配器
+						adapter.notifyDataSetChanged();
+					}
+					break;
+				}
 				case DowningCourse.STATE_PAUSE:{//暂停
 					Log.d(TAG, "更新暂停连接失败UI...");
 					if(pos > -1 && pos < adapter.getCount()){
@@ -387,6 +404,9 @@ public class DowningListAdapter extends BaseAdapter {
 							if(oldPercent == null || newPercent > oldPercent){
 								this.coursePercentMap.put(data, newPercent);
 								Log.d(TAG, "更新下载进度:"+newPercent+"%("+data.getFinishSize()+"/"+data.getFileSize()+")...");
+								if(newPercent == 100){//完成
+									data.setState(DowningCourse.STATE_FINISH);
+								}
 								//通知事件适配器
 								adapter.notifyDataSetChanged();
 							}
@@ -395,11 +415,16 @@ public class DowningListAdapter extends BaseAdapter {
 					return;
 				}
 				case DowningCourse.STATE_FINISH:{//下载完成
+					Log.d(TAG, "下载完成...");
 					if(pos > -1 && pos < adapter.getCount()){
 						//移除完成数据
-						adapter.list.remove(pos);
+						DowningCourse course = adapter.list.remove(pos.intValue());
+						if(course != null){
+							course.setState(DowningCourse.STATE_FINISH);
+							Log.d(TAG, "移除课程["+pos+"."+course.getCourseName()+"]");
+						}
 						//通知UI更新适配器
-						adapter.notifyDataSetChanged();
+						adapter.notifyDataSetChanged(); 
 					}
 					break;
 				}

@@ -27,7 +27,7 @@ import com.youeclass.util.StringUtils;
  */
 public class MultiThreadDownload {
 	private static final String TAG = "FileDownloadService";
-	private static final int DOWNLOAD_THREADS = 2;//下载线程数
+	private static final int DOWNLOAD_THREADS = 3;//下载线程数
 	private static final long THREAD_SLEEP = 900;//
 	private static final int CONNECT_TIMEOUT = 5000;//链接超时
 	private static final int CONNECT_SUCCESS = 200;//链接成功
@@ -231,7 +231,7 @@ public class MultiThreadDownload {
 			}
 			Log.d(TAG, "下载完成："+this.totalDownloadSize+"/" + this.fileSize);
 			//更新课程下载量
-			this.downloadDao.updateCourseFinish(this.url, this.userName, this.totalDownloadSize);
+			this.downloadDao.updateCourseFinish(this.url, this.userName, this.totalDownloadSize,this.fileSize);
 			//已下载完成
 			if(this.totalDownloadSize == this.fileSize){
 				//数据文件加密处理

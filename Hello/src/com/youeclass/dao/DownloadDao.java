@@ -136,15 +136,16 @@ public class DownloadDao {
 	 * 更新课程完成的数据
 	 * @param url
 	 * @param userName
-	 * @param finishsize
+	 * @param finishSize
+	 * @param fileSize
 	 */
-	public void updateCourseFinish(String url,String userName,long finishsize){
+	public void updateCourseFinish(String url,String userName,long finishSize, long fileSize){
 		Log.d(TAG, "更新课程完成文件下载量...");
-		final String update_sql = "update CourseTab set finishsize=? where fileurl=? and username=?";
+		final String update_sql = "update CourseTab set finishsize=?,filesize=?  where fileurl=? and username=?";
 		SQLiteDatabase db = this.dbHelper.getWritableDatabase();
 		try {
 			db.beginTransaction();
-			db.execSQL(update_sql, new Object[]{finishsize, url, userName});
+			db.execSQL(update_sql, new Object[]{finishSize,fileSize, url, userName});
 			db.setTransactionSuccessful();
 		} catch (Exception e) {
 			Log.e(TAG, "更新课程完成文件下载量发生异常：" + e.getMessage(), e);

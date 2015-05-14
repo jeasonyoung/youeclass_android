@@ -52,15 +52,6 @@ public class DowningListAdapter extends BaseAdapter {
 		//加载布局
 		this.layoutInflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
-	/**
-	 * 删除课程。
-	 * @param course
-	 */
-	public void removeCourse(DowningCourse course) {
-		if(course != null && this.list.size() > 0){
-			this.list.remove(course);
-		}
-	}
 	/*
 	 * 获取数据总数。
 	 * @see android.widget.Adapter#getCount()
@@ -340,7 +331,6 @@ public class DowningListAdapter extends BaseAdapter {
 	 * @author jeasonyoung
 	 *
 	 */
-
  	private static final class UpdateUIHandler extends Handler{
 		private Map<DowningCourse, Integer> coursePercentMap;
 		private final WeakReference<DowningListAdapter> downingAdapter;
@@ -403,12 +393,10 @@ public class DowningListAdapter extends BaseAdapter {
 							int newPercent = (int) (data.getFinishSize() * 100.0/ data.getFileSize());
 							if(oldPercent == null || newPercent > oldPercent){
 								this.coursePercentMap.put(data, newPercent);
-								Log.d(TAG, "更新下载进度:"+newPercent+"%("+data.getFinishSize()+"/"+data.getFileSize()+")...");
-								if(newPercent == 100){//完成
-									data.setState(DowningCourse.STATE_FINISH);
-								}
 								//通知事件适配器
 								adapter.notifyDataSetChanged();
+								//
+								Log.d(TAG, "更新下载进度:"+newPercent+"%("+data.getFinishSize()+"/"+data.getFileSize()+")...");
 							}
 						}
 					}
@@ -416,16 +404,8 @@ public class DowningListAdapter extends BaseAdapter {
 				}
 				case DowningCourse.STATE_FINISH:{//下载完成
 					Log.d(TAG, "下载完成...");
-					if(pos > -1 && pos < adapter.getCount()){
-						//移除完成数据
-						DowningCourse course = adapter.list.remove(pos.intValue());
-						if(course != null){
-							course.setState(DowningCourse.STATE_FINISH);
-							Log.d(TAG, "移除课程["+pos+"."+course.getCourseName()+"]");
-						}
-						//通知UI更新适配器
-						adapter.notifyDataSetChanged(); 
-					}
+					//通知UI更新适配器
+					adapter.notifyDataSetChanged(); 
 					break;
 				}
 			}

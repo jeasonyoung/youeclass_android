@@ -252,19 +252,6 @@ public class CourseDao {
 		}
 		Log.d(TAG, "完成更新状态[username="+userName+"][url="+fileUrl+"][state="+state+"].");
 	}
-//	public void updateFileSize(String url, int size ,int status,String filePath, String username) {
-//		SQLiteDatabase db = this.dbhelper.getWritableDatabase();//dbhelper.getDatabase(MyDBHelper.WRITE);
-//		try {
-//			String sql = "update CourseTab set filesize = ? ,state = ?,filepath = ? where fileurl = ? and username = ?";
-//			db.beginTransaction();
-//			db.execSQL(sql, new Object[] { size,status,filePath, url ,username});
-//			db.setTransactionSuccessful();
-//		} finally {
-//			db.endTransaction();
-//			db.close();
-//		}
-//		//dbhelper.closeDb();
-//	}
 	/**
 	 * 删除正在下载的课程。
 	 * @param userName

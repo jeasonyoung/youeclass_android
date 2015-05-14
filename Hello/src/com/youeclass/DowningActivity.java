@@ -7,7 +7,6 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -36,6 +35,7 @@ public class DowningActivity extends BaseActivity{
 	private DownloadServiceConnection serviceConnection = new DownloadServiceConnection();
 	private DownloadService.IFileDownloadService fileDownloadService;
 	private CourseDao courseDao = new CourseDao(this);
+	private List<DowningCourse> dataSource;
 	private String username;
 	/*
 	 * 重载创建。
@@ -55,65 +55,30 @@ public class DowningActivity extends BaseActivity{
 		
 		Intent intent = this.getIntent();
 		this.username = intent.getStringExtra("username");
-		//异步加载数据
-		new AsyncLoadData(this.username, intent.getStringExtra("name"), intent.getStringExtra("url"));
-	}
-	
-	/**
-	 * 异步加载后台数据
-	 * @author jeasonyoung
-	 *
-	 */
-	private final class AsyncLoadData extends AsyncTask<String, Integer, List<DowningCourse>>{
-		private static final String TAG = "AsyncLoadData";
-		/**
-		 * 构造函数。
-		 * @param userName  当前用户
-		 * @param courseName 课程名称
-		 * @param courseUrl 课程URL
-		 */
-		public AsyncLoadData(String userName, String courseName, String courseUrl){
-			Log.d(TAG, "初始化异步加载...");
-			this.execute(username,courseName, courseUrl);
-		}
-		/*
-		 * 重载后台执行
-		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
-		 */
-		@Override
-		protected List<DowningCourse> doInBackground(String... params) {
-			Log.d(TAG, "正在异步加载的课程... ");
-			String name = params[1],url = params[2];
-			List<DowningCourse> list = courseDao.findAllDowning(params[0]);
-			//初始化从课程列表中点击的要下载项
-			if(!StringUtils.isEmpty(name) && !StringUtils.isEmpty(url))
-			{
-				DowningCourse downing = new DowningCourse();
-				downing.setCourseName(name);
-				downing.setFileUrl(url);
-				downing.setState(DowningCourse.STATE_INIT);
-				downing.setUserName(params[0]);
-				if(!list.contains(downing)){
-					Log.d(TAG, "添加须下载课程["+name+"=>"+url+"]到集合...");
-					list.add(downing);
-					//更新数据库中状态为下载状态
-					courseDao.updateState(downing.getUserName(), downing.getFileUrl(), DowningCourse.STATE_DOWNING);
-				}
+		String name =  intent.getStringExtra("name");
+		String url = intent.getStringExtra("url");
+		//加载数据
+		this.dataSource = this.courseDao.findAllDowning(this.username);
+		//初始化从课程列表中点击的要下载项
+		if(!StringUtils.isEmpty(name) && !StringUtils.isEmpty(url))
+		{
+			DowningCourse downing = new DowningCourse();
+			downing.setCourseName(name);
+			downing.setFileUrl(url);
+			downing.setState(DowningCourse.STATE_INIT);
+			downing.setUserName(this.username);
+			if(!this.dataSource.contains(downing)){
+				Log.d(TAG, "添加须下载课程["+name+"=>"+url+"]到集合...");
+				this.dataSource.add(downing);
+				//添加到数据库
+				this.courseDao.updateState(this.username, downing.getFileUrl(), DowningCourse.STATE_DOWNING);
 			}
-			return list;
 		}
-		/*
-		 * UI处理
-		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
-		 */
-		@Override
-		protected void onPostExecute(List<DowningCourse> result) {
-			mAdapter = new DowningListAdapter(getApplicationContext(), result);
-			listView.setAdapter(mAdapter);
-			if(result.size() == 0){
-				nodata.setVisibility(View.VISIBLE);
-			}
-		};
+		this.mAdapter = new DowningListAdapter(getApplicationContext(), this.dataSource);
+		listView.setAdapter(mAdapter);
+		if(this.dataSource.size() == 0){
+			nodata.setVisibility(View.VISIBLE);
+		}
 	}
 	/*
 	 * 重载恢复。
@@ -233,7 +198,7 @@ public class DowningActivity extends BaseActivity{
 					 //删除数据库记录
 					 courseDao.deleteDowing(username, this.course.getFileUrl());
 					 //从数据集合中移除
-					 mAdapter.removeCourse(this.course);
+					 dataSource.remove(this.course);
 					 //更新UI
 					 mAdapter.notifyDataSetChanged();
 					 break;

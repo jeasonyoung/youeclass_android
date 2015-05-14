@@ -140,6 +140,7 @@ public class MultiThreadDownload {
 	//初始化下载线程
 	private void initDownloadThreads(){
 		this.totalDownloadSize = 0;
+		this.threadsPosCache.clear();
 		int len = 0;
 		//从数据库加载数据，以支持断点下载
 		Map<Integer, Long> logDataMap = this.downloadDao.loadAllData(this.url, this.userName);
@@ -183,6 +184,9 @@ public class MultiThreadDownload {
 				 out.close();
 			 }
 			if(this.totalDownloadSize > 0 && listener != null){//初始化设置进度
+				if(this.totalDownloadSize >= this.fileSize){
+					this.totalDownloadSize = 0;
+				}
 				//通知目前已下载完成的数据长度。
 				listener.onDownloadSize(this.totalDownloadSize);
 			}
@@ -234,11 +238,12 @@ public class MultiThreadDownload {
 			this.downloadDao.updateCourseFinish(this.url, this.userName, this.totalDownloadSize,this.fileSize);
 			//已下载完成
 			if(this.totalDownloadSize == this.fileSize){
-				//数据文件加密处理
-				encryptFile(this.savePath, 0, this.userName.getBytes("UTF-8"));
 				//更新数据库
 				this.downloadDao.finish(this.url, this.userName, this.savePath.getAbsolutePath());
-				this.isStop = true;
+				//数据文件加密处理
+				encryptFile(this.savePath, 0, this.userName.getBytes("UTF-8"));
+				//循环停止
+				isFinish = true;
 			}
 		} catch (Exception e) {
 			Log.e(TAG, "下载文件发生异常:" + e.getMessage(), e);
@@ -353,7 +358,7 @@ public class MultiThreadDownload {
 				//设置获取数据的范围
 				http.setRequestProperty("Range", "bytes=" + startPos + "-" + endPos);
 				
-				Log.d(TAG, "Thread: " + this.threadId + ": start download from start pos:" + startPos + " ...");
+				Log.d(TAG, "Thread: " + this.threadId + ": start download from start pos:[" + startPos + "/" + endPos + "]...");
 				//获取输入流数据
 				InputStream inStream = http.getInputStream();
 				byte[] buffer = new byte[NET_BUFFER_SIZE];
@@ -372,7 +377,6 @@ public class MultiThreadDownload {
 				}
 				threadFile.close();
 				inStream.close();
-				
 				this.finish = true;
 				Log.d(TAG, "Thread :" + this.threadId + " download finish.");
 			} catch (Exception e) {
@@ -381,7 +385,6 @@ public class MultiThreadDownload {
 			}
 		}
 	}
-	
 	/**
 	 * 下载进度监听器接口。
 	 * @author jeasonyoung

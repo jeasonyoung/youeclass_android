@@ -137,29 +137,23 @@ public class DownloadService extends Service {
 		Log.d(TAG, "当前网络类型:["+network.getTypeName()+"],网络状态:["+network.getState()+"]!=>" + msg );
 		return false;
 	}
-	//检查存储容量
-	private synchronized static final boolean checkStorageCapacity(long fileSize) throws Exception{
-		Log.d(TAG, "检查SD卡容量：" + fileSize);
-		boolean result = true;
-		if(fileSize > 0){
-			File root = Environment.getExternalStorageDirectory();
-			if(root == null || !root.exists()){
-				 throw new Exception("未检测到SD卡，请检查SD是否插好！");
-			}
-			StatFs statFs = new StatFs(root.getPath());
-			result = (statFs.getAvailableBlocks() * statFs.getBlockSize()) > fileSize;
-			if(!result){
-				throw new Exception("可用容量不足，不能下载！");
-			}
-		}
-		return result;
-	}
+	
 	//创建文件下载目录。
-	private synchronized static final File createDownloadSaveFileDir(String userName) throws Exception{
+	private synchronized static final File createDownloadSaveFileDir(String userName, long fileSize) throws Exception{
 		Log.d(TAG, "创建下载目录.");
 		File root = Environment.getExternalStorageDirectory();
-		if(root == null || !root.exists()){
-			 throw new Exception("未检测到SD卡，请检查SD是否插好！");
+		if(root == null || !root.exists()){//如果SD卡不存在，则检查内部存储
+			Log.d(TAG, "未检测到SD卡,将使用内部存储!");
+			// throw new Exception("未检测到SD卡，请检查SD是否插好！");
+			 root =  Environment.getDataDirectory();
+		}
+		if(fileSize > 0){
+			StatFs statFs = new StatFs(root.getPath());
+			long  space = (long)(statFs.getAvailableBlocks() * statFs.getBlockSize());
+			if(space <  fileSize){
+				Log.d(TAG, "路径["+root.getPath()+"]剩余空间["+space+"]不足["+fileSize+"],不能下载!");
+				throw new Exception("可用容量不足，不能下载！");
+			}
 		}
 		return new File(root + File.separator + "eschool" + File.separator + userName + File.separator + "video");
 	}
@@ -349,23 +343,17 @@ public class DownloadService extends Service {
 					//下载线程创建
 					MultiThreadDownload threadDownload = getDownloadThread(this.course);
 					if(threadDownload == null){
-						try {
-							File savePath = createDownloadSaveFileDir(this.course.getUserName());
-							Log.d(TAG, "本地保存地址:" + savePath.getAbsolutePath());
-							threadDownload = new MultiThreadDownload(DownloadService.this, this.course.getUserName(), this.course.getFileUrl(), savePath);
-							addDownloadThread(this.course, threadDownload);
-						} catch (Exception e) {
-							Log.e(TAG, "创建课程["+this.course.getUserName()+"]下载线程时发生异常:" + e.getMessage(), e);
-							sendHandlerMessage(this.course, DowningCourse.STATE_NETFAIL, e.getMessage());
-							continue;
-						}
+						threadDownload = new MultiThreadDownload(DownloadService.this, this.course.getUserName(), this.course.getFileUrl());
+						addDownloadThread(this.course, threadDownload);
 					}
-					//检查磁盘容量
 					try {
-						checkStorageCapacity(threadDownload.getFileSize());
+						//创建保存路径，并检查容量
+						File savePath = createDownloadSaveFileDir(this.course.getUserName(), threadDownload.getFileSize());
+						Log.d(TAG, "本地保存地址:" + savePath.getAbsolutePath());
+						threadDownload.setSavePath(savePath);
 					} catch (Exception e) {
-						Log.e(TAG, "检查磁盘容量：" + e.getMessage(), e);
-						sendHandlerMessage(this.course, DowningCourse.STATE_PAUSE, e.getMessage());
+						Log.e(TAG, "创建课程["+this.course.getUserName()+"]下载线程时发生异常:" + e.getMessage(), e);
+						sendHandlerMessage(this.course, DowningCourse.STATE_NETFAIL, e.getMessage());
 						continue;
 					}
 					//开始下载数据。

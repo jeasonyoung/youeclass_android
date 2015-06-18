@@ -36,6 +36,7 @@ public class MultiThreadDownload {
 	
 	private File savePath;
 	private String userName,url;
+	private HttpURLConnection conn;
 	private DownloadDao downloadDao;
 	private long fileSize,block,totalDownloadSize;
 	private boolean isStop;
@@ -56,38 +57,47 @@ public class MultiThreadDownload {
 	 * 构造函数。
 	 * @param context
 	 * @param url
-	 * @param savePath
 	 */
-	public MultiThreadDownload(Context context,String userName, String url, File savePath) throws Exception{
+	public MultiThreadDownload(Context context,String userName, String url) throws Exception{
 		this();
 		if(context == null) throw new IllegalArgumentException("context");
 		if((StringUtils.isEmpty(this.userName = userName))) throw new IllegalArgumentException("userName");
 		if(StringUtils.isEmpty((this.url = url))) throw new IllegalArgumentException("url");
-		if((this.savePath = savePath) == null) throw new IllegalArgumentException("savePath");
 		
 		this.downloadDao = new DownloadDao(context);
  
-		HttpURLConnection conn = (HttpURLConnection)(new URL(this.url).openConnection());
-		conn.setConnectTimeout(CONNECT_TIMEOUT);
-		conn.setRequestMethod(CONNECT_METHOD_GET);
-		this.createRequestParameters(conn);
-		conn.connect();
+		this.conn = (HttpURLConnection)(new URL(this.url).openConnection());
+		this.conn.setConnectTimeout(CONNECT_TIMEOUT);
+		this.conn.setRequestMethod(CONNECT_METHOD_GET);
+		this.createRequestParameters(this.conn);
+		this.conn.connect();
 		int respCode = -1;
 		if((respCode = conn.getResponseCode()) == CONNECT_SUCCESS){
 			//根据响应获取文件大小
 			this.fileSize = conn.getContentLength();
 			if(this.fileSize <= 0) throw new Exception("Unkown file size.");
-			if(!this.savePath.exists()){//如果不存在则创建目录
-				this.savePath.mkdirs();
-			}
-			if(this.savePath.isDirectory()){//如果是目录则创建文件名称
-				this.savePath =  new File(this.savePath, this.getFileName(conn));
-			}
-			//更新下载课程文件信息
-			this.downloadDao.updateDowningCourseFile(url, userName, this.savePath.getAbsolutePath(), this.fileSize);
 		}else {
 			throw new Exception("server no respose[" + respCode + "].");
 		}
+	}
+	
+	/**
+	 * 设置保存文件
+	 * @param savePath
+	 */
+	public void setSavePath(File savePath) throws Exception {
+		this.savePath = savePath;
+		if(this.savePath == null){
+			throw new Exception("下载文件保存路径不存在！");
+		}
+		if(!this.savePath.exists()){//如果不存在则创建目录
+			this.savePath.mkdirs();
+		}
+		if(this.savePath.isDirectory() && this.conn != null){//如果是目录则创建文件名称
+			this.savePath =  new File(this.savePath, this.getFileName(this.conn));
+		}
+		//更新下载课程文件信息
+		this.downloadDao.updateDowningCourseFile(url, userName, this.savePath.getAbsolutePath(), this.fileSize);
 	}
 	//创建请求参数集合
 	private void createRequestParameters(HttpURLConnection conn){
@@ -173,6 +183,9 @@ public class MultiThreadDownload {
 	 */
 	public long download(OnDownloadProgressListener listener) throws Exception{
 		 try {
+			 if(this.savePath == null){
+				 throw new Exception("下载文件保存地址不存在!");
+			 }
 			 Log.d(TAG, "开始下载文件:"+ this.url);
 			 this.isStop = false;
 			//初始化下载线程

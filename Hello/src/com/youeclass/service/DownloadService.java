@@ -150,7 +150,7 @@ public class DownloadService extends Service {
 		if(fileSize > 0){
 			StatFs statFs = new StatFs(root.getPath());
 			long  space = (long)(statFs.getAvailableBlocks() * statFs.getBlockSize());
-			if(space <  fileSize){
+			if(space > 0 &&  space <  fileSize){
 				Log.d(TAG, "路径["+root.getPath()+"]剩余空间["+space+"]不足["+fileSize+"],不能下载!");
 				throw new Exception("可用容量不足，不能下载！");
 			}
